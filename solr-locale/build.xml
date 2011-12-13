@@ -1,0 +1,235 @@
+<?xml version="1.0"?>
+
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+ -->
+
+<project name="lucene-geospatial" basedir=".">
+  <property name="dest.dir" value="target/"/>
+  <property name="classes.dir" value="${dest.dir}/classes"/>
+
+  <target name="clean">
+    <delete dir="${dest.dir}/"/>
+  </target>
+
+  <path id="compile.classpath">
+    <fileset dir="lib">
+      <include name="*.jar"/>
+    </fileset>
+    <fileset dir="apache-solr/dist">
+      <include name="*.jar"/>
+    </fileset>
+    <fileset dir="apache-solr/lib">
+      <include name="*.jar"/>
+    </fileset>
+  </path>
+
+  <path id="runtime.classpath">
+    <path refid="compile.classpath"/>
+    <path path="${classes.dir}"/>
+    <fileset dir="src/main/resources"/>
+    <fileset  dir="apache-solr/lib">
+      <include name="**/*.jar"/>
+    </fileset>
+  </path>
+
+  <target name="compile-solr">
+    <ant antfile="apache-solr/build.xml" target="dist" inheritall="false"/>
+  </target>
+
+  <target name="compile"
+          description="Compile the source code."
+          depends="init"
+          >
+    <mkdir dir="${classes.dir}"/>
+    <javac classpathref="compile.classpath"
+           destdir="${classes.dir}"
+           target="1.6"
+           source="1.6"
+           debug="on"
+           encoding="utf8"
+           sourcepath=""
+            >
+      <src path="src/main/java"/>
+    </javac>
+  </target>
+
+  <target name="init">
+
+  </target>
+
+  <!--<target name="install" depends="init,compile"
+          description="Get the necessary pieces to run the examples">
+  </target>-->
+  <property name="solr.port" value="8983"/>
+  <property name="solr.stop.port" value="8984"/>
+  <property name="solr.stop.key" value="geo"/>
+  <property name="solr.spawn" value="true"/>
+  <property name="solr.home.dir" location="solr"/>
+  <property name="solr.data.dir" location="solr/data"/>
+
+  <target name="start-solr" description="Start Solr">
+    <echo>java -Djetty.port=${solr.port} -Dsolr.solr.home=${solr.home.dir} -Dsolr.data.dir=${solr.data.dir} -DSTOP.PORT=${solr.stop.port} -DSTOP.KEY=${solr.stop.key} -jar start.jar</echo>
+    <java jar="apache-solr/example/start.jar" fork="true"
+          spawn="${solr.spawn}" maxmemory="738m" dir="apache-solr/example">
+      <sysproperty key="jetty.port" value="${solr.port}"/>
+      <sysproperty key="solr.solr.home" file="${solr.home.dir}"/>
+      <sysproperty key="solr.data.dir" file="${solr.data.dir}"/>
+      <sysproperty key="STOP.PORT" value="${solr.stop.port}"/>
+      <sysproperty key="STOP.KEY" value="${solr.stop.key}"/>
+    </java>
+  </target>
+
+  <target name="stop-solr" description="Stop Solr">
+    <java jar="apache-solr/example/start.jar" fork="true" dir="apache-solr/example">
+      <arg value="--stop"/>
+      <sysproperty key="STOP.PORT" value="${solr.stop.port}"/>
+      <sysproperty key="STOP.KEY" value="${solr.stop.key}"/>
+    </java>
+  </target>
+
+
+  <property name="data.file" value="./data/"/>
+  <property  name="fact.file" value="./data/"/>
+  <target name="index" depends="compile">
+    <echo>Indexing ${data.file} with ${fact.file} facts</echo>
+    <java classname="Driver" fork="true">
+      <classpath refid="runtime.classpath"/>
+
+      <arg line="${data.file} http://localhost:8983/solr ${fact.file}"/>
+    </java>
+  </target>
+
+  <property name="data.dir" value="data"/>
+
+  <target name="install" depends="init,compile"
+          description="Get the necessary pieces to run the examples">
+    <mkdir  dir="${data.dir}"/>
+    <get src="http://localhost/sample-data.tar.gz"
+            dest="${data.dir}/sample-data.tar.gz"/>
+    <gunzip src="${data.dir}/sample-data.tar.gz" dest="${data.dir}/sample-data.tar"/>
+    <untar src="${data.dir}/sample-data.tar" dest="${data.dir}"/>
+  </target>
+
+
+
+  <!--
+   All targets below this line are for internal use only
+
+   -->
+  <!-- Packaging Targets for Grant -->
+  <path id="dw.classpath">
+    <fileset dir="tools">
+      <include name="*.jar"/>
+    </fileset>
+  </path>
+  <target name="article">
+    <!--
+    schemaFile="${dwDir}/schema/${dwVersion}/dw-document-${dwVersion}.xsd"
+            xslFile="${dwDir}/xsl/${dwVersion}/dw-document-html-${dwVersion}.xsl"
+
+     `$javapgm "$forceFactory" -cp "$mycp" DeveloperWorksXML "$xmlFile" "$schemaFile" "$xslFile"`
+     -->
+    <java dir="manuscript" classname="DeveloperWorksXML" fork="true">
+      <classpath refid="dw.classpath"/>
+      <jvmarg line="-Djavax.xml.transform.TransformerFactory=org.apache.xalan.processor.TransformerFactoryImpl"/>
+      <arg line="index.xml ../schema/5.12/dw-document-5.12.xsd ../xsl/5.12/dw-document-html-5.12.xsl"/>
+    </java>
+    <zip zipfile="${dest.dir}/article.zip">
+      <zipfileset dir="manuscript" prefix="spatial"/>
+    </zip>
+  </target>
+
+  <target name="svn-up" unless="offline">
+    <exec command="svn" failonerror="false">
+      <arg value="update"/>
+      <arg value="apache-solr"/>
+    </exec>
+  </target>
+
+
+  <property name="pack.dir" value="${dest.dir}/package"/>
+
+  <target name="jar" depends="compile">
+    <jar basedir="${classes.dir}" destfile="${dest.dir}/spatial-ex.jar"/>
+    <copy  todir="./solr/lib">
+      <fileset dir="${dest.dir}">
+        <include name="spatial-ex.jar"/>
+      </fileset>
+      <fileset dir="./lib">
+        <include  name="geonames*.jar"/>
+        <include  name="jdom*.jar"/>
+      </fileset>
+    </copy>
+  </target>
+
+  <target name="prepare-src" depends="jar,compile-solr">
+    <mkdir dir="${pack.dir}"/>
+    <copy todir="${pack.dir}/">
+      <fileset dir="${basedir}">
+        <include name="build.xml"/>
+      </fileset>
+    </copy>
+    <copy todir="${pack.dir}/apache-solr">
+      <fileset dir="apache-solr">
+        <exclude name="**/build/**"/>
+        <exclude name="example/work/**"/>
+        <exclude name="**/target/**"/>
+      </fileset>
+    </copy>
+    <copy  todir="${pack.dir}/solr">
+      <fileset dir="solr">
+        <exclude name="data/**"/>
+      </fileset>
+    </copy>
+    <mkdir dir="${pack.dir}/solr/data"/>
+    <copy  todir="${pack.dir}/solr/lib">
+      <fileset dir="lib">
+        <include name="*.jar"/>
+      </fileset>
+    </copy>
+    <copy  todir="${pack.dir}/solr/lib">
+      <fileset dir="${dest.dir}">
+        <include name="spatial-ex.jar"/>
+      </fileset>
+    </copy>
+    <copy todir="${pack.dir}/lib">
+      <fileset dir="lib">
+        <include name="*.jar"/>
+        <exclude name="junit*.jar"/>
+      </fileset>
+    </copy>
+
+    <copy todir="${pack.dir}/src">
+      <fileset dir="src"/>
+    </copy>
+  </target>
+  <!--
+
+   -->
+  <target name="package" depends="clean,prepare-src,article">
+    <tar basedir="data" destfile="${dest.dir}/sample-data.tar">
+      <include name="*.osm"/>
+      <include name="*.facts"/>
+    </tar>
+    <gzip src="${dest.dir}/sample-data.tar" destfile="${dest.dir}/sample-data.tar.gz"/>
+    <echo>Don't forget to copy up to the download site!!!!</echo>
+    <zip zipfile="${dest.dir}/sample.zip">
+      <zipfileset dir="${pack.dir}" prefix="geospatial-examples"/>
+    </zip>
+  </target>
+
+</project>

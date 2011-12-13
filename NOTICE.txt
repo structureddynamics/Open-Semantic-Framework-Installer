@@ -1,0 +1,39 @@
+===============================================================
+== Notice of Attribution for the Apache License, Version 2.0 ==
+===============================================================
+
+Open Semantic Framework Installer, an installation application to
+deploy the Open Semantic Framework Stack.
+Copyright 2008-2012. Structured Dynamics LLC.
+
+The Open Semantic Framework Installer is one of the contributing components to the
+Open Semantic Framework (OSF); see http://openstructs.org.
+
+This product includes software developed by
+Structured Dynamics LLC (http://structureddynamics.com/).
+
+Specifically, this product is based on the 
+Open Semantic Framework Installer provided under 
+Apache 2 License by Structured Dynamics.
+The original software is available from
+
+As presently distributed, the Open Semantic Framework 
+Installer also provides hooks to these required software packages:
+
+-- OpenLink Software Virtuoso open source (VOS) server, provided under
+the GPL 2 license by OpenLink. See
+http://virtuoso.openlinksw.com/dataspace/dav/wiki/Main/VOSLicense.
+
+-- Apache Solr enterprise search server, provided under the
+Apache 2 license by the Apache Software Foundation. See
+http://www.apache.org/licenses/LICENSE-2.0.
+
+-- OWLAPI, provided under the LGPL license. See http://www.gnu.org/copyleft/lesser.html
+
+-- PHP/Java Bridge, provided under the LGPL license. See http://www.gnu.org/copyleft/lesser.html
+
+-- Gate, provided under the LGPL license. See http://www.gnu.org/copyleft/lesser.html
+
+OSF also has hooks to other open source products; for a listing and license
+terms of these, see:
+http://techwiki.openstructs.org/index.php/Open_Source_Software_Licenses. 

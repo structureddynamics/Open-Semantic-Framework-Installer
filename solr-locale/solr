@@ -1,0 +1,33 @@
+#!/bin/bash
+# description: Starts and stops Solr production
+set -e
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+SOLR_DIR=/usr/share/apachesolr/
+
+ANT=$(which ant)
+
+case $1 in
+start)
+echo "Starting Solr"
+cd $SOLR_DIR
+$ANT start-solr
+
+echo "ok - remember it may take a minute or two before Solr responds on requests"
+exit
+;;
+stop)
+echo "Stopping Solr"
+cd $SOLR_DIR
+$ANT stop-solr
+echo "ok"
+;;
+restart)
+$0 stop
+sleep 3
+$0 start	
+;;
+*)
+echo "Usage: $0 {start|stop|restart}" >&2exit 1
+;;
+esac
+
