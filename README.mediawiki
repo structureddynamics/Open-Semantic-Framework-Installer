@@ -36,10 +36,10 @@ You can perform these six four steps by copying and pasting these few commands i
 Once you have installed the OSF stack, you next query the [[structWSF]] Web service endpoints, and import datasets using [[conStruct]]. Here are a few things you can do to start exploring the Open Semantic Framework:
 
 # Start exploring [http://techwiki.openstructs.org/index.php/Category:StructWSF structWSF]
-# Start exploring [[http://techwiki.openstructs.org/index.php/Category:ConStruct conStruct]
-# Start exploring [[http://techwiki.openstructs.org/index.php/Category:Ontologies Ontologies usage in OSF]
-# Start [[http://techwiki.openstructs.org/index.php/Category:Datasets importing and manipulating datasets]
-# Start exploring the [[http://techwiki.openstructs.org/index.php/Category:Open_Semantic_Framework Open Semantic Framework architecture]
+# Start exploring [http://techwiki.openstructs.org/index.php/Category:ConStruct conStruct]
+# Start exploring [http://techwiki.openstructs.org/index.php/Category:Ontologies Ontologies usage in OSF]
+# Start [http://techwiki.openstructs.org/index.php/Category:Datasets importing and manipulating datasets]
+# Start exploring the [http://techwiki.openstructs.org/index.php/Category:Open_Semantic_Framework Open Semantic Framework architecture]
 # [http://techwiki.openstructs.org/index.php/StructWSF_Web_Services_Tutorial Start  playing with the structWSF web service endpoints].
 
 When you are ready to begin developing and configuring your new instance in earnest, the best place to start is [http://techwiki.openstructs.org/index.php/A_Basic_Guide_to_Content A Basic GuidetoContent] on the TechWiki.
