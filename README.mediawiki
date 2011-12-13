@@ -33,7 +33,7 @@ You can perform these six four steps by copying and pasting these few commands i
 
 
 == Next Steps ==
-Once you have installed the OSF stack, you next query the [[structWSF]] Web service endpoints, and import datasets using [[conStruct]]. Here are a few things you can do to start exploring the Open Semantic Framework:
+Once you have installed the OSF stack, you next query the [http://techwiki.openstructs.org/index.php/StructWSF structWSF] Web service endpoints, and import datasets using [http://techwiki.openstructs.org/index.php/ConStruct conStruct]. Here are a few things you can do to start exploring the Open Semantic Framework:
 
 # Start exploring [http://techwiki.openstructs.org/index.php/Category:StructWSF structWSF]
 # Start exploring [http://techwiki.openstructs.org/index.php/Category:ConStruct conStruct]
@@ -42,7 +42,7 @@ Once you have installed the OSF stack, you next query the [[structWSF]] Web serv
 # Start exploring the [http://techwiki.openstructs.org/index.php/Category:Open_Semantic_Framework Open Semantic Framework architecture]
 # [http://techwiki.openstructs.org/index.php/StructWSF_Web_Services_Tutorial Start  playing with the structWSF web service endpoints].
 
-When you are ready to begin developing and configuring your new instance in earnest, the best place to start is [http://techwiki.openstructs.org/index.php/A_Basic_Guide_to_Content A Basic GuidetoContent] on the TechWiki.
+When you are ready to begin developing and configuring your new instance in earnest, the best place to start is [http://techwiki.openstructs.org/index.php/A_Basic_Guide_to_Content A Basic Guide to Content] on the TechWiki.
 
 == Installation Notes ==
 The installation script guides the download, installation and configuration of all software needed by the Open Semantic Framework stack to operate.
