@@ -1190,7 +1190,7 @@ sudo drush perm-grant 'owner/curator' 'access all views'
 
 cecho "\n\n13.9) Import new Dataset Content Type into Drupal...\n"
 
-sudo drush cck_import-import < $DRUPALFOLDER"/sites/all/modules/construct/content_types.cck"
+sudo drush cck_import-import < $DRUPALFOLDER"/sites/all/modules/conStruct/content_types.cck"
 
 cecho "\n\n13.10) Setup the initial WSF-Registry node...\n"
 
@@ -1199,7 +1199,7 @@ sudo drush php-eval '$wsfRegistry = array("http://'$DOMAINNAME'/ws/"); variable_
 
 cecho "\n\n13.11) Installing YUI...\n"
 
-cd sites/all/modules/construct/js
+cd sites/all/modules/conStruct/js
 
 sudo wget http://yui.zenfs.com/releases/yui2/yui_2.9.0.zip
 
@@ -1211,9 +1211,9 @@ cd $DRUPALFOLDER
 
 cecho "\n\n13.12) Installing Smarty...\n"
 
-sudo mkdir -p sites/all/modules/construct/framework/smarty
+sudo mkdir -p sites/all/modules/conStruct/framework/smarty
 
-cd sites/all/modules/construct/framework/smarty
+cd sites/all/modules/conStruct/framework/smarty
 
 sudo wget http://www.smarty.net/files/Smarty-2.6.26.zip
 
@@ -1282,7 +1282,7 @@ sudo mv -f propertyHierarchySerialized.srz $DATAFOLDER/ontologies/structure/
 
 cecho "\n\n14.3) Create symbolic links to classes and properties structures from conStruct...\n"
 
-sudo ln -s $DATAFOLDER"/ontologies/structure/" $DRUPALFOLDER"/sites/all/modules/construct/framework/ontologies"
+sudo ln -s $DATAFOLDER"/ontologies/structure/" $DRUPALFOLDER"/sites/all/modules/conStruct/framework/ontologies"
 
 
 
