@@ -25,7 +25,7 @@ The only steps needed to install the Open Semantic Framework are to:
 You can perform these six four steps by copying and pasting these few commands in your shell:
 
 # <code>cd /mnt/</code>
-# <code>sudo wget https://github.com/downloads/structureddynamics/Open-Semantic-Framework-Installer/osf-install-v1.0a1.zip</code>
+# <code>sudo wget https://github.com/downloads/structureddynamics/Open-Semantic-Framework-Installer/osf-installer-v1.0a1.zip</code>
 # <code>sudo unzip osf-install-v1.0a1.zip</code>
 # <code>cd `ls -d structureddynamics*/`</code>
 # <code>sudo chmod 755 osf-install.sh</code>
