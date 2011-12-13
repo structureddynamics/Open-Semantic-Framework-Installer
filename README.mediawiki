@@ -1,10 +1,10 @@
 {|
 |-
-| In its early version, installing the Open Semantic Framework ([http://openstructs.org OSF]) software stack was not easy. However, the process has now been automated with the OSF Installer. This page explains how to download this utility and run it. The OSF installation script provides complete assistance for how to download, install and configure all software within the Open Semantic Framework stack.
+| <p>In its early version, installing the Open Semantic Framework ([http://openstructs.org OSF]) software stack was not easy. However, the process has now been automated with the OSF Installer. This page explains how to download this utility and run it. The OSF installation script provides complete assistance for how to download, install and configure all software within the Open Semantic Framework stack.</p>
 
-The only thing you need to do to use this utility is to perform the few commands outlined in the <code>Installing the Open Semantic Framework</code> section below, and to answer the questions that will be asked, from time to time, by the installation script.
+<p>The only thing you need to do to use this utility is to perform the few commands outlined in the <code>Installing the Open Semantic Framework</code> section below, and to answer the questions that will be asked, from time to time, by the installation script.</p>
 
-'''Note:''' [http://techwiki.openstructs.org/index.php/StructWSF_Installation_Guide |A detailed manual that explains each of these steps is available here.]
+<p>'''Note:''' [http://techwiki.openstructs.org/index.php/StructWSF_Installation_Guide A detailed manual that explains each of these steps is available here.]</p>
 | [[File:http://dev.openstructs.org/imgs/osf_installer.png]]
 |}
 
@@ -22,14 +22,14 @@ The only steps needed to install the Open Semantic Framework are to:
 # Make the <code>osf-install.sh</code> installation script executable
 # Run the <code>osf-install.sh</code> installation script
 
-You can perform these six easy steps by copying and pasting these few commands in your shell:
+You can perform these six four steps by copying and pasting these few commands in your shell:
 
-# cd /mnt/
-# sudo wget https://github.com/downloads/structureddynamics/Open-Semantic-Framework-Installer/osf-install-v1.0a1.zip
-# sudo unzip osf-install-v1.0a1.zip
-# cd `ls -d structureddynamics*/`
-# sudo chmod 755 osf-install.sh
-# ./osf-install.sh 
+# <code>cd /mnt/</code>
+# <code>sudo wget</code> https://github.com/downloads/structureddynamics/Open-Semantic-Framework-Installer/osf-install-v1.0a1.zip</code>
+# <code>sudo unzip osf-install-v1.0a1.zip</code>
+# <code>cd `ls -d structureddynamics*/`</code>
+# <code>sudo chmod 755 osf-install.sh</code>
+# <code>./osf-install.sh</code>
 
 
 == Next Steps ==
