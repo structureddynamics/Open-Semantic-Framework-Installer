@@ -1,0 +1,63 @@
+{|
+|-
+| In its early version, installing the Open Semantic Framework ([http://openstructs.org OSF]) software stack was not easy. However, the process has now been automated with the OSF Installer. This page explains how to download this utility and run it. The OSF installation script provides complete assistance for how to download, install and configure all software within the Open Semantic Framework stack.
+
+The only thing you need to do to use this utility is to perform the few commands outlined in the <code>Installing the Open Semantic Framework</code> section below, and to answer the questions that will be asked, from time to time, by the installation script.
+
+'''Note:''' [http://techwiki.openstructs.org/index.php/StructWSF_Installation_Guide |A detailed manual that explains each of these steps is available here.]
+| [[File:http://dev.openstructs.org/imgs/osf_installer.png]]
+|}
+
+== Requirements ==
+# Ubuntu 10.04 (Lucid)
+# 32 Bits Operating System
+# Access to internet from your server
+# 5 GB of disk space on the partition where you are installing OSF
+
+== Installing the Open Semantic Framework ==
+The only steps needed to install the Open Semantic Framework are to:
+
+# Create a folder where to install OSF
+# Download the <code>osf-install.zip</code> installation package
+# Make the <code>osf-install.sh</code> installation script executable
+# Run the <code>osf-install.sh</code> installation script
+
+You can perform these six easy steps by copying and pasting these few commands in your shell:
+
+# cd /mnt/
+# sudo wget https://github.com/downloads/structureddynamics/Open-Semantic-Framework-Installer/osf-install-v1.0a1.zip
+# sudo unzip osf-install-v1.0a1.zip
+# cd `ls -d structureddynamics*/`
+# sudo chmod 755 osf-install.sh
+# ./osf-install.sh 
+
+
+== Next Steps ==
+Once you have installed the OSF stack, you next query the [[structWSF]] Web service endpoints, and import datasets using [[conStruct]]. Here are a few things you can do to start exploring the Open Semantic Framework:
+
+# Start exploring [http://techwiki.openstructs.org/index.php/Category:StructWSF structWSF]
+# Start exploring [[http://techwiki.openstructs.org/index.php/Category:ConStruct conStruct]
+# Start exploring [[http://techwiki.openstructs.org/index.php/Category:Ontologies Ontologies usage in OSF]
+# Start [[http://techwiki.openstructs.org/index.php/Category:Datasets importing and manipulating datasets]
+# Start exploring the [[http://techwiki.openstructs.org/index.php/Category:Open_Semantic_Framework Open Semantic Framework architecture]
+# [http://techwiki.openstructs.org/index.php/StructWSF_Web_Services_Tutorial Start  playing with the structWSF web service endpoints].
+
+When you are ready to begin developing and configuring your new instance in earnest, the best place to start is [http://techwiki.openstructs.org/index.php/A_Basic_Guide_to_Content A Basic GuidetoContent] on the TechWiki.
+
+== Installation Notes ==
+The installation script guides the download, installation and configuration of all software needed by the Open Semantic Framework stack to operate.
+
+In the installation process, you are asked multiple configuration questions at the prompts. For each of these questions, a default value is proposed by the system. If you are not to sure what to answer, just use the default value and (for most installations) everything should be alright.
+
+The installation process takes about 10 minutes of your time, but actual running time extends over a few hours. The two pieces of software that take the most amount of time to install are:
+
+# PHP5
+# Virtuoso
+
+Since both applications get compiled and tested during their installation, each takes about 1 hours to install, depending on the server's capabilities.
+
+== For More Help ==
+If you are experiencing issues with this installation process, please do make an outreach to the [http://groups.google.com/group/open-semantic-framework Open Semantic Web Mailing List].
+
+Describe the specifications of the server where you are trying to install OSF. Tell us where the issue happens in the installation process. Also add any logs that could be helpful in debugging the issue.
+
