@@ -900,11 +900,11 @@ cecho "\n\n12.2) Configure tests...\n"
 
 sudo sed -i "s>REPLACEME>"$INSTALLDIR">" phpunit.xml
 
-sudo sed -i "s>$this->structwsfInstanceFolder = \"/usr/share/structwsf/\";>$this->structwsfInstanceFolder = \""$STRUCTWSFFOLDER"/\";>" Config.php
+sudo sed -i "s>$this-\>structwsfInstanceFolder = \"/usr/share/structwsf/\";>$this-\>structwsfInstanceFolder = \""$STRUCTWSFFOLDER"/\";>" Config.php
 
-sudo sed -i "s>$this->endpointUrl = \"http://localhost/ws/\";>$this->endpointUrl = \"http://"$DOMAINNAME"/ws/\";>" Config.php
+sudo sed -i "s>$this-\>endpointUrl = \"http://localhost/ws/\";>$this-\>endpointUrl = \"http://"$DOMAINNAME"/ws/\";>" Config.php
 
-sudo sed -i "s>$this->endpointUri = \"http://localhost/wsf/ws/\";>$this->endpointUri = \"http://"$DOMAINNAME"/wsf/ws/\";>" Config.php
+sudo sed -i "s>$this-\>endpointUri = \"http://localhost/wsf/ws/\";>$this-\>endpointUri = \"http://"$DOMAINNAME"/wsf/ws/\";>" Config.php
 
 
 cecho "\n\n12.3) Run the system integration tests suites...\n"
