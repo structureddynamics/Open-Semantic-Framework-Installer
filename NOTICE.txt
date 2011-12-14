@@ -6,19 +6,28 @@ Open Semantic Framework Installer, an installation application to
 deploy the Open Semantic Framework Stack.
 Copyright 2008-2012. Structured Dynamics LLC.
 
-The Open Semantic Framework Installer is one of the contributing components to the
-Open Semantic Framework (OSF); see http://openstructs.org.
+The Open Semantic Framework Installer is one of the contributing
+components to the Open Semantic Framework (OSF); 
+see http://openstructs.org. Additional technical documentation for
+OSF and its related OSF components is available at
+http://techwiki.openstructs.org.
 
-This product includes software developed by
+This application includes software developed by
 Structured Dynamics LLC (http://structureddynamics.com/).
 
-Specifically, this product is based on the 
-Open Semantic Framework Installer provided under 
+This application also is based in large part by effort contributed
+by the City of Winnipeg, Manitoba, CA, as part of its Neighbourhoods
+of Winnipeg (NOW) initiative. We gratefully acknowledge the City's 
+generous contributions in the spirit of this open source initiative.
+
+Specifically, this application is based on the
+Open Semantic Framework Installer provided under
 Apache 2 License by Structured Dynamics.
 The original software is available from
+https://github.com/structureddynamics/Open-Semantic-Framework-Installer.
 
-As presently distributed, the Open Semantic Framework 
-Installer also provides hooks to these required software packages:
+As presently distributed, the Open Semantic Framework also provides hooks
+to these required software packages:
 
 -- OpenLink Software Virtuoso open source (VOS) server, provided under
 the GPL 2 license by OpenLink. See
@@ -32,7 +41,7 @@ http://www.apache.org/licenses/LICENSE-2.0.
 
 -- PHP/Java Bridge, provided under the LGPL license. See http://www.gnu.org/copyleft/lesser.html
 
--- Gate, provided under the LGPL license. See http://www.gnu.org/copyleft/lesser.html
+-- GATE, provided under the LGPL license. See http://www.gnu.org/copyleft/lesser.html
 
 OSF also has hooks to other open source products; for a listing and license
 terms of these, see:
