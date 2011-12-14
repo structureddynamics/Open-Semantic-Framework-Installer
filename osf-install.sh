@@ -139,6 +139,9 @@ cecho "\n\n2.1) Install required packages by PHP5...\n"
 
 sudo apt-get -y install devscripts gcc debhelper fakeroot apache2-mpm-prefork hardening-wrapper libdb-dev libenchant-dev libglib2.0-dev libicu-dev
 
+# Make sure to fix a problem that throws unnecessary PHP notices for a badly commented line in mcrypt
+sudo sed -i 's># configuration for php MCrypt module>; configuration for php MCrypt module>' /etc/php5/cli/conf.d/mcrypt.ini
+
 cecho "2.2) Creating the folders for the compilation of PHP5...\n"
 
 sudo mkdir update
@@ -260,7 +263,6 @@ then
 fi
 
 # Fix a problem that throws unnecessary PHP notices for a badly commented line in mcrypt
-
 sudo sed -i 's># configuration for php MCrypt module>; configuration for php MCrypt module>' /etc/php5/cli/conf.d/mcrypt.ini
 
 
@@ -952,6 +954,9 @@ sudo sed -i "s>/usr/share/drupal>"$DRUPALFOLDER">" "/etc/apache2/sites-available
 sudo cp $INSTALLDIR"/drupal/htaccess" $DRUPALFOLDER"/.htaccess"
 
 sudo /etc/init.d/apache2 restart
+
+# Make sure to fix a problem that throws unnecessary PHP notices for a badly commented line in mcrypt
+sudo sed -i 's># configuration for php MCrypt module>; configuration for php MCrypt module>' /etc/php5/cli/conf.d/mcrypt.ini
 
 cecho "\n\n13.3) Installing Drush...\n"
 
