@@ -1125,14 +1125,13 @@ sudo drush perm-grant 'authenticated user' 'access content'
 sudo drush perm-grant 'contributor' 'access content' 
 sudo drush perm-grant 'owner/curator' 'access content' 
 
-sudo drush perm-grant 'contributor' 'create dataset content' 
-sudo drush perm-grant 'owner/curator' 'create dataset content' 
-
-sudo drush perm-grant 'contributor' 'delete own dataset content' 
-sudo drush perm-grant 'owner/curator' 'delete own dataset content' 
-
-sudo drush perm-grant 'contributor' 'edit own dataset content' 
-sudo drush perm-grant 'owner/curator' 'edit own dataset content' 
+# These are not currently settable using Drush.
+#sudo drush perm-grant 'contributor' 'create dataset content' 
+#sudo drush perm-grant 'owner/curator' 'create dataset content' 
+#sudo drush perm-grant 'contributor' 'delete own dataset content' 
+#sudo drush perm-grant 'owner/curator' 'delete own dataset content' 
+#sudo drush perm-grant 'contributor' 'edit own dataset content' 
+#sudo drush perm-grant 'owner/curator' 'edit own dataset content' 
 
 sudo drush perm-grant 'contributor' 'access conStruct append' 
 sudo drush perm-grant 'owner/curator' 'access conStruct append' 
@@ -1302,5 +1301,5 @@ then
   echo -e "\n\n"
 
   cecho "\n\nHere are some non fatal errors that happened in the installation process that will need to be addressed:\n"
-  cecho $NONFATALERRORS $yellow
+  cecho "$NONFATALERRORS" $yellow
 fi
