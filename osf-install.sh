@@ -231,7 +231,7 @@ cecho " 3. Installing Apache2 "
 cecho "-----------------------"
 echo -e "\n\n"
 
-sudo apt-get install apache2
+sudo apt-get install -y apache2
 sudo a2enmod rewrite
 sudo /etc/init.d/apache2 restart
 
@@ -878,7 +878,7 @@ cecho " 12. Installing PHPUnit "
 cecho "------------------------"
 echo -e "\n\n"
 
-sudo apt-get install phpunit
+sudo apt-get install -y phpunit
 
 cd $INSTALLDIR"/tests/"
 
@@ -1252,7 +1252,7 @@ echo -e "\n\n"
 # load all the ontologies in the OWLAPI instance
 
 #perl -MCPAN -e 'install XML::Twig'
-apt-get install xml-twig-tools
+apt-get install -y xml-twig-tools
 
 for FILE in $DATAFOLDER/ontologies/files/*
 do
