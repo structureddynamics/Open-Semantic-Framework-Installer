@@ -1271,7 +1271,7 @@ do
     ONTOLOGYURI="file://localhost/"$FILE
     ONTOLOGYURIENCODE="$(perl -MURI::Escape -e 'print uri_escape($ARGV[0]);' "$ONTOLOGYURI")"
 
-    curl http://$DOMAINNAME/ws/ontology/create/ -H "Accept: text/xml" -d "advancedIndexation=false&uri=$ONTOLOGYURIENCODE&registered_ip=self"
+    curl http://$DOMAINNAME/ws/ontology/create/ -H "Accept: text/xml" -d "advancedIndexation=true&uri=$ONTOLOGYURIENCODE&registered_ip=self"
   fi
 done
 
