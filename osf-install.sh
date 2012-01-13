@@ -341,12 +341,22 @@ sudo chown -R "$LOGNAME":"$LOGNAME" virtuoso-opensource-"$VIRTUOSOVERSION"
 
 cd virtuoso-opensource-"$VIRTUOSOVERSION"
 
+cecho "\n\n6.6) Patching...\n"
+
+cd "libsrc/Wi/"
+
+sudo cp "$INSTALLDIR"/virtuoso/spasql-php.diff spasql-php.diff
+
+sudo patch < spasql-php.diff
+
+cd ../..
+
+cecho "\n\n6.6) Building Virtuoso...\n"
+
 set_flags () {
     CFLAGS="-O2"
     export CFLAGS
 }
-
-cecho "\n\n6.6) Building Virtuoso...\n"
 
 set_flags 
 sudo ./autogen.sh 
@@ -600,7 +610,7 @@ sudo cp "$INSTALLDIR/owlapi/classHierarchySerialized.srz" "$DATAFOLDER/ontologie
 sudo cp "$INSTALLDIR/owlapi/propertyHierarchySerialized.srz" "$DATAFOLDER/ontologies/structure/propertyHierarchySerialized.srz"  
 sudo cp "$INSTALLDIR/owlapi/new.owl" "$DATAFOLDER/ontologies/files/new.owl"  
 
-cecho "\n\n8.11) Set the properly ontologies filder rights...\n"
+cecho "\n\n8.11) Set the properly ontologies folder rights...\n"
 
 sudo chmod -R 777 "$DATAFOLDER/ontologies"  
 
@@ -1256,12 +1266,13 @@ apt-get install -y xml-twig-tools
 
 for FILE in $DATAFOLDER/ontologies/files/*
 do
+  if [ $FILE != "new.owl" ]
+  then
+    ONTOLOGYURI="file://localhost/"$FILE
+    ONTOLOGYURIENCODE="$(perl -MURI::Escape -e 'print uri_escape($ARGV[0]);' "$ONTOLOGYURI")"
 
-  ONTOLOGYURI="file://localhost/"$FILE
-  ONTOLOGYURIENCODE="$(perl -MURI::Escape -e 'print uri_escape($ARGV[0]);' "$ONTOLOGYURI")"
-
-  curl http://$DOMAINNAME/ws/ontology/create/ -H "Accept: text/xml" -d "advancedIndexation=false&uri=$ONTOLOGYURIENCODE&registered_ip=self"
-
+    curl http://$DOMAINNAME/ws/ontology/create/ -H "Accept: text/xml" -d "advancedIndexation=false&uri=$ONTOLOGYURIENCODE&registered_ip=self"
+  fi
 done
 
 cecho "\n\n14.1) Creating Classes and Properties...\n"
