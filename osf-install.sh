@@ -3,7 +3,7 @@
 # Default values for some of the core settings
 VIRTUOSOVERSION="6.1.4"
 DRUPALVERSION="6.22"
-STRUCTWSFVERSION="1.0a92"
+STRUCTWSFVERSION="1.0a93"
 CONSTRUCTVERSION="6.x-1.0-beta9"
 DATAFOLDER="/data"
 
@@ -341,17 +341,23 @@ sudo chown -R "$LOGNAME":"$LOGNAME" virtuoso-opensource-"$VIRTUOSOVERSION"
 
 cd virtuoso-opensource-"$VIRTUOSOVERSION"
 
-cecho "\n\n6.6) Patching...\n"
+VIRTUOSOMAINVERSION=${VIRTUOSOVERSION:0:1}
+VIRTUOSOMINORVERSION=${VIRTUOSOVERSION:4:1}
 
-cd "libsrc/Wi/"
+if [[ $VIRTUOSOMAINVERSION -eq 6 && $VIRTUOSOMINORVERSION -lt 5 ]]
+then
+  cecho "\n\n6.6) Patching...\n"
 
-sudo cp "$INSTALLDIR"/virtuoso/spasql-php.diff spasql-php.diff
+  cd "libsrc/Wi/"
 
-sudo patch < spasql-php.diff
+  sudo cp "$INSTALLDIR"/virtuoso/spasql-php.diff spasql-php.diff
 
-cd ../..
+  sudo patch < spasql-php.diff
 
-cecho "\n\n6.6) Building Virtuoso...\n"
+  cd ../..
+fi
+
+cecho "\n\n6.7) Building Virtuoso...\n"
 
 set_flags () {
     CFLAGS="-O2"
@@ -367,31 +373,31 @@ set_flags
 sudo make check 
 sudo make install
 
-cecho "\n\n6.7) Cleaning Virtuoso building folder...\n"
+cecho "\n\n6.8) Cleaning Virtuoso building folder...\n"
 
 sudo rm -rf virtuoso-build
 
-cecho "\n\n6.8) Set Virtuoso locale...\n"
+cecho "\n\n6.9) Set Virtuoso locale...\n"
 
 sudo update-locale LANG=en_CA.utf8 LC_ALL=en_CA.utf8
 
-cecho "\n\n6.9) Installing odbc.ini and odbcinst.ini files...\n"
+cecho "\n\n6.10) Installing odbc.ini and odbcinst.ini files...\n"
 
 sudo cp "$INSTALLDIR"/virtuoso/odbc.ini /etc/odbc.ini
 sudo cp "$INSTALLDIR"/virtuoso/odbcinst.ini /etc/odbcinst.ini
 
-cecho "\n\n6.10) Install Virtuoso Startup Script...\n"
+cecho "\n\n6.11) Install Virtuoso Startup Script...\n"
 
 sudo cp "$INSTALLDIR"/virtuoso/virtuoso /etc/init.d/virtuoso
 
 sudo chmod 744 /etc/init.d/virtuoso
 
-cecho "\n\n6.11) Test Virtuoso startup script...\n"
+cecho "\n\n6.12) Test Virtuoso startup script...\n"
 
 sudo /etc/init.d/virtuoso stop
 sudo /etc/init.d/virtuoso start
 
-cecho "\n\n6.12) Check if Virtuoso is running...\n"
+cecho "\n\n6.13) Check if Virtuoso is running...\n"
 
 CHECKVIRTUOSO=$(ps aux | grep virtuoso)
 
@@ -401,15 +407,11 @@ then
   NONFATALERRORS="$NONFATALERRORS \n [Error] Virtuoso is not currently running...\n\n"
 fi
 
-cecho "\n\n6.13) Register Virtuoso to automatically start at the system's startup...\n"
+cecho "\n\n6.14) Register Virtuoso to automatically start at the system's startup...\n"
 
 sudo update-rc.d virtuoso defaults
 
-#cecho "\n\nTest DNS...\n"
-
-#sudo /usr/bin/iodbctest "DSN=structwsf-triples-store;UID=dba;PWD=dba"
-
-cecho "\n\n6.14) Installing the exst() procedure...\n"
+cecho "\n\n6.15) Installing the exst() procedure...\n"
 
 PHPERROR=$(php "$INSTALLDIR/virtuoso/install_exst.php")
 
@@ -419,7 +421,7 @@ then
   NONFATALERRORS="$NONFATALERRORS \n [Error] The EXST() procedure couldn't be created. Try to create it after this installation process referring you to these instructions: http://techwiki.openstructs.org/index.php/StructWSF_Installation_Guide#Open_Virtuoso_Conductor...\n\n"
 fi
 
-cecho "\n\n6.15) Installing the logging procedures and tables...\n"
+cecho "\n\n6.16) Installing the logging procedures and tables...\n"
 
 PHPERROR=$(php "$INSTALLDIR/virtuoso/install_logging.php")
 
@@ -429,7 +431,7 @@ then
   NONFATALERRORS="$NONFATALERRORS \n [Error] The logging procedures couldn't be created. Try to create them after this installation process referring you to these instructions: http://techwiki.openstructs.org/index.php/StructWSF_Installation_Guide#Configure_Logger...\n\n"
 fi
 
-cecho "\n\n6.16) Change Virtuoso Passwords...\n"
+cecho "\n\n6.17) Change Virtuoso Passwords...\n"
 
 DBAPASSWORD="dba"
 DAVPASSWORD="dav"
@@ -736,6 +738,26 @@ sudo sed -i "s>wsf_base_url = \"http://localhost\">wsf_base_url = \"http://"$DOM
 #fix wsf_base_path
 sudo sed -i "s>wsf_base_path = \"/usr/share/structwsf/\">wsf_base_path = \""$STRUCTWSFFOLDER"/\">" "$DATAFOLDER/network.ini"
 
+# fix virtuoso_main_version
+
+if [[ $VIRTUOSOMAINVERSION -eq 5 ]]
+then
+  sudo sed -i "s>virtuoso_main_version = \"6\">virtuoso_main_version = \"5\">" "$DATAFOLDER/data.ini"
+fi
+
+if [[ $VIRTUOSOMAINVERSION -eq 4 ]]
+then
+  sudo sed -i "s>virtuoso_main_version = \"6\">virtuoso_main_version = \"4\">" "$DATAFOLDER/data.ini"
+fi
+
+# fix enable_lrl
+
+if [[ $VIRTUOSOMAINVERSION -gt 5 ]]
+then
+  sudo sed -i "s>enable_lrl = \"FALSE\">enable_lrl = \"TRUE\">" "$DATAFOLDER/data.ini"
+fi
+
+
 cecho "Do you want to enable logging in structWSF? (y/n) (default: y):" $magenta
 
 read
@@ -835,9 +857,11 @@ cecho "\n\n11.2) Create WSF...\n"
 
 sudo curl 'http://'$DOMAINNAME'/ws/auth/wsf_indexer.php?action=create_wsf&server_address=http://'$DOMAINNAME
 
-cecho "\n\n11.3) Create user full access for: "$DOMAINNAME" ...\n"
+DOMAINIP=$(ping -c 1 $DOMAINNAME | grep -E -o "[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}" | head -1)
 
-sudo curl 'http://'$DOMAINNAME'/ws/auth/wsf_indexer.php?action=create_user_full_access&user_address='$DOMAINNAME'&server_address=http://'$DOMAINNAME
+cecho "\n\n11.3) Create user full access for (server's own external IP): "$DOMAINIP" ...\n"
+
+sudo curl 'http://'$DOMAINNAME'/ws/auth/wsf_indexer.php?action=create_user_full_access&user_address='$DOMAINIP'&server_address=http://'$DOMAINNAME
 
 cecho "\n\n11.4) Create user full access for: 127.0.0.1 ...\n"
 
@@ -1016,9 +1040,9 @@ read NEWDRUPALPASSWORD
 
 [ -n "$NEWDRUPALPASSWORD" ] && DRUPALPASSWORD=$NEWDRUPALPASSWORD
 
-sudo mysqladmin -u $DRUPALUSERNAME --password=$DRUPALPASSWORD create "drupal_$DOMAINNAME"
+sudo mysqladmin -u $DRUPALUSERNAME --password=$DRUPALPASSWORD create "drupal_test"
 
-sudo sed -i "s>$db_url = 'mysql://username:password@localhost/databasename';>$db_url = 'mysql://"$DRUPALUSERNAME":"$NEWDRUPALPASSWORD"@localhost/drupal_"$DOMAINNAME"';>" $DRUPALFOLDER"/sites/default/settings.php"
+sudo sed -i "s>$db_url = 'mysql://username:password@localhost/databasename';>$db_url = 'mysql://"$DRUPALUSERNAME":"$NEWDRUPALPASSWORD"@localhost/drupal_test';>" $DRUPALFOLDER"/sites/default/settings.php"
 
 sudo chmod a+w sites/default/settings.php
 
@@ -1266,7 +1290,7 @@ apt-get install -y xml-twig-tools
 
 for FILE in $DATAFOLDER/ontologies/files/*
 do
-  if [ $FILE != "new.owl" ]
+  if [ $FILE != $DATAFOLDER"/ontologies/files/new.owl" ]
   then
     ONTOLOGYURI="file://localhost/"$FILE
     ONTOLOGYURIENCODE="$(perl -MURI::Escape -e 'print uri_escape($ARGV[0]);' "$ONTOLOGYURI")"

@@ -17,16 +17,16 @@
 
             exec_close (h);
           }';
-  
+
   $errors = FALSE;
-          
+
   if(odbc_exec($db_link, $exst) === FALSE)
   {
     $errors = TRUE;
   }
-  
+
   odbc_close($db_link);
-  
+
   if($errors)
   {
     echo "errors";
