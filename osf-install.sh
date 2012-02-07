@@ -1,4 +1,3 @@
-#!/bin/bash
 
 # Default values for some of the core settings
 VIRTUOSOVERSION="6.1.4"
@@ -994,8 +993,8 @@ sudo sed -i 's># configuration for php MCrypt module>; configuration for php MCr
 
 cecho "\n\n13.3) Installing Drush...\n"
 
-sudo pear upgrade –force Console_Getopt
-sudo pear upgrade –force pear
+sudo pear upgrade -force Console_Getopt
+sudo pear upgrade -force pear
 pear upgrade-all
 
 pear channel-discover pear.drush.org
