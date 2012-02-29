@@ -1,3 +1,4 @@
+#!/bin/bash
 
 # Default values for some of the core settings
 VIRTUOSOVERSION="6.1.4"
