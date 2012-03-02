@@ -29,7 +29,7 @@ You can perform these six four steps by copying and pasting these few commands i
 # <code>sudo unzip osf-installer-v1.0a4.zip</code>
 # <code>cd `ls -d structureddynamics*/`</code>
 # <code>sudo chmod 755 osf-install.sh</code>
-# <code>./osf-install.sh</code>
+# <code>sudo ./osf-install.sh</code>
 
 
 == Next Steps ==
