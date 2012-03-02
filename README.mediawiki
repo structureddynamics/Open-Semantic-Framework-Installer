@@ -26,7 +26,7 @@ You can perform these six four steps by copying and pasting these few commands i
 
 # <code>cd /mnt/</code>
 # <code>sudo wget https://github.com/downloads/structureddynamics/Open-Semantic-Framework-Installer/osf-installer-v1.0a4.zip</code>
-# <code>sudo unzip osf-install-v1.0a4.zip</code>
+# <code>sudo unzip osf-installer-v1.0a4.zip</code>
 # <code>cd `ls -d structureddynamics*/`</code>
 # <code>sudo chmod 755 osf-install.sh</code>
 # <code>./osf-install.sh</code>
