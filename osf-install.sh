@@ -1040,9 +1040,9 @@ read NEWDRUPALPASSWORD
 
 [ -n "$NEWDRUPALPASSWORD" ] && DRUPALPASSWORD=$NEWDRUPALPASSWORD
 
-sudo mysqladmin -u $DRUPALUSERNAME --password=$DRUPALPASSWORD create "drupal_test"
+sudo mysqladmin -u $DRUPALUSERNAME --password=$DRUPALPASSWORD create "drupal_construct"
 
-sudo sed -i "s>$db_url = 'mysql://username:password@localhost/databasename';>$db_url = 'mysql://"$DRUPALUSERNAME":"$NEWDRUPALPASSWORD"@localhost/drupal_test';>" $DRUPALFOLDER"/sites/default/settings.php"
+sudo sed -i "s>$db_url = 'mysql://username:password@localhost/databasename';>$db_url = 'mysql://"$DRUPALUSERNAME":"$NEWDRUPALPASSWORD"@localhost/drupal_construct';>" $DRUPALFOLDER"/sites/default/settings.php"
 
 sudo chmod a+w sites/default/settings.php
 
