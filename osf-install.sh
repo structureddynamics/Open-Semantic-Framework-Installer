@@ -3,7 +3,7 @@
 # Default values for some of the core settings
 VIRTUOSOVERSION="6.1.4"
 DRUPALVERSION="6.22"
-STRUCTWSFVERSION="1.0a93"
+STRUCTWSFVERSION="1.0a94"
 CONSTRUCTVERSION="6.x-1.0-beta9"
 DATAFOLDER="/data"
 
