@@ -411,27 +411,7 @@ cecho "\n\n6.14) Register Virtuoso to automatically start at the system's startu
 
 sudo update-rc.d virtuoso defaults
 
-cecho "\n\n6.15) Installing the exst() procedure...\n"
-
-PHPERROR=$(php "$INSTALLDIR/virtuoso/install_exst.php")
-
-if [[ $PHPERROR == errors ]]
-then
-  cecho "\n\nThe EXST() procedure couldn't be created. Try to create it after this installation process referring you to these instructions: http://techwiki.openstructs.org/index.php/StructWSF_Installation_Guide#Open_Virtuoso_Conductor...\n" $yellow
-  NONFATALERRORS="$NONFATALERRORS \n [Error] The EXST() procedure couldn't be created. Try to create it after this installation process referring you to these instructions: http://techwiki.openstructs.org/index.php/StructWSF_Installation_Guide#Open_Virtuoso_Conductor...\n\n"
-fi
-
-cecho "\n\n6.16) Installing the logging procedures and tables...\n"
-
-PHPERROR=$(php "$INSTALLDIR/virtuoso/install_logging.php")
-
-if [[ $PHPERROR == errors ]]
-then
-  cecho "\n\nThe logging procedures couldn't be created. Try to create them after this installation process referring you to these instructions: http://techwiki.openstructs.org/index.php/StructWSF_Installation_Guide#Configure_Logger...\n" $yellow
-  NONFATALERRORS="$NONFATALERRORS \n [Error] The logging procedures couldn't be created. Try to create them after this installation process referring you to these instructions: http://techwiki.openstructs.org/index.php/StructWSF_Installation_Guide#Configure_Logger...\n\n"
-fi
-
-cecho "\n\n6.17) Change Virtuoso Passwords...\n"
+cecho "\n\n6.15) Change Virtuoso Passwords...\n"
 
 DBAPASSWORD="dba"
 DAVPASSWORD="dav"
@@ -457,6 +437,29 @@ then
 fi
 
 
+cecho "\n\n6.16) Installing the exst() procedure...\n"
+
+sudo sed -i 's>"dba", "dba">"dba", "'$DBAPASSWORD'">' "$INSTALLDIR/virtuoso/install_exst.php"
+
+PHPERROR=$(php "$INSTALLDIR/virtuoso/install_exst.php")
+
+if [[ $PHPERROR == errors ]]
+then
+  cecho "\n\nThe EXST() procedure couldn't be created. Try to create it after this installation process referring you to these instructions: http://techwiki.openstructs.org/index.php/StructWSF_Installation_Guide#Open_Virtuoso_Conductor...\n" $yellow
+  NONFATALERRORS="$NONFATALERRORS \n [Error] The EXST() procedure couldn't be created. Try to create it after this installation process referring you to these instructions: http://techwiki.openstructs.org/index.php/StructWSF_Installation_Guide#Open_Virtuoso_Conductor...\n\n"
+fi
+
+cecho "\n\n6.17) Installing the logging procedures and tables...\n"
+
+sudo sed -i 's>"dba", "dba">"dba", "'$DBAPASSWORD'">' "$INSTALLDIR/virtuoso/install_logging.php"
+
+PHPERROR=$(php "$INSTALLDIR/virtuoso/install_logging.php")
+
+if [[ $PHPERROR == errors ]]
+then
+  cecho "\n\nThe logging procedures couldn't be created. Try to create them after this installation process referring you to these instructions: http://techwiki.openstructs.org/index.php/StructWSF_Installation_Guide#Configure_Logger...\n" $yellow
+  NONFATALERRORS="$NONFATALERRORS \n [Error] The logging procedures couldn't be created. Try to create them after this installation process referring you to these instructions: http://techwiki.openstructs.org/index.php/StructWSF_Installation_Guide#Configure_Logger...\n\n"
+fi
 
 
 
@@ -704,6 +707,10 @@ cecho "\n\n9.9) Configure the data.ini configuration file...\n"
 
 DOMAINNAME="localhost"
 
+cecho "---------------------------------" $red
+cecho "NOTE: if the domain name you are about to enter here is not currently configured for this server, do take care to edit the /etc/hosts file to handle this domain, otherwise the installer will throws a series of error later in the process." $red
+cecho "---------------------------------" $red
+
 cecho "What is the domain name where the structWSF instance will be accessible (default: $DOMAINNAME):" $magenta
 
 read NEWDOMAINNAME
@@ -873,6 +880,8 @@ sudo curl 'http://'$DOMAINNAME'/ws/auth/wsf_indexer.php?action=create_world_read
 
 cecho "\n\n11.6) Commit transactions to Virtuoso...\n"
 
+sudo sed -i 's>"dba", "dba">"dba", "'$DBAPASSWORD'">' "$INSTALLDIR/virtuoso/commit.php"
+
 PHPERROR=$(php "$INSTALLDIR/virtuoso/commit.php")
 
 if [[ $PHPERROR == errors ]]
@@ -1028,13 +1037,13 @@ cp sites/default/default.settings.php sites/default/settings.php
 DRUPALUSERNAME="root"
 DRUPALPASSWORD="root"
 
-cecho "What is the MySQL username used for drupal (default: $DRUPALUSERNAME):" $magenta
+cecho "What is the MySQL username used for drupal (default username: $DRUPALUSERNAME):" $magenta
 
 read NEWDRUPALUSERNAME
 
 [ -n "$NEWDRUPALUSERNAME" ] && DRUPALUSERNAME=$NEWDRUPALUSERNAME
 
-cecho "What is the MySQL password for that username [without spaces] (default: $DRUPALPASSWORD):" $magenta
+cecho "What is the MySQL password for that username [without spaces] (default password: $DRUPALPASSWORD):" $magenta
 
 read NEWDRUPALPASSWORD
 
