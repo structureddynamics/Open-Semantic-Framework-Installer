@@ -5,8 +5,8 @@
 
   $db_link = odbc_connect("structwsf-triples-store", "dba", "dba", SQL_CUR_USE_ODBC);
 
-  $changeDavPassword = "user_set_password('dav', '$davPassword')";
-  $changeDbaPassword = "user_set_password('dba', '$dbaPassword')";
+  $changeDavPassword = "user_change_password('dav', 'dav', '$davPassword')";
+  $changeDbaPassword = "user_change_password('dba', 'dba', '$dbaPassword')";
   
   $errors = FALSE;
   
