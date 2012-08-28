@@ -418,15 +418,65 @@ DAVPASSWORD="dav"
 
 cecho "Password for the DBA user [without spaces] (default: $DBAPASSWORD):" $magenta
 
-read NEWDBAPASSWORD
+read -s  NEWDBAPASSWORD
 
-[ -n "$NEWDBAPASSWORD" ] && DBAPASSWORD=$NEWDBAPASSWORD
+if [ -n "$NEWDBAPASSWORD" ]
+then
+
+  cecho "Retype new password:" $magenta
+
+  read -s RENEWDBAPASSWORD
+
+  while [ $NEWDBAPASSWORD != $RENEWDBAPASSWORD ];do
+
+    cecho "Password doesn't match, enter a new password again" $magenta
+
+    cecho "New password:" $magenta
+
+    read -s  NEWDBAPASSWORD
+
+    cecho "Retype new password:" $magenta
+
+    read -s RENEWDBAPASSWORD;done
+
+  DBAPASSWORD=$NEWDBAPASSWORD
+fi
+
+
+#read NEWDBAPASSWORD
+
+#[ -n "$NEWDBAPASSWORD" ] && DBAPASSWORD=$NEWDBAPASSWORD
 
 cecho "Password for the DAV user [without spaces] (default: $DAVPASSWORD):" $magenta
 
-read NEWDAVPASSWORD
+read -s  NEWDAVPASSWORD
 
-[ -n "$NEWDAVPASSWORD" ] && DAVPASSWORD=$NEWDAVPASSWORD
+if [ -n "$NEWDAVPASSWORD" ]
+then
+
+  cecho "Retype new password:" $magenta
+
+  read -s RENEWDAVPASSWORD
+
+  while [ $NEWDAVPASSWORD != $RENEWDAVPASSWORD ];do
+
+    cecho "Password doesn't match, enter a new password again" $magenta
+
+    cecho "New password:" $magenta
+
+    read -s  NEWDAVPASSWORD
+
+    cecho "Retype new password:" $magenta
+
+    read -s RENEWDAVPASSWORD;done
+
+  DAVPASSWORD=$NEWDAVPASSWORD
+fi
+
+#read NEWDAVPASSWORD
+
+#[ -n "$NEWDAVPASSWORD" ] && DAVPASSWORD=$NEWDAVPASSWORD
+
 
 PHPERROR=$(php "$INSTALLDIR/virtuoso/change_passwords.php" $DBAPASSWORD $DAVPASSWORD)
 
@@ -1045,9 +1095,33 @@ read NEWDRUPALUSERNAME
 
 cecho "What is the MySQL password for that username [without spaces] (default password: $DRUPALPASSWORD):" $magenta
 
-read NEWDRUPALPASSWORD
+read -s  NEWDRUPALPASSWORD
 
-[ -n "$NEWDRUPALPASSWORD" ] && DRUPALPASSWORD=$NEWDRUPALPASSWORD
+if [ -n "$NEWDRUPALPASSWORD" ]
+then
+
+  cecho "Retype new password:" $magenta
+
+  read -s RENEWDRUPALPASSWORD
+
+  while [ $NEWDRUPALPASSWORD != $RENEWDRUPALPASSWORD ];do
+
+    cecho "Password doesn't match, enter a new password again" $magenta
+
+    cecho "New password:" $magenta
+
+    cread -s  NEWDRUPALPASSWORD $magenta
+
+    cecho "Retype new password:" $magenta
+
+    read -s RENEWDRUPALPASSWORD;done
+
+  DRUPALPASSWORD=$NEWDRUPALPASSWORD
+fi
+
+#read NEWDRUPALPASSWORD
+
+#[ -n "$NEWDRUPALPASSWORD" ] && DRUPALPASSWORD=$NEWDRUPALPASSWORD
 
 sudo mysqladmin -u $DRUPALUSERNAME --password=$DRUPALPASSWORD create "drupal_construct"
 
@@ -1071,9 +1145,33 @@ read NEWDRUPALADMINUSERNAME
 
 cecho "What password do you want to use for the Drupal admin user? (default: $DRUPALADMINUSERNAMEPASSWORD):" $magenta
 
-read NEWDRUPALADMINUSERNAMEPASSWORD
+read -s  NEWDRUPALADMINUSERNAMEPASSWORD
 
-[ -n "$NEWDRUPALADMINUSERNAMEPASSWORD" ] && DRUPALADMINUSERNAMEPASSWORD=$NEWDRUPALADMINUSERNAMEPASSWORD
+if [ -n "$NEWDRUPALADMINUSERNAMEPASSWORD" ]
+then
+
+  cecho "Retype new password:" $magenta
+
+  read -s RENEWDRUPALADMINUSERNAMEPASSWORD
+
+  while [ $NEWDRUPALADMINUSERNAMEPASSWORD != $RENEWDRUPALADMINUSERNAMEPASSWORD ];do
+
+    cecho "Password doesn't match, enter a new password again" $magenta
+
+    cecho "New password:" $magenta
+
+    read -s  NEWDRUPALADMINUSERNAMEPASSWORD
+
+    cecho "Retype new password:" $magenta
+
+    read -s RENEWDRUPALADMINUSERNAMEPASSWORD;done
+
+  DRUPALADMINUSERNAMEPASSWORD=$NEWDRUPALADMINUSERNAMEPASSWORD
+fi
+
+#read NEWDRUPALADMINUSERNAMEPASSWORD
+
+#[ -n "$NEWDRUPALADMINUSERNAMEPASSWORD" ] && DRUPALADMINUSERNAMEPASSWORD=$NEWDRUPALADMINUSERNAMEPASSWORD
 
 
 cecho "What is the email of the drupal site? (default: $DRUPALSITEMAIL):" $magenta
