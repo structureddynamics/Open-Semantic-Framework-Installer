@@ -977,9 +977,9 @@ cd $INSTALLDIR"/tests/"
 
 cecho "\n\n12.1) Download the latest system integration tests for structWSF...\n"
 
-sudo wget https://github.com/structureddynamics/structWSF-Tests-Suites/zipball/master
+sudo wget https://github.com/structureddynamics/structWSF-Tests-Suites/zipball/1.1
 
-unzip master
+unzip 1.1
 
 cd `ls -d structureddynamics*/`
 
