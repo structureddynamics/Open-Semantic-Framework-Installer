@@ -9,8 +9,8 @@
 |}
 
 == Requirements ==
-# Ubuntu 10.04 (Lucid)
-# 32 Bits Operating System
+# Ubuntu 12.04 LTS (Precise Pangolin)
+# 32 or 64 Bits Operating System
 # Access to internet from your server
 # 5 GB of disk space on the partition where you are installing OSF
 
