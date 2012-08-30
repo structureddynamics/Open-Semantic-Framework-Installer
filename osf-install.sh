@@ -971,7 +971,15 @@ cecho " 12. Installing PHPUnit "
 cecho "------------------------"
 echo -e "\n\n"
 
-sudo apt-get install -y phpunit
+#sudo apt-get install -y phpunit
+
+sudo apt-get install -y php-pear
+
+pear channel-discover pear.phpunit.de
+pear channel-discover pear.symfony-project.com
+pear upgrade-all
+
+sudo pear install --force --alldeps phpunit/PHPUnit
 
 cd $INSTALLDIR"/tests/"
 
