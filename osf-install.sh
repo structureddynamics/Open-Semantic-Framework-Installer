@@ -1250,8 +1250,6 @@ sudo drush -u 1 role-create 'owner/curator'
 
 cecho "\n\n13.8) Creating the permissions, per role and per module...\n"
 
-sudo drush perm-grant 'admin' all
-
 sudo drush perm-grant --roles='anonymous user' --permissions='access comments' 
 sudo drush perm-grant --roles='authenticated user' --permissions='access comments' 
 sudo drush perm-grant --roles='contributor' --permissions='access comments' 
@@ -1348,7 +1346,6 @@ sudo drush perm-grant --roles='authenticated user' --permissions='access conStru
 sudo drush perm-grant --roles='contributor' --permissions='access conStruct view' 
 sudo drush perm-grant --roles='owner/curator' --permissions='access conStruct view' 
 sudo drush perm-grant --roles='admin' --permissions='access conStruct view' 
-
 
 sudo drush perm-grant --roles='authenticated user' --permissions='change own username' 
 sudo drush perm-grant --roles='contributor' --permissions='change own username' 
