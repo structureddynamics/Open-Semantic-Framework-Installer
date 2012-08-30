@@ -1437,13 +1437,13 @@ CLASSHIERARCHY=$(curl http://localhost/ws/ontology/read/ -v -H "Accept: text/xml
 
 echo $CLASSHIERARCHY > classHierarchy.xml
 
-xml_grep -t '/resultset/subject/predicate/object' classHierarchy.xml > classHierarchySerialized.srz
+xml_grep --text_only '/resultset/subject/predicate/object' classHierarchy.xml > classHierarchySerialized.srz
 
 PROPERTYHIERARCHY=$(curl http://localhost/ws/ontology/read/ -v -H "Accept: text/xml" -d "function=getSerializedPropertyHierarchy&registered_ip=self")
 
 echo $PROPERTYHIERARCHY > propertyHierarchy.xml
 
-xml_grep -t '/resultset/subject/predicate/object' propertyHierarchy.xml > propertyHierarchySerialized.srz
+xml_grep --text_only '/resultset/subject/predicate/object' propertyHierarchy.xml > propertyHierarchySerialized.srz
 
 cecho "\n\n14.2) Moving the classes and properties structure file to the ontology folder...\n"
 
