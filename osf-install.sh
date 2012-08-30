@@ -137,7 +137,7 @@ echo -e "\n\n"
 
 cecho "\n\n2.1) Install required packages by PHP5...\n"
 
-sudo apt-get -y install devscripts gcc debhelper fakeroot apache2-mpm-prefork hardening-wrapper libdb-dev libenchant-dev libglib2.0-dev libicu-dev
+sudo apt-get -y install devscripts gcc debhelper fakeroot apache2-mpm-prefork hardening-wrapper libdb-dev libenchant-dev libglib2.0-dev libicu-dev libsqlite0-dev
 
 # Make sure to fix a problem that throws unnecessary PHP notices for a badly commented line in mcrypt
 sudo sed -i 's># configuration for php MCrypt module>; configuration for php MCrypt module>' /etc/php5/cli/conf.d/mcrypt.ini
