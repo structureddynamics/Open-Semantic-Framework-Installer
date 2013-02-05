@@ -1,8 +1,0 @@
-Alias /ws /usr/share/structwsf
-
-<Directory /usr/share/structwsf/>
-  Options +FollowSymLinks
-  AllowOverride All
-  order allow,deny
-  allow from all
-</Directory> 
