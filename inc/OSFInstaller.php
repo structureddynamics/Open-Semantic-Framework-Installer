@@ -2,7 +2,7 @@
   class OSFInstaller
   {
     /* Minimal Ubuntu release version supported by this OSF isntaller script  */    
-    private $supported_minimal_release_version = 12.04;
+    private $supported_minimal_release_version = 12.10;
     
     /* Parsed intaller.ini configuration file */
     private $config;
@@ -213,10 +213,11 @@
       $this->exec('apt-get -y install curl gcc iodbc libssl-dev openssl unzip gawk vim default-jdk ftp-upload');        
             
       $this->installStructWSFPHPAPI();
+
+      $this->installVirtuoso();
       
       $this->installApache2();      
       $this->installPhp5();
-      
       
       
       
@@ -460,58 +461,87 @@
       $this->cecho("-----------------\n", 'WHITE');
       $this->cecho("\n\n", 'WHITE');
       
-//      $this->cecho("Preparing installation...\n", 'WHITE');
-//      $this->exec('mkdir -p /tmp/php5-install/update/build/');
-//                
-//      $this->cecho("Installing required packages for installing PHP5...\n", 'WHITE');
-//      $this->exec('apt-get -y install devscripts gcc debhelper fakeroot apache2-mpm-prefork hardening-wrapper libdb-dev libenchant-dev libglib2.0-dev libicu-dev libsqlite0-dev');
-//      
-//      $this->cecho("Repackaging PHP5 to use iODBC instead of unixODBC...\n", 'WHITE');
-//      
-//      $this->exec("cd /tmp/php5-install/update/build/ \n apt-get -y source php5");            
-//      
-//      $php_folder = rtrim(rtrim(shell_exec("cd /tmp/php5-install/update/build/ \n ls -d php5*/")), '/');
-//      
-//      file_put_contents('/tmp/php5-install/update/build/'.$php_folder.'/debian/control', file_get_contents('resources/php5/control'));
-//      file_put_contents('/tmp/php5-install/update/build/'.$php_folder.'/debian/rules', file_get_contents('resources/php5/rules'));
-//      
-//      $this->exec("apt-get -y build-dep php5");     
-//      $this->exec("apt-get -y remove unixodbc-dev");     
-//      $this->exec("apt-get -y install iodbc libiodbc2 libiodbc2-dev");     
-//      
-//      $this->cecho("Running debuild. This operation can take quite some time so be patient...\n", 'WHITE');
-//      $this->exec("cd /tmp/php5-install/update/build/php5*/ \n debuild -us -uc");     
-            
-        $newVersion = shell_exec("cd /tmp/php5-install/update/build/ \n (ls php5-common*.deb | echo \$(sed s/php5-common//))");
-        $allVersion = shell_exec("cd /tmp/php5-install/update/build/ \n (echo \"$newVersion\" | echo \$(sed s/amd64/all/))");
+      $currentWorkingDirectory = getcwd();
+      
+      $this->cecho("Preparing installation...\n", 'WHITE');
+      $this->exec('mkdir -p /tmp/php5-install/update/build/');
 
-        // In case we are with a i386 server...
-        $allVersion = str_replace('i386', 'all', $allVersion);
-        
-        $currentWorkingDirectory = getcwd();
-        
-        chdir('/tmp/php5-install/update/build/');
-        
-        $this->exec("dpkg -i php5-common".$newVersion); 
-        $this->exec("dpkg -i php5-cgi".$newVersion);
-        $this->exec("dpkg -i php5-cli".$newVersion);
-        $this->exec("dpkg -i php5-curl".$newVersion);
-        $this->exec("dpkg -i libapache2-mod-php5".$newVersion);
-        $this->exec("dpkg -i php5-mysql".$newVersion);
-        $this->exec("dpkg -i php5-odbc".$newVersion);
-        $this->exec("dpkg -i php5-gd".$newVersion);
-        $this->exec("dpkg -i php5".$allVersion);
+      $this->cecho("Installing required packages for installing PHP5...\n", 'WHITE');
+      $this->exec('apt-get -y install devscripts gcc debhelper fakeroot apache2-mpm-prefork hardening-wrapper libdb-dev libenchant-dev libglib2.0-dev libicu-dev libsqlite0-dev');
+      
+      $this->cecho("Repackaging PHP5 to use iODBC instead of unixODBC...\n", 'WHITE');
 
-        // Place dpkg hold on the custom packages
-        $this->exec('dpkg --set-selections && "php5-common hold" | dpkg --set-selections && echo "php5-cgi hold" | dpkg --set-selections && echo "php5-cli hold" | dpkg --set-selections && echo "php5-curl hold" | dpkg --set-selections && echo "libapache2-mod-php5 hold" | dpkg --set-selections && echo "php5-mysql hold" | dpkg --set-selections && echo "php5-odbc hold" | dpkg --set-selections && echo "php5-gd hold" | dpkg --set-selections && echo "php5 hold" | dpkg --set-selections');     
+      chdir('/tmp/php5-install/update/build/');
+      
+      $this->exec("apt-get -y source php5");            
+      
+      $php_folder = rtrim(rtrim(shell_exec("ls -d php5*/")), '/');
 
-        // Place aptitude/apt-get hold on the custom packages
-        $this->exec('aptitude hold php5-common php5-cgi php5-cli php5-curl libapache2-mod-php5 php5-mysql php5-odbc php5-gd php5');
+      chdir($currentWorkingDirectory);
+      
+      file_put_contents('/tmp/php5-install/update/build/'.$php_folder.'/debian/control', file_get_contents('resources/php5/control'));
+      file_put_contents('/tmp/php5-install/update/build/'.$php_folder.'/debian/rules', file_get_contents('resources/php5/rules'));
 
-        chdir($currentWorkingDirectory);
-        
-        $this->cecho("Cleaning installation...\n", 'WHITE');
-        $this->exec('rm -rf /tmp/php5-install/');
+      chdir('/tmp/php5-install/update/build/');
+      
+      $this->exec("apt-get -y build-dep php5");     
+      $this->exec("apt-get -y remove unixodbc-dev");     
+      $this->exec("apt-get -y install iodbc libiodbc2 libiodbc2-dev libt1-dev");     
+      
+      $this->cecho("Running debuild. This operation can take quite some time so be patient...\n", 'WHITE');
+      
+      chdir('/tmp/php5-install/update/build/'.$php_folder.'/');
+      
+      $this->exec("debuild -us -uc");     
+      
+      chdir('/tmp/php5-install/update/build/');
+          
+      $newVersion = shell_exec("(ls php5-common*.deb | echo \$(sed s/php5-common//))");
+      $allVersion = shell_exec("(echo \"$newVersion\" | echo \$(sed s/amd64/all/))");
+
+      // In case we are with a i386 server...
+      $allVersion = str_replace('i386', 'all', $allVersion);
+      
+      $this->exec("dpkg -i php5-common".$newVersion); 
+      $this->exec("dpkg -i php5-cgi".$newVersion);
+      $this->exec("dpkg -i php5-cli".$newVersion);
+      $this->exec("dpkg -i php5-curl".$newVersion);
+      $this->exec("dpkg -i libapache2-mod-php5".$newVersion);
+      $this->exec("dpkg -i php5-mysql".$newVersion);
+      $this->exec("dpkg -i php5-odbc".$newVersion);
+      $this->exec("dpkg -i php5-gd".$newVersion);
+      $this->exec("dpkg -i php5".$allVersion);
+
+      // Place dpkg hold on the custom packages
+      $this->exec('dpkg --set-selections && "php5-common hold" | dpkg --set-selections && echo "php5-cgi hold" | dpkg --set-selections && echo "php5-cli hold" | dpkg --set-selections && echo "php5-curl hold" | dpkg --set-selections && echo "libapache2-mod-php5 hold" | dpkg --set-selections && echo "php5-mysql hold" | dpkg --set-selections && echo "php5-odbc hold" | dpkg --set-selections && echo "php5-gd hold" | dpkg --set-selections && echo "php5 hold" | dpkg --set-selections');     
+
+      // Place aptitude/apt-get hold on the custom packages
+      $this->exec('aptitude hold php5-common php5-cgi php5-cli php5-curl libapache2-mod-php5 php5-mysql php5-odbc php5-gd php5');
+
+      chdir($currentWorkingDirectory);
+      
+      $this->cecho("Cleaning installation...\n", 'WHITE');
+      $this->exec('rm -rf /tmp/php5-install/');
+    }
+    
+    /**
+    * Install Virtuoso as required by OSF
+    */
+    public function installVirtuoso()
+    {
+      $this->cecho("\n\n", 'WHITE');
+      $this->cecho("---------------------\n", 'WHITE');
+      $this->cecho(" Installing Virtuoso \n", 'WHITE');
+      $this->cecho("---------------------\n", 'WHITE');
+      $this->cecho("\n\n", 'WHITE');   
+      
+      // Need to use passthru because the installer promp the user with some screens
+      // where they have to answer questions
+      
+      // This cannot be logged into the log
+      passthru('apt-get -y install virtuoso-server');
+      
+      // Fix this this /etc/default/virtuoso-opensource-6.1
     }
 
     /**
