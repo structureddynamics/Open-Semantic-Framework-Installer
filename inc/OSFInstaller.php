@@ -218,7 +218,11 @@
       
       $this->installPhp5();
       
-      $this->installApache2();      
+      $this->installApache2();  
+      
+      $this->installMySQL();    
+      
+      $this->installPhpMyAdmin();
       
       
       
@@ -561,7 +565,7 @@
       $this->cecho(" Installing Apache2 \n", 'WHITE');
       $this->cecho("--------------------\n", 'WHITE');
       $this->cecho("\n\n", 'WHITE');
-      /*
+      
       $this->cecho("Installing Apache2...\n", 'WHITE');
       $this->exec('apt-get -y install apache2');
       
@@ -569,8 +573,7 @@
       $this->exec('a2enmod rewrite');
       
       $this->cecho("Restarting Apache2...\n", 'WHITE');
-      $this->exec('/etc/init.d/apache2 restart');
-      */
+      $this->exec('/etc/init.d/apache2 restart');      
 
       $this->cecho("Performing some tests on the new Apache2 instance...\n", 'WHITE');
       $this->cecho("Checking if the Apache2 instance is up and running...\n", 'WHITE');
@@ -590,6 +593,72 @@
       }
     }
 
+    /**
+    * Install MySQL as required by OSF
+    */
+    public function installMySQL()
+    {
+      if(!$this->validOS())
+      {
+        $this->cecho("This option is only available on Ubuntu. Aborded.\n", 'RED');
+        die;
+      }
+      
+      $this->cecho("\n\n", 'WHITE');
+      $this->cecho("------------------\n", 'WHITE');
+      $this->cecho(" Installing MySQL \n", 'WHITE');
+      $this->cecho("------------------\n", 'WHITE');
+      $this->cecho("\n\n", 'WHITE');
+
+      $this->cecho("Installing MySQL...\n", 'WHITE');
+      
+      // Need to use passthru because the installer promp the user with some screens
+      // where they have to answer questions
+      
+      // This cannot be logged into the log
+      passthru('apt-get -y install mysql-server');
+      
+      $this->cecho("Updating php.ini to enable mysql...\n", 'WHITE');
+      $this->exec('sed -r -i "s/; +extension=msql.so/extension=mysql.so/" /etc/php5/apache2/php.ini');
+      
+      $this->cecho("Restarting Apache2...\n", 'WHITE');
+      $this->exec('/etc/init.d/apache2 restart');
+
+      $this->cecho("Performing some tests on the new Apache2 instance...\n", 'WHITE');
+      $this->cecho("Checking if the Apache2 instance is up and running...\n", 'WHITE');
+      
+      if(strpos(shell_exec('curl -s http://localhost'), 'It works!') === FALSE)
+      {
+        $this->cecho("[Error] Apache2 is not currently running...\n", 'YELLOW');
+      }
+    }    
+    
+    /**
+    * Install MySQL as required by OSF
+    */
+    public function installPhpMyAdmin()
+    {
+      if(!$this->validOS())
+      {
+        $this->cecho("This option is only available on Ubuntu. Aborded.\n", 'RED');
+        die;
+      }
+      
+      $this->cecho("\n\n", 'WHITE');
+      $this->cecho("-----------------------\n", 'WHITE');
+      $this->cecho(" Installing PhpMyAdmin \n", 'WHITE');
+      $this->cecho("-----------------------\n", 'WHITE');
+      $this->cecho("\n\n", 'WHITE');
+
+      $this->cecho("Installing PhpMyAdmin...\n", 'WHITE');
+      
+      // Need to use passthru because the installer promp the user with some screens
+      // where they have to answer questions
+      
+      // This cannot be logged into the log
+      passthru('apt-get -y install phpmyadmin');
+    }     
+    
     /**
     * Execute a shell command. The command is also logged into the logging file.
     *     

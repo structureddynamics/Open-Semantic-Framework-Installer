@@ -18,7 +18,10 @@
                                       'verbose::',
                                       'install-osf::',
                                       'install-apache2::',
+                                      'install-mysql::',
+                                      'install-phpmyadmin::',
                                       'install-php5::',
+                                      'install-virtuoso::',
                                       'install-structwsf-php-api::',
                                       'upgrade-structwsf-php-api::',
                                       'install-datasets-management-tool::',
@@ -36,6 +39,10 @@
     $installer->cecho("Installation Options:\n", 'WHITE');
     $installer->cecho("--install-osf                           Install the Open Semantic Framework \n", 'WHITE');
     $installer->cecho("--install-apache2                       Install Apache2 \n", 'WHITE');
+    $installer->cecho("--install-mysql                         Install MySQL \n", 'WHITE');
+    $installer->cecho("--install-phpmyadmin                    Install PhpMyAdmin \n", 'WHITE');
+    $installer->cecho("--install-virtuoso                      Install Virtuoso \n", 'WHITE');
+    $installer->cecho("--install-php5                          Install PHP5 \n", 'WHITE');
     $installer->cecho("--install-structwsf-php-api             Install the structWSF-PHP-API library \n", 'WHITE');
     $installer->cecho("--install-datasets-management-tool      Install the Datasets Management Tool \n", 'WHITE');
     $installer->cecho("--install-ontologies-management-tool    Install the Ontologies Management Tool \n", 'WHITE');
@@ -101,10 +108,28 @@
     $installer->installApache2();
   }
   
-  // Install PHP5 on the system
-  if(isset($arguments['install-php5']))
+  // Install MySQL on the system
+  if(isset($arguments['install-mysql']))
   {
-    $installer->installPhp5();
+    $installer->installMySQL();
+  }
+  
+  // Install MySQL on the system
+  if(isset($arguments['install-mysql']))
+  {
+    $installer->installMySQL();
+  }
+  
+  // Install PhpMyAdmin on the system
+  if(isset($arguments['install-phpmyadmin']))
+  {
+    $installer->installPhpMyAdmin();
+  }
+  
+  // Install Virtuoso on the system
+  if(isset($arguments['install-virtuoso']))
+  {
+    $installer->installVirtuoso();
   }
   
 ?>
