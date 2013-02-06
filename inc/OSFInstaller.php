@@ -216,8 +216,9 @@
 
       $this->installVirtuoso();
       
-      $this->installApache2();      
       $this->installPhp5();
+      
+      $this->installApache2();      
       
       
       
@@ -560,7 +561,7 @@
       $this->cecho(" Installing Apache2 \n", 'WHITE');
       $this->cecho("--------------------\n", 'WHITE');
       $this->cecho("\n\n", 'WHITE');
-      
+      /*
       $this->cecho("Installing Apache2...\n", 'WHITE');
       $this->exec('apt-get -y install apache2');
       
@@ -569,6 +570,24 @@
       
       $this->cecho("Restarting Apache2...\n", 'WHITE');
       $this->exec('/etc/init.d/apache2 restart');
+      */
+
+      $this->cecho("Performing some tests on the new Apache2 instance...\n", 'WHITE');
+      $this->cecho("Checking if the Apache2 instance is up and running...\n", 'WHITE');
+      
+      if(strpos(shell_exec('curl -s http://localhost'), 'It works!') === FALSE)
+      {
+        $this->cecho("[Error] Apache2 is not currently running...\n", 'YELLOW');
+      }
+      else
+      {
+        $this->cecho("Checking if the Apache2 instance is using IPv6...\n", 'WHITE');
+        
+        if(strpos(shell_exec('netstat -tulpn | grep apache2'), ':::80') !== FALSE)
+        {
+          $this->cecho("Apache2 is running using IPv6. Check this web page for more information on what to do: http://techwiki.openstructs.org/index.php/StructWSF_Installation_Guide#IPv6_Not_Supported...\n", 'YELLOW');
+        }
+      }
     }
 
     /**
