@@ -1,0 +1,110 @@
+#!/usr/bin/php -q
+
+<?php
+  
+  if(PHP_SAPI != 'cli')
+  {
+    die('This is a shell application, so make sure to run this application in your terminal.');
+  }
+  
+  ini_set('memory_limit', '500M');
+  
+  include_once('inc/OSFInstaller.php');
+  
+  $installer = new OSFInstaller(getcwd().'/installer.ini');
+  
+  // Get commandline options
+  $arguments = getopt('h::v::', array('help::',
+                                      'verbose::',
+                                      'install-osf::',
+                                      'install-apache2::',
+                                      'install-php5::',
+                                      'install-structwsf-php-api::',
+                                      'upgrade-structwsf-php-api::',
+                                      'install-datasets-management-tool::',
+                                      'upgrade-datasets-management-tool::',  
+                                      'install-ontologies-management-tool::',
+                                      'upgrade-ontologies-management-tool::'));  
+  
+  // Displaying DSF's help screen if required
+  if(isset($arguments['h']) || isset($arguments['help']))
+  {
+    $installer->cecho("Usage: osf-install [OPTIONS]\n\n\n", 'WHITE');
+    $installer->cecho("General Options:\n", 'WHITE');
+    $installer->cecho("-h, --help                              Show this help section\n", 'WHITE');
+    $installer->cecho("-v, --verbose                           Make this insaller verbose\n\n", 'WHITE');
+    $installer->cecho("Installation Options:\n", 'WHITE');
+    $installer->cecho("--install-osf                           Install the Open Semantic Framework \n", 'WHITE');
+    $installer->cecho("--install-apache2                       Install Apache2 \n", 'WHITE');
+    $installer->cecho("--install-structwsf-php-api             Install the structWSF-PHP-API library \n", 'WHITE');
+    $installer->cecho("--install-datasets-management-tool      Install the Datasets Management Tool \n", 'WHITE');
+    $installer->cecho("--install-ontologies-management-tool    Install the Ontologies Management Tool \n", 'WHITE');
+    $installer->cecho("\nUpgrade Options:\n", 'WHITE');
+    $installer->cecho("--upgrade-structwsf-php-api             Upgrade the structWSF-PHP-API library \n", 'WHITE');
+    $installer->cecho("--upgrade-datasets-management-tool      Upgrade the Datasets Management Tool \n", 'WHITE');
+    $installer->cecho("--upgrade-ontologies-management-tool    Upgrade the Ontologies Management Tool \n", 'WHITE');
+    $installer->cecho("\n\n", 'WHITE');
+    die;
+  }
+
+  // Make the output more verbose
+  if(isset($arguments['v']) || isset($arguments['verbose']))
+  {
+    $installer->verbose();
+  }
+
+  // Install the Open Semantic Framework
+  if(isset($arguments['install-osf']))
+  {
+    $installer->installOSF();
+  }
+
+  // Install the structWSF-PHP-API library
+  if(isset($arguments['install-structwsf-php-api']))
+  {
+    $installer->installStructWSFPHPAPI();
+  }
+
+  // Upgrade the structWSF-PHP-API library
+  if(isset($arguments['upgrade-structwsf-php-api']))
+  {
+    $installer->upgradeStructWSFPHPAPI();
+  }
+
+  // Install the Datasets Management Tool library
+  if(isset($arguments['install-datasets-management-tool']))
+  {
+    $installer->installDatasetsManagementTool();
+  }
+
+  // Upgrade the Datasets Management Tool library
+  if(isset($arguments['upgrade-datasets-management-tool']))
+  {
+    $installer->upgradeDatasetsManagementTool();
+  }
+
+  // Install the Ontologies Management Tool library
+  if(isset($arguments['install-ontologies-management-tool']))
+  {
+    $installer->installOntologiesManagementTool();
+  }
+
+  // Upgrade the Ontologies Management Tool library
+  if(isset($arguments['upgrade-ontologies-management-tool']))
+  {
+    $installer->upgradeOntologiesManagementTool();
+  }
+  
+  // Install Apache2 on the system
+  if(isset($arguments['install-apache2']))
+  {
+    $installer->installApache2();
+  }
+  
+  // Install PHP5 on the system
+  if(isset($arguments['install-php5']))
+  {
+    $installer->installPhp5();
+  }
+  
+?>
