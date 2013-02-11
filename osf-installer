@@ -10,8 +10,24 @@
   ini_set('memory_limit', '500M');
   
   include_once('inc/OSFInstaller.php');
+  include_once('inc/OSFInstaller_Ubuntu_12_10.php');
   
-  $installer = new OSFInstaller(getcwd().'/installer.ini');
+  $installer;
+  
+  // Detects what is the version of the current linux distribution.
+  // Let's use the installer for the good distribution and the good version.
+  // If the distribution/version is not supported, the generic installer
+  // will be used which means that some features may be disabled.
+  if(OSFInstaller_Ubuntu_12_10::isWorkingInstaller())
+  {
+    $installer = new OSFInstaller_Ubuntu_12_10(getcwd().'/installer.ini');  
+  }
+  else
+  {
+    $installer = new OSFInstallerGeneric(getcwd().'/installer.ini');
+  }
+  
+  
   
   // Get commandline options
   $arguments = getopt('h::v::', array('help::',
@@ -22,8 +38,12 @@
                                       'install-phpmyadmin::',
                                       'install-php5::',
                                       'install-virtuoso::',
+                                      'install-solr::',
+                                      'install-structwsf::',
                                       'install-structwsf-php-api::',
                                       'upgrade-structwsf-php-api::',
+                                      'install-structwsf-tests-suites::',
+                                      'upgrade-structwsf-tests-suites::',
                                       'install-datasets-management-tool::',
                                       'upgrade-datasets-management-tool::',  
                                       'install-ontologies-management-tool::',
@@ -42,12 +62,15 @@
     $installer->cecho("--install-mysql                         Install MySQL \n", 'WHITE');
     $installer->cecho("--install-phpmyadmin                    Install PhpMyAdmin \n", 'WHITE');
     $installer->cecho("--install-virtuoso                      Install Virtuoso \n", 'WHITE');
+    $installer->cecho("--install-solr                          Install Solr \n", 'WHITE');
     $installer->cecho("--install-php5                          Install PHP5 \n", 'WHITE');
     $installer->cecho("--install-structwsf-php-api             Install the structWSF-PHP-API library \n", 'WHITE');
+    $installer->cecho("--install-structwsf-tests-suites        Install the structWSF tests suites \n", 'WHITE');
     $installer->cecho("--install-datasets-management-tool      Install the Datasets Management Tool \n", 'WHITE');
     $installer->cecho("--install-ontologies-management-tool    Install the Ontologies Management Tool \n", 'WHITE');
     $installer->cecho("\nUpgrade Options:\n", 'WHITE');
     $installer->cecho("--upgrade-structwsf-php-api             Upgrade the structWSF-PHP-API library \n", 'WHITE');
+    $installer->cecho("--upgrade-structwsf-tests-suites        Upgrade the structWSF tests suites \n", 'WHITE');
     $installer->cecho("--upgrade-datasets-management-tool      Upgrade the Datasets Management Tool \n", 'WHITE');
     $installer->cecho("--upgrade-ontologies-management-tool    Upgrade the Ontologies Management Tool \n", 'WHITE');
     $installer->cecho("\n\n", 'WHITE');
@@ -102,16 +125,28 @@
     $installer->upgradeOntologiesManagementTool();
   }
   
+  // Install structWSF Tests Suites
+  if(isset($arguments['install-structwsf-tests-suites']))
+  {
+    $installer->installStructWSFTestsSuites();
+  }
+  
+  // Upgrade structWSF Tests Suites
+  if(isset($arguments['upgrade-structwsf-tests-suites']))
+  {
+    $installer->upgradeStructWSFTestsSuites();
+  }
+  
   // Install Apache2 on the system
   if(isset($arguments['install-apache2']))
   {
     $installer->installApache2();
   }
   
-  // Install MySQL on the system
-  if(isset($arguments['install-mysql']))
+  // Install PHP5 on the system
+  if(isset($arguments['install-php5']))
   {
-    $installer->installMySQL();
+    $installer->installPhp5();
   }
   
   // Install MySQL on the system
@@ -126,10 +161,22 @@
     $installer->installPhpMyAdmin();
   }
   
+  // Install structWSF on the system
+  if(isset($arguments['install-structwsf']))
+  {
+    $installer->installStructWSF();
+  }
+  
   // Install Virtuoso on the system
   if(isset($arguments['install-virtuoso']))
   {
     $installer->installVirtuoso();
+  }
+  
+  // Install Solr on the system
+  if(isset($arguments['install-solr']))
+  {
+    $installer->installSolr();
   }
   
 ?>
