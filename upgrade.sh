@@ -44,7 +44,7 @@ sudo wget https://github.com/structureddynamics/Open-Semantic-Framework-Installe
 
 unzip 2.0-php.zip
 
-cd Open-Semantic-Framework-Installer
+cd Open-Semantic-Framework-Installer*
 
 mv ../installer.ini ../installer.bak.ini
 
@@ -52,7 +52,7 @@ sudo mv -f * ../
 
 cd ..
 
-sudo rm -rf Open-Semantic-Framework-Installer
+sudo rm -rf Open-Semantic-Framework-Installer*
 sudo rm -f 2.0-php.zip
 
 cecho "\n\nThe OSD-Installer has been upgraded\n"
