@@ -108,13 +108,6 @@
         $this->log_file = $this->logging_folder.'/osf-install-'.date('Y-m-d_H:i:s').'.log';        
       }
     }
-    
-    /**
-    * Install the entire OSF stack. Running this command will install the full stack on the server
-    * according to the settings specified in the installer.ini file.
-    */
-    abstract public function installOSF();
-    
     /**
     * Tries to install PHP5 using the packages available for the linux distribution
     */
@@ -152,6 +145,67 @@
     */
     abstract public function installPhpMyAdmin();    
 
+    /**
+    * Install the entire OSF stack. Running this command will install the full stack on the server
+    * according to the settings specified in the installer.ini file.
+    */
+    public function installOSF()
+    {
+      $this->cecho("You are about to install the Open Semantic Framework.\n", 'WHITE');
+      $this->cecho("This installation process will install all the softwares that are part of the OSF stack. It will take 10 minutes of your time, but the process will go on for a few hours because all pieces of software that get compiled.\n\n", 'WHITE');
+      $this->cecho("The log of this installation is available here: ".$this->log_file."\n", 'WHITE');
+      $this->cecho("\n\nCopyright 2008-13. Structured Dynamics LLC. All rights reserved.\n\n", 'WHITE');
+      
+      $this->cecho("\n\n");
+      $this->cecho("---------------------------------\n", 'WHITE');
+      $this->cecho(" General Settings Initialization \n", 'WHITE'); 
+      $this->cecho("---------------------------------\n", 'WHITE'); 
+      $this->cecho("\n\n");
+
+      $this->cecho("\n\n");
+      $this->cecho("------------------------\n", 'WHITE');
+      $this->cecho(" Installing prerequires \n", 'WHITE');
+      $this->cecho("------------------------\n", 'WHITE');
+      $this->cecho("\n\n");
+
+      $yes = $this->isYes($this->getInput("We recommand you to upgrade all softwares of the server. Would you like to do this right now? (yes/no)"));             
+      
+      if($yes)
+      {
+        $this->cecho("Updating the package registry...\n", 'WHITE');
+        $this->exec('apt-get -y update');
+        
+        $this->cecho("Upgrading the server...\n", 'WHITE');
+        $this->exec('apt-get -y upgrade');        
+      }
+      
+      $this->cecho("Installing required general packages...\n", 'WHITE');
+      $this->exec('apt-get -y install curl gcc libssl-dev openssl gawk vim default-jdk ftp-upload');        
+            
+      // Dependency chain:
+      // PHP5 depends on MySQL
+      // Virtuoso depends on PHP5
+
+      $this->installMySQL();    
+
+      $this->installPhp5();
+     
+      $this->installApache2();  
+
+      $this->installPhpMyAdmin();
+      
+      $this->installVirtuoso();
+      
+      $this->installSolr();
+
+      $this->installStructWSFPHPAPI();
+      $this->installDatasetsManagementTool();
+      $this->installOntologiesManagementTool();
+
+      $this->installStructWSF();      
+    }
+    
+    
     /**
     * Install the structWSF-PHP-API library
     * 
@@ -315,7 +369,7 @@
       $this->cecho(" Installing structWSF \n", 'WHITE');
       $this->cecho("----------------------\n", 'WHITE');
       $this->cecho("\n\n", 'WHITE');          
-      /*      
+  
       if(is_dir($this->structwsf_folder.'/StructuredDynamics/structwsf/ws/'))                
       {
         $this->cecho("The structWSF is already installed. Consider upgrading it with the option: --upgrade-structwsf\n", 'YELLOW');
@@ -511,25 +565,6 @@
       $this->cecho("Restart Apache2...\n", 'WHITE');
       $this->exec('/etc/init.d/apache2 restart');
 
-      $this->cecho("Create Data & Ontologies folders...\n", 'WHITE');
-      
-      $this->exec('mkdir -p "'.$this->data_folder.'/ontologies/files/"');
-      $this->exec('mkdir -p "'.$this->data_folder.'/ontologies/structure/"');
-
-      $this->cecho("Download the core OSF ontologies files...\n", 'WHITE');
-
-      $this->chdir($this->data_folder.'/ontologies/files');
-            
-      $this->exec('wget -q https://raw.github.com/structureddynamics/Ontologies-Open-Semantic-Framework/master/aggr/aggr.owl');
-      $this->exec('wget -q sudo wget https://raw.github.com/structureddynamics/Ontologies-Open-Semantic-Framework/master/iron/iron.owl');
-      $this->exec('wget -q sudo wget https://raw.github.com/structureddynamics/Ontologies-Open-Semantic-Framework/master/owl/owl.rdf');
-      $this->exec('wget -q sudo wget https://raw.github.com/structureddynamics/Ontologies-Open-Semantic-Framework/master/rdf/rdf.xml');
-      $this->exec('wget -q sudo wget https://raw.github.com/structureddynamics/Ontologies-Open-Semantic-Framework/master/rdf/rdfs.xml');
-      $this->exec('wget -q sudo wget https://raw.github.com/structureddynamics/Ontologies-Open-Semantic-Framework/master/sco/sco.owl');
-      $this->exec('wget -q sudo wget https://raw.github.com/structureddynamics/Ontologies-Open-Semantic-Framework/master/wgs84/wgs84.owl');
-      $this->exec('wget -q sudo wget https://raw.github.com/structureddynamics/Ontologies-Open-Semantic-Framework/master/wsf/wsf.owl');
-      
-      
       $this->cecho("Create the WSF Network...\n", 'WHITE');
       
       $this->cecho("Reset WSF...\n", 'WHITE');
@@ -573,10 +608,39 @@
       $this->chdir($this->structwsf_folder.$ns.'/auth/');
       
       rename('wsf_indexer.php', 'wsf_indexer_'.$shadow.'.php');
+
+      $this->cecho("Create Data & Ontologies folders...\n", 'WHITE');
       
+      $this->exec('mkdir -p "'.$this->data_folder.'/ontologies/files/"');
+      $this->exec('mkdir -p "'.$this->data_folder.'/ontologies/structure/"');
+
+      $this->cecho("Download the core OSF ontologies files...\n", 'WHITE');
+
+      $this->chdir($this->data_folder.'/ontologies/files');
+            
+      $this->exec('wget -q https://raw.github.com/structureddynamics/Ontologies-Open-Semantic-Framework/master/aggr/aggr.owl');
+      $this->exec('wget -q sudo wget https://raw.github.com/structureddynamics/Ontologies-Open-Semantic-Framework/master/iron/iron.owl');
+      $this->exec('wget -q sudo wget https://raw.github.com/structureddynamics/Ontologies-Open-Semantic-Framework/master/owl/owl.rdf');
+      $this->exec('wget -q sudo wget https://raw.github.com/structureddynamics/Ontologies-Open-Semantic-Framework/master/rdf/rdf.xml');
+      $this->exec('wget -q sudo wget https://raw.github.com/structureddynamics/Ontologies-Open-Semantic-Framework/master/rdf/rdfs.xml');
+      $this->exec('wget -q sudo wget https://raw.github.com/structureddynamics/Ontologies-Open-Semantic-Framework/master/sco/sco.owl');
+      $this->exec('wget -q sudo wget https://raw.github.com/structureddynamics/Ontologies-Open-Semantic-Framework/master/wgs84/wgs84.owl');
+      $this->exec('wget -q sudo wget https://raw.github.com/structureddynamics/Ontologies-Open-Semantic-Framework/master/wsf/wsf.owl');
+
+      $this->cecho("Load ontologies...\n", 'WHITE');
+      
+      $this->chdir($this->ontologies_management_tool_folder);
+      
+      $this->exec('php sync.php --generate-structures="'.$this->data_folder.'ontologies/structure/" --structwsf="http://'.$this->structwsf_domain.'/ws/"');
+
+      $this->cecho("Create underlying ontological structures...\n", 'WHITE');
+      
+      $this->exec('php sync.php --load-all --load-list="'.rtrim($currentWorkingDirectory, '/').'/resources/structwsf/ontologies.lst" --structwsf="http://'.$this->structwsf_domain.'/ws/"');
+
       $this->installStructWSFTestsSuites();
 
       $this->chdir($currentWorkingDirectory);
+
       
       $this->cecho("Set files owner permissions...\n", 'WHITE');
       
@@ -587,7 +651,6 @@
       
       $this->cecho("Cleaning installation folder...\n", 'WHITE');
       $this->exec('rm -rf /tmp/structwsf-install/');  
-      */
       
       $this->runStructWSFTestsSuites($this->structwsf_folder);
     }    

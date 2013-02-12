@@ -6,10 +6,6 @@
     * Install the entire OSF stack. Running this command will install the full stack on the server
     * according to the settings specified in the installer.ini file.
     */
-    public function installOSF()
-    {
-      $this->cecho("Option not supported for this Linux distribution and version.\n", 'RED');
-    }
     
     /**
     * Tries to install PHP5 using the packages available for the linux distribution

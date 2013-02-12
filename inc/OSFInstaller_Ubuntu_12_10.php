@@ -1,65 +1,6 @@
 <?php
   class OSFInstaller_Ubuntu_12_10 extends OSFInstaller
   {
-    /**
-    * Install the entire OSF stack. Running this command will install the full stack on the server
-    * according to the settings specified in the installer.ini file.
-    */
-    public function installOSF()
-    {
-      $this->cecho("You are about to install the Open Semantic Framework.\n", 'WHITE');
-      $this->cecho("This installation process will install all the softwares that are part of the OSF stack. It will take 10 minutes of your time, but the process will go on for a few hours because all pieces of software that get compiled.\n\n", 'WHITE');
-      $this->cecho("The log of this installation is available here: ".$this->log_file."\n", 'WHITE');
-      $this->cecho("\n\nCopyright 2008-13. Structured Dynamics LLC. All rights reserved.\n\n", 'WHITE');
-      
-      $this->cecho("\n\n");
-      $this->cecho("---------------------------------\n", 'WHITE');
-      $this->cecho(" General Settings Initialization \n", 'WHITE'); 
-      $this->cecho("---------------------------------\n", 'WHITE'); 
-      $this->cecho("\n\n");
-
-      $this->cecho("\n\n");
-      $this->cecho("------------------------\n", 'WHITE');
-      $this->cecho(" Installing prerequires \n", 'WHITE');
-      $this->cecho("------------------------\n", 'WHITE');
-      $this->cecho("\n\n");
-
-      $yes = $this->isYes($this->getInput("We recommand you to upgrade all softwares of the server. Would you like to do this right now? (yes/no)"));             
-      
-      if($yes)
-      {
-        $this->cecho("Updating the package registry...\n", 'WHITE');
-        $this->exec('apt-get -y update');
-        
-        $this->cecho("Upgrading the server...\n", 'WHITE');
-        $this->exec('apt-get -y upgrade');        
-      }
-      
-      $this->cecho("Installing required general packages...\n", 'WHITE');
-      $this->exec('apt-get -y install curl gcc libssl-dev openssl gawk vim default-jdk ftp-upload');        
-            
-      // Dependency chain:
-      // PHP5 depends on MySQL
-      // Virtuoso depends on PHP5
-
-      $this->installMySQL();    
-
-      $this->installPhp5();
-     
-      $this->installApache2();  
-
-      $this->installPhpMyAdmin();
-      
-      $this->installVirtuoso();
-      
-      $this->installSolr();
-      
-      
-      $this->installStructWSFPHPAPI();
-      $this->installDatasetsManagementTool();
-      $this->installOntologiesManagementTool();
-    }
- 
     public function installPhp5()
     {
       $this->cecho("\n\n", 'WHITE');
