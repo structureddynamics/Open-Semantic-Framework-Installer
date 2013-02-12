@@ -2,9 +2,9 @@ The Open Semantic Framework Installer script is used to install and deploy a OSF
 
 Requirements
 ------------
-* Ubuntu 12.04 LTS (Precise Pangolin)
-* PHP 5.3
-* 32 or 64 Bits Operating System
+* Ubuntu 12.10
+* PHP 5.3 or higher
+* 64 Bits Operating System
 * Access to internet from your server
 * 5 GB of disk space on the partition where you are installing OSF
 
@@ -12,10 +12,21 @@ Installing the Open Semantic Framework
 --------------------------------------
 The only steps needed to install the Open Semantic Framework are to:
 
+```
+wget https://raw.github.com/structureddynamics/Open-Semantic-Framework-Installer/2.0-php/install.sh
+
+chmod 755 install.sh
+
+./install.sh
+
+./osf-installer --install-osf -v
+```
+
 Usage
 -----
 ```
 Usage: osf-install [OPTIONS]
+
 
 General Options:
 -h, --help                              Show this help section
@@ -24,12 +35,19 @@ General Options:
 Installation Options:
 --install-osf                           Install the Open Semantic Framework
 --install-apache2                       Install Apache2
+--install-mysql                         Install MySQL
+--install-phpmyadmin                    Install PhpMyAdmin
+--install-virtuoso                      Install Virtuoso
+--install-solr                          Install Solr
+--install-php5                          Install PHP5
 --install-structwsf-php-api             Install the structWSF-PHP-API library
+--install-structwsf-tests-suites        Install the structWSF tests suites
 --install-datasets-management-tool      Install the Datasets Management Tool
 --install-ontologies-management-tool    Install the Ontologies Management Tool
 
 Upgrade Options:
 --upgrade-structwsf-php-api             Upgrade the structWSF-PHP-API library
+--upgrade-structwsf-tests-suites        Upgrade the structWSF tests suites
 --upgrade-datasets-management-tool      Upgrade the Datasets Management Tool
 --upgrade-ontologies-management-tool    Upgrade the Ontologies Management Tool
 ```
