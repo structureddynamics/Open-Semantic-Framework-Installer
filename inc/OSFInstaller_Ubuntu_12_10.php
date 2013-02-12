@@ -186,9 +186,14 @@
       
       $this->exec('apt-mark unhold php5-odbc');
       
-      $this->exec('dpkg -i --ignore-depends=libiodbc2 resources/php5/php5-odbc_5.4.6-1ubuntu1.1_amd64.deb ');      
-      // dpkg -i --ignore-depends=libiodbc2 php5-odbc_5.4.6-1ubuntu1.1_amd64.deb 
+      $this->exec('dpkg -i --ignore-depends=libiodbc2 resources/php5/php5-odbc_5.4.6-1ubuntu1.1_amd64.deb');      
 
+      $status = file_get_contents('/var/lib/dpkg/status');
+      $status = str_replace('Depends: libc6 (>= 2.14), libiodbc2 (>= 3.52.7), phpapi-20100525, php5-common (= 5.4.6-1ubuntu1.1), ucf',
+                            'Depends: libc6 (>= 2.14), phpapi-20100525, php5-common (= 5.4.6-1ubuntu1.1), ucf',
+                            $status);
+      file_put_contents('/var/lib/dpkg/status', $status);
+      
       $this->exec('apt-mark hold php5-odbc');
       
       // Then we have to install the libiodbc2 by hand
