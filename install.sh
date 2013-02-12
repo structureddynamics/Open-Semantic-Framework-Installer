@@ -43,6 +43,7 @@ cecho "\n\nInstalling requirements...\n"
 sudo apt-get -y update
 sudo apt-get -y upgrade
 sudo apt-get -y install php5
+sudo apt-get -y install unzip
 
 cecho "\n\nDownload the latest version of the OSF Installer tool...\n"
 
@@ -50,14 +51,15 @@ sudo wget https://github.com/structureddynamics/Open-Semantic-Framework-Installe
 
 unzip 2.0-php.zip
 
-cd Open-Semantic-Framework-Installer
+cd Open-Semantic-Framework-Installer*
 
 sudo mv -f * ../
 
 cd ..
 
-sudo rm -rf Open-Semantic-Framework-Installer
+sudo rm -rf Open-Semantic-Framework-Installer*
 sudo rm -f 2.0-php.zip
+
 
 chmod 755 osf-installer
 chmod 755 upgrade.sh
