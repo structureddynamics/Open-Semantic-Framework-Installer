@@ -184,8 +184,12 @@
       
       // Re-install php-odbc
       
+      $this->exec('apt-mark unhold php5-odbc');
+      
       $this->exec('dpkg -i --ignore-depends=libiodbc2 resources/php5/php5-odbc_5.4.6-1ubuntu1.1_amd64.deb ');      
       // dpkg -i --ignore-depends=libiodbc2 php5-odbc_5.4.6-1ubuntu1.1_amd64.deb 
+
+      $this->exec('apt-mark hold php5-odbc');
       
       // Then we have to install the libiodbc2 by hand
       
@@ -237,6 +241,9 @@
       $this->cecho("Test Virtuoso startup...\n", 'WHITE');
       
       $this->exec('/etc/init.d/virtuoso stop');
+      
+      sleep(20);
+      
       $this->exec('/etc/init.d/virtuoso start');
       
       $isVirtuosoRunning = shell_exec('ps aux | grep virtuoso');
