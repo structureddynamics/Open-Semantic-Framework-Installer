@@ -520,7 +520,7 @@
       
       $this->exec('wget -q https://github.com/semsol/arc2/archive/v2.1.1.zip');
       
-      $this->exec('unzip -f v2.1.1.zip');
+      $this->exec('unzip v2.1.1.zip');
       
       $this->chdir($this->structwsf_folder.$ns.'/framework/arc2/arc2-2.1.1/');
       
@@ -592,6 +592,8 @@
       
       $this->cecho("Commit transactions to Virtuoso...\n", 'WHITE');
       
+      $this->chdir($currentWorkingDirectory);
+      
       $this->exec('sed -i \'s>"dba", "dba">"dba", "'.$dbaPassword.'">\' "resources/virtuoso/commit.php"');
       
       $return = shell_exec('php resources/virtuoso/commit.php');
@@ -631,7 +633,7 @@
       
       $this->chdir($this->ontologies_management_tool_folder);
       
-      $this->exec('php sync.php --generate-structures="'.$this->data_folder.'ontologies/structure/" --structwsf="http://'.$this->structwsf_domain.'/ws/"');
+      $this->exec('php sync.php --generate-structures="'.$this->data_folder.'/ontologies/structure/" --structwsf="http://'.$this->structwsf_domain.'/ws/"');
 
       $this->cecho("Create underlying ontological structures...\n", 'WHITE');
       
