@@ -8,6 +8,10 @@
   }
   
   ini_set('memory_limit', '500M');
+  
+  // Set the working directory of this script to its home directory. That way, if it is ran from elsewhere,
+  // the relative paths will follow.
+  chdir(dirname(realpath($argv[0])));  
 
   include_once('inc/OSFInstaller_Ubuntu_12_10.php');
   
