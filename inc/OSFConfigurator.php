@@ -47,6 +47,8 @@
     
     function __construct($configFile)
     {
+      parent::__construct();
+      
       // Load the installer configuration file
       $this->config = parse_ini_file($configFile, TRUE); 
       

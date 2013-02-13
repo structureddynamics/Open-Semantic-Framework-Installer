@@ -10,7 +10,7 @@
     
     protected $currentWorkingDirectory;
     
-    function __construct($configFile)
+    function __construct()
     {
       $this->currentWorkingDirectory = getcwd();
     }    
