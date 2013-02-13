@@ -16,6 +16,8 @@
       
       $this->currentInstalledVersion = $versionIni['version']['version'];
       
+      $this->backupInstalledVersion();         
+      
       switch($this->currentInstalledVersion)
       {
         case '2.0.0':
@@ -30,6 +32,9 @@
           $this->cecho("You are running an unknown structWSF version: ".$this->currentInstalledVersion.". structWSF cannot be upgraded using this upgrade tool.\n", 'YELLOW');
         break;
       }
+      
+      $this->upgradeStructWSFTestsSuites();
+      $this->runStructWSFTestsSuites();      
     } 
     
     private function backupInstalledVersion()
@@ -86,10 +91,7 @@
       $this->cecho("Upgrade finished, latest version installed: structWSF ".$this->latestVersion."\n\n", 'WHITE');
 
       /*
-      $this->backupInstalledVersion();         
-      $this->upgradeCodebase('2.0.0');
-      $this->upgradeStructWSFTestsSuites();
-      $this->runStructWSFTestsSuites();
+      $this->upgradeCodebase('2.0.1');
       */
       
       //

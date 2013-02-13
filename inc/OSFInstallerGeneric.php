@@ -1,6 +1,6 @@
 <?php
 
-  include_once('OSFInstaller.php');
+  include_once('inc/OSFInstaller.php');
 
   class OSFInstallerGeneric extends OSFInstaller
   {

@@ -32,25 +32,27 @@
   
   
   // Get commandline options
-  $arguments = getopt('h::v::', array('help::',
-                                      'verbose::',
-                                      'install-osf::',
-                                      'install-apache2::',
-                                      'install-mysql::',
-                                      'install-phpmyadmin::',
-                                      'install-php5::',
-                                      'install-virtuoso::',
-                                      'install-solr::',
-                                      'install-structwsf::',
-                                      'upgrade-structwsf::',
-                                      'install-structwsf-php-api::',
-                                      'upgrade-structwsf-php-api::',
-                                      'install-structwsf-tests-suites::',
-                                      'upgrade-structwsf-tests-suites::',
-                                      'install-datasets-management-tool::',
-                                      'upgrade-datasets-management-tool::',  
-                                      'install-ontologies-management-tool::',
-                                      'upgrade-ontologies-management-tool::'));  
+  $arguments = getopt('h::v::c::', array('help::',
+                                         'verbose::',
+                                         'configure-installer::',
+                                         'list-configurations::',
+                                         'install-osf::',
+                                         'install-apache2::',
+                                         'install-mysql::',
+                                         'install-phpmyadmin::',
+                                         'install-php5::',
+                                         'install-virtuoso::',
+                                         'install-solr::',
+                                         'install-structwsf::',
+                                         'upgrade-structwsf::',
+                                         'install-structwsf-php-api::',
+                                         'upgrade-structwsf-php-api::',
+                                         'install-structwsf-tests-suites::',
+                                         'upgrade-structwsf-tests-suites::',
+                                         'install-datasets-management-tool::',
+                                         'upgrade-datasets-management-tool::',  
+                                         'install-ontologies-management-tool::',
+                                         'upgrade-ontologies-management-tool::'));  
   
   // Displaying DSF's help screen if required
   if(isset($arguments['h']) || isset($arguments['help']))
@@ -58,7 +60,9 @@
     $installer->cecho("Usage: osf-install [OPTIONS]\n\n\n", 'WHITE');
     $installer->cecho("General Options:\n", 'WHITE');
     $installer->cecho("-h, --help                              Show this help section\n", 'WHITE');
-    $installer->cecho("-v, --verbose                           Make this insaller verbose\n\n", 'WHITE');
+    $installer->cecho("-v, --verbose                           Make this insaller verbose\n", 'WHITE');
+    $installer->cecho("-c, --configure-installer               Configure the options used by this installer\n", 'WHITE');
+    $installer->cecho("--list-configurations                   List the current configuration used by the installer tool\n\n", 'WHITE');
     $installer->cecho("Installation Options:\n", 'WHITE');
     $installer->cecho("--install-osf                           Install the Open Semantic Framework \n", 'WHITE');
     $installer->cecho("--install-apache2                       Install Apache2 \n", 'WHITE');
@@ -80,13 +84,25 @@
     $installer->cecho("\n\n", 'WHITE');
     die;
   }
+  
+  // Configure installer
+  if(!$installer->installer_configured || isset($arguments['c']) || isset($arguments['configure-installer']))
+  {
+    $installer->configureInstaller();
+  }  
 
+  // List current configuration settings
+  if(isset($arguments['list-configurations']))
+  {
+    $installer->listConfigurations();
+  }
+  
   // Make the output more verbose
   if(isset($arguments['v']) || isset($arguments['verbose']))
   {
     $installer->verbose();
   }
-
+  
   // Install the Open Semantic Framework
   if(isset($arguments['install-osf']))
   {

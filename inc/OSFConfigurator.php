@@ -1,6 +1,6 @@
 <?php
 
-  include_once('CommandlineTool.php');
+  include_once('inc/CommandlineTool.php');
 
   class OSFConfigurator extends CommandlineTool
   {
@@ -8,6 +8,9 @@
     protected $config;
     
     // Configufation options
+
+    /* Determine if the installer is configured */
+    public $installer_configured = FALSE;
     
     /* version of virtuoso to install */
     protected $virtuoso_version = "6.1.6";
@@ -54,6 +57,18 @@
       }      
       else
       {
+        if(isset($this->config['installer']['configured']))
+        {
+          if(strtolower($this->config['installer']['configured']) === 'false')
+          {
+            $this->installer_configured = FALSE;
+          }
+          else
+          {
+            $this->installer_configured = TRUE;
+          }
+        }
+        
         if(isset($this->config['data']['virtuoso-folder']))
         {
           $this->virtuoso_version = $this->config['data']['virtuoso-folder'];
@@ -106,6 +121,159 @@
         
         $this->log_file = $this->logging_folder.'/osf-install-'.date('Y-m-d_H:i:s').'.log';        
       }
+    }
+    
+    /**
+    * Ask a series of questions to the user to configure the installer software.
+    */
+    public function configureInstaller()
+    {
+      $this->cecho("Configure the OSF-Installer Tool\n\n", 'WHITE');
+      $this->cecho("Note: if you want to use the default value, you simply have to press Enter on your keyboard.\n\n", 'WHITE');
+
+      $this->cecho("\n\nstructWSF related configuration settings:\n", 'CYAN');
+      
+      $return = $this->getInput("What is the structWSF version you want to install or upgrade? (default: ".$this->structwsf_version.")");
+      
+      if($return != '')
+      {
+        $this->structwsf_version = $return;
+      }          
+      
+      $return = $this->getInput("Where do you what to install structWSF, or where is structWSF installed? (default: ".$this->structwsf_folder.")");
+      
+      if($return != '')
+      {
+        $this->structwsf_folder = $return;
+      }       
+      
+      $return = $this->getInput("What is the domain name where the structWSF instance will be accessible (default: ".$this->structwsf_domain.")");
+      
+      if($return != '')
+      {
+        $this->structwsf_domain = $return;
+      }    
+      
+      $this->cecho("\n\nconStruct related configuration settings:\n", 'CYAN');
+            
+      $return = $this->getInput("What is the Drupal version you want to install or upgrade? (default: ".$this->drupal_version.")");
+      
+      if($return != '')
+      {
+        $this->drupal_version = $return;
+      }          
+      
+      $return = $this->getInput("What is the conStruct version you want to install or upgrade? (default: ".$this->construct_version.")");
+      
+      if($return != '')
+      {
+        $this->construct_version = $return;
+      }          
+      
+      $this->cecho("\n\nOther tools related configuration settings:\n", 'CYAN');
+            
+      $return = $this->getInput("Where do you what to install the Datasets Management Tool, or where is Datasets Management Tool installed? (default: ".$this->datasets_management_tool_folder.")");
+      
+      if($return != '')
+      {
+        $this->datasets_management_tool_folder = $return;
+      }       
+            
+      $return = $this->getInput("Where do you what to install the Ontologies Management Tool, or where is Ontologies Management Tool installed? (default: ".$this->ontologies_management_tool_folder.")");
+      
+      if($return != '')
+      {
+        $this->ontologies_management_tool_folder = $return;
+      }       
+      
+      $this->cecho("\n\nData related configuration settings:\n", 'CYAN');
+
+      $return = $this->getInput("Where is located the data folder? (default: ".$this->data_folder.")");
+      
+      if($return != '')
+      {
+        $this->data_folder = $return;
+      }       
+      
+      $return = $this->getInput("What is the Virtuoso version you want to install? (default: ".$this->virtuoso_version.")");
+      
+      if($return != '')
+      {
+        $this->virtuoso_version = $return;
+      }          
+            
+      $this->cecho("\n\nLogging related configuration settings:\n", 'CYAN');
+      
+      $return = $this->getInput("Where is located the folder where to save the log files? (default: ".$this->logging_folder.")");
+      
+      if($return != '')
+      {
+        $this->logging_folder = $return;
+      }   
+      
+      $this->installer_configured = TRUE;   
+      
+      $this->saveConfigurations(); 
+    }
+    
+    private function saveConfigurations()
+    {
+      $ini = "[installer]
+configured = \"".($this->installer_configured ? 'true' : 'false')."\"
+
+[structwsf]
+structwsf-version = \"".$this->structwsf_version."\"
+strucwsf-folder = \"".$this->structwsf_folder."\"
+structwsf-domain = \"".$this->structwsf_domain."\"
+
+[construct]
+drupal-version = \"".$this->drupal_version."\"
+construct-version = \"".$this->construct_version."\"
+
+[tools]
+dataset-management-tool-folder = \"".$this->datasets_management_tool_folder."\"
+ontologies-management-tool-folder = \"".$this->ontologies_management_tool_folder."\"
+
+[data]
+virtuoso-version = \"".$this->virtuoso_version."\"
+data-folder = \"".$this->data_folder."\"
+
+[logging]
+logging-folder = \"".$this->logging_folder."\"      
+";
+      file_put_contents('installer.ini', $ini);
+
+    }
+    
+    /**
+    * List current configuration settings
+    */
+    public function listConfigurations()
+    {
+      $this->cecho("\n\nstructWSF related configuration settings:\n", 'CYAN');
+
+      $this->cecho("structwsf-version: ".$this->structwsf_version."\n", 'WHITE');
+      $this->cecho("structwsf-folder: ".$this->structwsf_folder."\n", 'WHITE');
+      $this->cecho("structwsf-domain: ".$this->structwsf_domain."\n", 'WHITE');
+      
+      $this->cecho("\n\nconStruct related configuration settings:\n", 'CYAN');
+            
+      $this->cecho("drupal-version: ".$this->drupal_version."\n", 'WHITE');
+      $this->cecho("construct-version: ".$this->construct_version."\n", 'WHITE');
+      
+      $this->cecho("\n\nOther tools related configuration settings:\n", 'CYAN');
+
+      $this->cecho("datasets-management-tool-folder: ".$this->datasets_management_tool_folder."\n", 'WHITE');
+      $this->cecho("ontologies-management-tool-folder: ".$this->ontologies_management_tool_folder."\n", 'WHITE');
+      
+      $this->cecho("\n\nData related configuration settings:\n", 'CYAN');
+
+      $this->cecho("data-folder: ".$this->data_folder."\n", 'WHITE');
+      $this->cecho("virtuoso-version: ".$this->virtuoso_version."\n", 'WHITE');
+
+      $this->cecho("\n\nLogging related configuration settings:\n", 'CYAN');
+
+      $this->cecho("logging-folder: ".$this->logging_folder."\n\n", 'WHITE');
     }
     
     /**
