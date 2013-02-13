@@ -1,17 +1,18 @@
 <?php
 
+  include_once('OSFInstaller.php');
+
   class OSFInstallerGeneric extends OSFInstaller
   {
     /**
     * Install the entire OSF stack. Running this command will install the full stack on the server
     * according to the settings specified in the installer.ini file.
-    */
-    
+    */  
     /**
     * Tries to install PHP5 using the packages available for the linux distribution
     */
     public function installPhp5()
-    {
+    { 
       $this->cecho("Option not supported for this Linux distribution and version.\n", 'RED');
     }
     

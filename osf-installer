@@ -8,8 +8,7 @@
   }
   
   ini_set('memory_limit', '500M');
-  
-  include_once('inc/OSFInstaller.php');
+
   include_once('inc/OSFInstaller_Ubuntu_12_10.php');
   
   $installer;
@@ -20,10 +19,13 @@
   // will be used which means that some features may be disabled.
   if(OSFInstaller_Ubuntu_12_10::isWorkingInstaller())
   {
+    
     $installer = new OSFInstaller_Ubuntu_12_10(getcwd().'/installer.ini');  
   }
   else
   {
+    include_once('inc/OSFInstallerGeneric.php');
+    
     $installer = new OSFInstallerGeneric(getcwd().'/installer.ini');
   }
   
@@ -40,6 +42,7 @@
                                       'install-virtuoso::',
                                       'install-solr::',
                                       'install-structwsf::',
+                                      'upgrade-structwsf::',
                                       'install-structwsf-php-api::',
                                       'upgrade-structwsf-php-api::',
                                       'install-structwsf-tests-suites::',
@@ -69,6 +72,7 @@
     $installer->cecho("--install-datasets-management-tool      Install the Datasets Management Tool \n", 'WHITE');
     $installer->cecho("--install-ontologies-management-tool    Install the Ontologies Management Tool \n", 'WHITE');
     $installer->cecho("\nUpgrade Options:\n", 'WHITE');
+    $installer->cecho("--upgrade-structwsf                     Upgrade structWSF \n", 'WHITE');
     $installer->cecho("--upgrade-structwsf-php-api             Upgrade the structWSF-PHP-API library \n", 'WHITE');
     $installer->cecho("--upgrade-structwsf-tests-suites        Upgrade the structWSF tests suites \n", 'WHITE');
     $installer->cecho("--upgrade-datasets-management-tool      Upgrade the Datasets Management Tool \n", 'WHITE');
@@ -165,6 +169,14 @@
   if(isset($arguments['install-structwsf']))
   {
     $installer->installStructWSF();
+  }
+  
+  // Upgrade the structWSF version on the system
+  if(isset($arguments['upgrade-structwsf']))
+  {
+    include_once('inc/StructWSFUpgrader.php');    
+    
+    $upgrader = new StructWSFUpgrader(getcwd().'/installer.ini');
   }
   
   // Install Virtuoso on the system

@@ -1,4 +1,7 @@
 <?php
+
+  include_once('OSFInstaller.php');
+
   class OSFInstaller_Ubuntu_12_10 extends OSFInstaller
   {
     public function installPhp5()
@@ -8,8 +11,6 @@
       $this->cecho(" Installing PHP5 \n", 'WHITE');
       $this->cecho("-----------------\n", 'WHITE');
       $this->cecho("\n\n", 'WHITE');
-      
-      $currentWorkingDirectory = getcwd();
       
       if(strpos(shell_exec('uname -m'), 'x86_64') === FALSE)
       {
@@ -21,8 +22,6 @@
       }
       
       $this->cecho("Installing required packages for installing PHP5...\n", 'WHITE');
-      
-      $currentWorkingDirectory = getcwd();
       
       $this->chdir('resources/php5/');
       
@@ -64,7 +63,7 @@
       $this->cecho("Restarting Apache2...\n", 'WHITE');
       $this->exec('/etc/init.d/apache2 restart');      
 
-      $this->chdir($currentWorkingDirectory);
+      $this->chdir($this->currentWorkingDirectory);
     }    
     
     /**
@@ -79,8 +78,6 @@
       $this->cecho(" Installing PHP5 From Source \n", 'WHITE');
       $this->cecho("-----------------------------\n", 'WHITE');
       $this->cecho("\n\n", 'WHITE');
-      
-      $currentWorkingDirectory = getcwd();
       
       $this->cecho("Preparing installation...\n", 'WHITE');
       
@@ -99,7 +96,7 @@
       
       $php_folder = rtrim(rtrim(shell_exec("ls -d php5*/")), '/');
 
-      $this->chdir($currentWorkingDirectory);
+      $this->chdir($this->currentWorkingDirectory);
       
       file_put_contents('/tmp/php5-install/update/build/'.$php_folder.'/debian/control', file_get_contents('resources/php5/control'));
       file_put_contents('/tmp/php5-install/update/build/'.$php_folder.'/debian/rules', file_get_contents('resources/php5/rules'));
@@ -157,7 +154,7 @@
       $this->cecho("Restarting Apache2...\n", 'WHITE');
       $this->exec('/etc/init.d/apache2 restart');      
       
-      $this->chdir($currentWorkingDirectory);
+      $this->chdir($this->currentWorkingDirectory);
       
       $this->cecho("Cleaning installation...\n", 'WHITE');
       $this->exec('rm -rf /tmp/php5-install/');      
@@ -173,8 +170,6 @@
       $this->cecho(" Installing Virtuoso \n", 'WHITE');
       $this->cecho("---------------------\n", 'WHITE');
       $this->cecho("\n\n", 'WHITE');   
-      
-      $currentWorkingDirectory = getcwd();
       
       // Need to use passthru because the installer promp the user with some screens
       // where they have to answer questions
@@ -207,7 +202,7 @@
       $this->exec('tar -xzvf data.tar.gz');
       $this->exec('cp usr/lib/* /usr/lib/');
       
-      $this->chdir($currentWorkingDirectory);
+      $this->chdir($this->currentWorkingDirectory);
       
       $this->exec('rm -rf /tmp/libodbc2-install/');
       
@@ -225,7 +220,7 @@
       $this->exec('cp usr/lib/* /usr/lib/');
       $this->exec('cp usr/bin/* /usr/bin/');
       
-      $this->chdir($currentWorkingDirectory);
+      $this->chdir($this->currentWorkingDirectory);
       
       $this->exec('rm -rf /tmp/iodbc-install/');
       
@@ -303,8 +298,6 @@
       $this->cecho("-----------------\n", 'WHITE');
       $this->cecho("\n\n", 'WHITE');   
       
-      $currentWorkingDirectory = getcwd();
-      
       $this->cecho("Installing prerequirements...\n", 'WHITE');
       
       $this->exec('apt-get -y install openjdk-7-jdk');
@@ -329,7 +322,7 @@
       
       $this->cecho("Configuring Solr...\n", 'WHITE');
       
-      $this->chdir($currentWorkingDirectory);
+      $this->chdir($this->currentWorkingDirectory);
 
       $this->exec('cp -f resources/solr/solr /etc/init.d/');
       
@@ -343,7 +336,7 @@
       
       $this->exec('wget -q https://github.com/downloads/dsmiley/SOLR-2155/Solr2155-1.0.5.jar');
       
-      $this->chdir($currentWorkingDirectory);
+      $this->chdir($this->currentWorkingDirectory);
       
       $this->exec('cp -af resources/solr/solrconfig.xml /usr/share/solr/structwsf/solr/conf/');
 
