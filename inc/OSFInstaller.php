@@ -216,6 +216,14 @@
       
       $this->exec('cp -af /tmp/dmt/structWSF-Datasets-Management-Tool-master/* '.$this->datasets_management_tool_folder.'/');
 
+      $this->exec('chmod 755 '.$this->datasets_management_tool_folder.'/dmt');
+      
+      $this->chdir('/usr/bin');
+      
+      $this->exec('ln -s '.$this->datasets_management_tool_folder.'/dmt dmt');
+      
+      $this->chdir($this->currentWorkingDirectory);
+      
       $this->cecho("Cleaning installation folder...\n", 'WHITE');
       $this->exec('rm -rf /tmp/dmt/');      
     }
@@ -628,6 +636,14 @@
       
       $this->exec('cp -af /tmp/omt/structWSF-Ontologies-Management-Tool-master/* '.$this->ontologies_management_tool_folder.'/');
 
+      $this->exec('chmod 755 '.$this->ontologies_management_tool_folder.'/omt');
+      
+      $this->chdir('/usr/bin');
+      
+      $this->exec('ln -s '.$this->ontologies_management_tool_folder.'/omt omt');
+      
+      $this->chdir($this->currentWorkingDirectory);
+            
       $this->cecho("Cleaning installation folder...\n", 'WHITE');
       $this->exec('rm -rf /tmp/omt/');      
     }
