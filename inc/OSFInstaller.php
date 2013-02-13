@@ -315,14 +315,7 @@
       $this->exec('sed -i \'s>public static $data_ini = "/usr/share/structwsf/StructuredDynamics/structwsf/ws/";>public static $data_ini = "'.$this->structwsf_folder.$this->structwsf_ns.'/";>\' "'.$this->structwsf_folder.$this->structwsf_ns.'/framework/WebService.php"');
       $this->exec('sed -i \'s>public static $network_ini = "/usr/share/structwsf/StructuredDynamics/structwsf/ws/";>public static $network_ini = "'.$this->structwsf_folder.$this->structwsf_ns.'/";>\' "'.$this->structwsf_folder.$this->structwsf_ns.'/framework/WebService.php"');
 
-      $return = $this->getInput("What is the domain name where the structWSF instance will be accessible (default: ".$this->structwsf_domain.")");
-
       $this->cecho("Configure the data.ini configuration file...\n", 'WHITE');
-      
-      if($return != '')
-      {
-        $this->structwsf_domain = $return;
-      }     
 
       $dbaPassword = 'dba';     
       
@@ -594,20 +587,6 @@
       $this->exec('rm -rf structWSF-Tests-Suites-master');
       
       $this->cecho("Configure the tests suites...\n", 'WHITE');
-      
-      $return = $this->getInput("What is the domain name where the structWSF instance is accessible (default: ".$this->structwsf_domain.")");
-
-      if($return != '')
-      {
-        $this->structwsf_domain = $return;        
-      }
-      
-      $return = $this->getInput("What is the structwsf installation folder (default: ".$this->structwsf_folder.")");
-
-      if($return != '')
-      {
-        $this->structwsf_folder = $return;        
-      }
       
       $this->exec('sed -i "s>REPLACEME>'.$this->structwsf_folder.'/StructuredDynamics/structwsf>" phpunit.xml');
 

@@ -301,20 +301,6 @@ logging-folder = \"".$this->logging_folder."\"
 
       $this->chdir($this->structwsf_folder.'/StructuredDynamics/structwsf/tests/');
       
-      $return = $this->getInput("What is the domain name where the structWSF instance is accessible (default: ".$this->structwsf_domain.")");
-
-      if($return != '')
-      {
-        $this->structwsf_domain = $return;        
-      }
-      
-      $return = $this->getInput("What is the structwsf installation folder (default: ".$this->structwsf_folder.")");
-
-      if($return != '')
-      {
-        $this->structwsf_folder = $return;        
-      }
-      
       $this->exec('sed -i "s>REPLACEME>'.$this->structwsf_folder.'/StructuredDynamics/structwsf>" phpunit.xml');
 
       $this->exec('sudo sed -i "s>$this-\>structwsfInstanceFolder = \"/usr/share/structwsf/\";>$this-\>structwsfInstanceFolder = \"'.$this->structwsf_folder.'/\";>" Config.php');
@@ -330,16 +316,7 @@ logging-folder = \"".$this->logging_folder."\"
     {
       if($installationFolder == '')
       {
-        $return = $this->getInput("What is the structwsf installation folder (default: ".$this->structwsf_folder.")");
-
-        if($return != '')
-        {
-          $installationFolder = $return;        
-        }
-        else
-        {
-          $installationFolder = $this->structwsf_folder;
-        }
+        $installationFolder = $this->structwsf_folder;
       }
       
       $this->chdir($installationFolder.'/StructuredDynamics/structwsf/tests/');
