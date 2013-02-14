@@ -19,7 +19,13 @@
     protected $drupal_version = "7.19";
 
     /* Version of structWSF to install */
-    protected $structwsf_version = "2.0";
+    protected $structwsf_version = "dev";
+
+    /* Version of structWSF-PHP-API to install */
+    protected $structwsf_php_api_version = "dev";
+
+    /* Version of structWSF Tests Suites to install */
+    protected $structwsf_tests_suites_version = "dev";
 
     /* Version of conStruct to install */
     protected $construct_version = "7.x-1.0";
@@ -38,6 +44,12 @@
 
     /* Folder where to install the Ontologies Management Tool */
     protected $ontologies_management_tool_folder = "/usr/share/ontologies-management-tool";
+
+    /* Version of the Datasets Management Tool to install */
+    protected $datasets_management_tool_version = "dev";
+
+    /* Version of the Ontologies Management Tool to install */
+    protected $ontologies_management_tool_version = "dev";
 
     /* Folder where to put the logging files */
     protected $logging_folder = "/tmp";
@@ -83,8 +95,39 @@
         
         if(isset($this->config['structwsf']['structwsf-version']))
         {
-          $this->structwsf_version = $this->config['structwsf']['structwsf-version'];
-        }
+          if(strtolower($this->config['structwsf']['structwsf-version']) == 'dev')
+          {
+            $this->structwsf_version = 'master';
+          }
+          else
+          {
+            $this->structwsf_version = $this->config['structwsf']['structwsf-version'];
+          }
+        }        
+        
+        if(isset($this->config['structwsf']['structwsf-php-api-version']))
+        {
+          if(strtolower($this->config['structwsf']['structwsf-php-api-version']) == 'dev')
+          {
+            $this->structwsf_php_api_version = 'master';
+          }
+          else
+          {
+            $this->structwsf_php_api_version = $this->config['structwsf']['structwsf-php-api-version'];
+          }
+        }        
+
+        if(isset($this->config['structwsf']['structwsf-tests-suites-version']))
+        {
+          if(strtolower($this->config['structwsf']['structwsf-tests-suites-version']) == 'dev')
+          {
+            $this->structwsf_tests_suites_version = 'master';
+          }
+          else
+          {
+            $this->structwsf_tests_suites_version = $this->config['structwsf']['structwsf-tests-suites-version'];
+          }
+        }        
         
         if(isset($this->config['construct']['construct-version']))
         {
@@ -115,6 +158,30 @@
         {
           $this->ontologies_management_tool_folder = rtrim($this->config['tools']['ontologies-management-tool-folder'], '/');
         }
+        
+        if(isset($this->config['tools']['ontologies-management-tool-version']))
+        {
+          if(strtolower($this->config['tools']['ontologies-management-tool-version']) == 'dev')
+          {
+            $this->ontologies_management_tool_version = 'master';
+          }
+          else
+          {
+            $this->ontologies_management_tool_version = $this->config['tools']['ontologies-management-tool-version'];
+          }
+        }        
+        
+        if(isset($this->config['tools']['datasets-management-tool-version']))
+        {
+          if(strtolower($this->config['tools']['datasets-management-tool-version']) == 'dev')
+          {
+            $this->datasets_management_tool_version = 'master';
+          }
+          else
+          {
+            $this->datasets_management_tool_version = $this->config['tools']['datasets-management-tool-version'];
+          }
+        }          
                                               
         if(isset($this->config['logging']['logging-folder']))
         {
@@ -140,6 +207,20 @@
       if($return != '')
       {
         $this->structwsf_version = $return;
+      }          
+      
+      $return = $this->getInput("What is the structWSF-PHP-API version you want to install or upgrade? (default: ".$this->structwsf_php_api_version.")");
+      
+      if($return != '')
+      {
+        $this->structwsf_php_api_version = $return;
+      }          
+      
+      $return = $this->getInput("What is the structWSF Tests Suites version you want to install or upgrade? (default: ".$this->structwsf_tests_suites_version.")");
+      
+      if($return != '')
+      {
+        $this->structwsf_tests_suites_version = $return;
       }          
       
       $return = $this->getInput("Where do you what to install structWSF, or where is structWSF installed? (default: ".$this->structwsf_folder.")");
@@ -173,12 +254,26 @@
       }          
       
       $this->cecho("\n\nOther tools related configuration settings:\n", 'CYAN');
+
+      $return = $this->getInput("What is the Datasets Management Tool version you want to install or upgrade? (default: ".$this->datasets_management_tool_version.")");
+      
+      if($return != '')
+      {
+        $this->datasets_management_tool_version = $return;
+      }       
             
       $return = $this->getInput("Where do you what to install the Datasets Management Tool, or where is Datasets Management Tool installed? (default: ".$this->datasets_management_tool_folder.")");
       
       if($return != '')
       {
         $this->datasets_management_tool_folder = $return;
+      }       
+
+      $return = $this->getInput("What is the Ontologies Management Tool version you want to install or upgrade? (default: ".$this->ontologies_management_tool_version.")");
+      
+      if($return != '')
+      {
+        $this->ontologies_management_tool_version = $return;
       }       
             
       $return = $this->getInput("Where do you what to install the Ontologies Management Tool, or where is Ontologies Management Tool installed? (default: ".$this->ontologies_management_tool_folder.")");
@@ -227,6 +322,8 @@ configured = \"".($this->installer_configured ? 'true' : 'false')."\"
 structwsf-version = \"".$this->structwsf_version."\"
 strucwsf-folder = \"".$this->structwsf_folder."\"
 structwsf-domain = \"".$this->structwsf_domain."\"
+structwsf-php-api-version = \"".$this->structwsf_version."\"
+structwsf-tests-suites-version = \"".$this->structwsf_version."\"
 
 [construct]
 drupal-version = \"".$this->drupal_version."\"
@@ -234,7 +331,9 @@ construct-version = \"".$this->construct_version."\"
 
 [tools]
 dataset-management-tool-folder = \"".$this->datasets_management_tool_folder."\"
+dataset-management-tool-version = \"".$this->datasets_management_tool_version."\"
 ontologies-management-tool-folder = \"".$this->ontologies_management_tool_folder."\"
+ontologies-management-tool-version = \"".$this->ontologies_management_tool_version."\"
 
 [data]
 virtuoso-version = \"".$this->virtuoso_version."\"
@@ -257,6 +356,8 @@ logging-folder = \"".$this->logging_folder."\"
       $this->cecho("structwsf-version: ".$this->structwsf_version."\n", 'WHITE');
       $this->cecho("structwsf-folder: ".$this->structwsf_folder."\n", 'WHITE');
       $this->cecho("structwsf-domain: ".$this->structwsf_domain."\n", 'WHITE');
+      $this->cecho("structwsf-php-api-version: ".$this->structwsf_php_api_version."\n", 'WHITE');
+      $this->cecho("structwsf-tests-suites-version: ".$this->structwsf_tests_suites_version."\n", 'WHITE');
       
       $this->cecho("\n\nconStruct related configuration settings:\n", 'CYAN');
             
@@ -265,7 +366,9 @@ logging-folder = \"".$this->logging_folder."\"
       
       $this->cecho("\n\nOther tools related configuration settings:\n", 'CYAN');
 
+      $this->cecho("datasets-management-tool-version: ".$this->datasets_management_tool_version."\n", 'WHITE');
       $this->cecho("datasets-management-tool-folder: ".$this->datasets_management_tool_folder."\n", 'WHITE');
+      $this->cecho("ontologies-management-tool-version: ".$this->ontologies_management_tool_version."\n", 'WHITE');
       $this->cecho("ontologies-management-tool-folder: ".$this->ontologies_management_tool_folder."\n", 'WHITE');
       
       $this->cecho("\n\nData related configuration settings:\n", 'CYAN');
@@ -289,11 +392,11 @@ logging-folder = \"".$this->logging_folder."\"
       
       $this->chdir('/tmp/structwsftestssuites-upgrade/');
       
-      $this->exec('wget -q https://github.com/structureddynamics/structWSF-Tests-Suites/archive/master.zip');
+      $this->exec('wget -q https://github.com/structureddynamics/structWSF-Tests-Suites/archive/'.$this->structwsf_tests_suites_version.'.zip');
       
-      $this->exec('unzip master.zip');
+      $this->exec('unzip '.$this->structwsf_tests_suites_version.'.zip');
       
-      $this->chdir('/tmp/structwsftestssuites-upgrade/structWSF-Tests-Suites-master/StructuredDynamics/structwsf/');
+      $this->chdir('/tmp/structwsftestssuites-upgrade/structWSF-Tests-Suites-'.$this->structwsf_tests_suites_version.'/StructuredDynamics/structwsf/');
 
       $this->exec('rm -rf '.$this->structwsf_folder.'/StructuredDynamics/structwsf/tests/');
       
