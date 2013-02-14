@@ -13,7 +13,7 @@ Installing the Open Semantic Framework
 The only steps needed to install the Open Semantic Framework are to:
 
 ```
-wget https://raw.github.com/structureddynamics/Open-Semantic-Framework-Installer/2.0-php/install.sh
+wget https://raw.github.com/structureddynamics/Open-Semantic-Framework-Installer/master/install.sh
 
 chmod 755 install.sh
 

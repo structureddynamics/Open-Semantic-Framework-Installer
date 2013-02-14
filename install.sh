@@ -47,9 +47,9 @@ sudo apt-get -y install unzip
 
 cecho "\n\nDownload the latest version of the OSF Installer tool...\n"
 
-sudo wget https://github.com/structureddynamics/Open-Semantic-Framework-Installer/archive/2.0-php.zip
+sudo wget https://github.com/structureddynamics/Open-Semantic-Framework-Installer/archive/master.zip
 
-unzip 2.0-php.zip
+unzip master.zip
 
 cd Open-Semantic-Framework-Installer*
 
