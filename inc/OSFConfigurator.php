@@ -355,8 +355,8 @@ drupal-version = \"".$this->drupal_version."\"
 construct-version = \"".$this->construct_version."\"
 
 [tools]
-dataset-management-tool-folder = \"".$this->datasets_management_tool_folder."\"
-dataset-management-tool-version = \"".$this->datasets_management_tool_version."\"
+datasets-management-tool-folder = \"".$this->datasets_management_tool_folder."\"
+datasets-management-tool-version = \"".$this->datasets_management_tool_version."\"
 ontologies-management-tool-folder = \"".$this->ontologies_management_tool_folder."\"
 ontologies-management-tool-version = \"".$this->ontologies_management_tool_version."\"
 
