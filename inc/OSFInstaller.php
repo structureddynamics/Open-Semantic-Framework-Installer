@@ -531,11 +531,11 @@
       
       $this->chdir($this->ontologies_management_tool_folder);
       
-      $this->exec('php sync.php --load-all --load-list="'.rtrim($this->currentWorkingDirectory, '/').'/resources/structwsf/ontologies.lst" --structwsf="http://'.$this->structwsf_domain.'/ws/"');
+      $this->exec('omt --load-all --load-list="'.rtrim($this->currentWorkingDirectory, '/').'/resources/structwsf/ontologies.lst" --structwsf="http://'.$this->structwsf_domain.'/ws/"');
 
       $this->cecho("Create underlying ontological structures...\n", 'WHITE');
       
-      $this->exec('php sync.php --generate-structures="'.$this->data_folder.'/ontologies/structure/" --structwsf="http://'.$this->structwsf_domain.'/ws/"');
+      $this->exec('omt --generate-structures="'.$this->data_folder.'/ontologies/structure/" --structwsf="http://'.$this->structwsf_domain.'/ws/"');
 
       $this->installStructWSFTestsSuites();
 
