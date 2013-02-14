@@ -71,9 +71,9 @@
           }
         }
         
-        if(isset($this->config['data']['virtuoso-folder']))
+        if(isset($this->config['data']['virtuoso-version']))
         {
-          $this->virtuoso_version = $this->config['data']['virtuoso-folder'];
+          $this->virtuoso_version = $this->config['data']['virtuoso-version'];
         }
         
         if(isset($this->config['construct']['drupal-version']))
