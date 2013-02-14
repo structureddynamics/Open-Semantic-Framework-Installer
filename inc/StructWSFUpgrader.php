@@ -21,7 +21,8 @@
       switch($this->currentInstalledVersion)
       {
         case '2.0.0':
-          $this->upgradeTo_2_0_1();
+          $this->latestVersion();
+          //$this->upgradeTo_2_0_1();
         break;
         
         case '2.0.1':
@@ -86,10 +87,13 @@
       $this->cecho("Codebase upgraded...\n", 'GREEN');
     }
     
-    private function upgradeTo_2_0_1()
+    private function latestVersion()
     {                    
       $this->cecho("Upgrade finished, latest version installed: structWSF ".$this->latestVersion."\n\n", 'WHITE');
-
+    }    
+    
+    private function upgradeTo_2_0_1()
+    {                    
       /*
       $this->upgradeCodebase('2.0.1');
       */
