@@ -202,24 +202,39 @@
 
       $this->cecho("\n\nstructWSF related configuration settings:\n", 'CYAN');
       
-      $return = $this->getInput("What is the structWSF version you want to install or upgrade? (default: ".$this->structwsf_version.")");
+      $return = $this->getInput("What is the structWSF version you want to install or upgrade? (default: ".($this->structwsf_version == 'master' ? 'dev' : '').")");
       
       if($return != '')
       {
+        if($return == 'dev')
+        {
+          $return = 'master';
+        }
+        
         $this->structwsf_version = $return;
       }          
       
-      $return = $this->getInput("What is the structWSF-PHP-API version you want to install or upgrade? (default: ".$this->structwsf_php_api_version.")");
+      $return = $this->getInput("What is the structWSF-PHP-API version you want to install or upgrade? (default: ".($this->structwsf_php_api_version == 'master' ? 'dev' : '').")");
       
       if($return != '')
       {
+        if($return == 'dev')
+        {
+          $return = 'master';
+        }
+                
         $this->structwsf_php_api_version = $return;
       }          
       
-      $return = $this->getInput("What is the structWSF Tests Suites version you want to install or upgrade? (default: ".$this->structwsf_tests_suites_version.")");
+      $return = $this->getInput("What is the structWSF Tests Suites version you want to install or upgrade? (default: ".($this->structwsf_tests_suites_version == 'master' ? 'dev' : '').")");
       
       if($return != '')
       {
+        if($return == 'dev')
+        {
+          $return = 'master';
+        }
+        
         $this->structwsf_tests_suites_version = $return;
       }          
       
@@ -255,10 +270,15 @@
       
       $this->cecho("\n\nOther tools related configuration settings:\n", 'CYAN');
 
-      $return = $this->getInput("What is the Datasets Management Tool version you want to install or upgrade? (default: ".$this->datasets_management_tool_version.")");
+      $return = $this->getInput("What is the Datasets Management Tool version you want to install or upgrade? (default: ".($this->datasets_management_tool_version == 'master' ? 'dev' : '').")");
       
       if($return != '')
       {
+        if($return == 'dev')
+        {
+          $return = 'master';
+        }
+                
         $this->datasets_management_tool_version = $return;
       }       
             
@@ -269,10 +289,15 @@
         $this->datasets_management_tool_folder = $return;
       }       
 
-      $return = $this->getInput("What is the Ontologies Management Tool version you want to install or upgrade? (default: ".$this->ontologies_management_tool_version.")");
+      $return = $this->getInput("What is the Ontologies Management Tool version you want to install or upgrade? (default: ".($this->ontologies_management_tool_version == 'master' ? 'dev' : '').")");
       
       if($return != '')
       {
+        if($return == 'dev')
+        {
+          $return = 'master';
+        }
+                
         $this->ontologies_management_tool_version = $return;
       }       
             
@@ -353,11 +378,11 @@ logging-folder = \"".$this->logging_folder."\"
     {
       $this->cecho("\n\nstructWSF related configuration settings:\n", 'CYAN');
 
-      $this->cecho("structwsf-version: ".$this->structwsf_version."\n", 'WHITE');
+      $this->cecho("structwsf-version: ".($this->structwsf_version == 'master' ? 'dev' : '')."\n", 'WHITE');
       $this->cecho("structwsf-folder: ".$this->structwsf_folder."\n", 'WHITE');
       $this->cecho("structwsf-domain: ".$this->structwsf_domain."\n", 'WHITE');
-      $this->cecho("structwsf-php-api-version: ".$this->structwsf_php_api_version."\n", 'WHITE');
-      $this->cecho("structwsf-tests-suites-version: ".$this->structwsf_tests_suites_version."\n", 'WHITE');
+      $this->cecho("structwsf-php-api-version: ".($this->structwsf_php_api_version == 'master' ? 'dev' : '')."\n", 'WHITE');
+      $this->cecho("structwsf-tests-suites-version: ".($this->structwsf_tests_suites_version == 'master' ? 'dev' : '')."\n", 'WHITE');
       
       $this->cecho("\n\nconStruct related configuration settings:\n", 'CYAN');
             
@@ -366,9 +391,9 @@ logging-folder = \"".$this->logging_folder."\"
       
       $this->cecho("\n\nOther tools related configuration settings:\n", 'CYAN');
 
-      $this->cecho("datasets-management-tool-version: ".$this->datasets_management_tool_version."\n", 'WHITE');
+      $this->cecho("datasets-management-tool-version: ".($this->datasets_management_tool_version == 'master' ? 'dev' : '')."\n", 'WHITE');
       $this->cecho("datasets-management-tool-folder: ".$this->datasets_management_tool_folder."\n", 'WHITE');
-      $this->cecho("ontologies-management-tool-version: ".$this->ontologies_management_tool_version."\n", 'WHITE');
+      $this->cecho("ontologies-management-tool-version: ".($this->ontologies_management_tool_version == 'master' ? 'dev' : '')."\n", 'WHITE');
       $this->cecho("ontologies-management-tool-folder: ".$this->ontologies_management_tool_folder."\n", 'WHITE');
       
       $this->cecho("\n\nData related configuration settings:\n", 'CYAN');
