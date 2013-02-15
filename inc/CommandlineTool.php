@@ -79,9 +79,9 @@
     {
       $this->log(array('cd '.$dir), TRUE);      
 
-      $error = chdir($dir);
+      $success = chdir($dir);
       
-      if($error)
+      if(!$success)
       {
         switch(strtolower($errorLevel))
         {
