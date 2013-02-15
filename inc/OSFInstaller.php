@@ -594,13 +594,13 @@
       
       $this->exec('apt-get install -y php-pear');
       
-      $this->exec('pear channel-discover pear.phpunit.de');
+      $this->exec('pear channel-discover pear.phpunit.de', 'warning');
       
-      $this->exec('pear channel-discover pear.symfony-project.com');
+      $this->exec('pear channel-discover pear.symfony-project.com', 'warning');
       
-      $this->exec('pear upgrade-all');
+      $this->exec('pear upgrade-all', 'warning');
       
-      $this->exec('pear install --force --alldeps phpunit/PHPUnit');
+      $this->exec('pear install --force --alldeps phpunit/PHPUnit', 'warning');
       
       $this->cecho("Install tests suites...\n", 'WHITE');
       
