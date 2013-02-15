@@ -18,32 +18,94 @@
     /**
     * Execute a shell command. The command is also logged into the logging file.
     *     
-    * @param mixed $command the shell command to execute
+    * @param $command the shell command to execute
+    * @param $errorLevel the level of the error if an error happens. There are 4 levels:
+    *                    (1) ignore, (2) notice, (3) warning and (4) error. The ignore
+    *                    level doesn't display anything, the notice level output an error
+    *                    in light-cyan, the warning level output an error message in yellow
+    *                    color and a error error output an error message in red and 
+    *                    stops the execution of the script.
     * 
-    * @return Returns the exit code of the executed shell command
+    * @return Returns TRUE if the command succeeded, FALSE otherwise
     */
-    public function exec($command)
+    public function exec($command, $errorLevel = 'error')
     {
       $output = array();
       $this->log(array($command), TRUE);      
       exec($command, $output, $return);
+      
       $this->log($output);      
       
-      return($return);
+      if($return == 0)
+      {
+        switch(strtolower($errorLevel))
+        {
+          case 'notice':
+            $this->cecho("An occured but the script continue its process. Check the log to see what was the error: ".$this->log_file."\n", 'LIGHT_CYAN');
+          break;
+          
+          case 'warning':
+            $this->cecho("An occured but the script continue its process. Check the log to see what was the error: ".$this->log_file."\n", 'YELLOW');
+          break;
+          
+          case 'error':
+            $this->cecho("A non-recoverable error happened. Check the log to see what was the error: ".$this->log_file."\n", 'RED');
+            exit(1);
+          break;
+        }
+        
+        return(TRUE);
+      }
+      else
+      {
+        return(FALSE);
+      }
     }
-    
     
     /**
     * Change the current folder of the script. The command is also logged into the logging file.
     *     
     * @param mixed $dir folder path where to go
-
+    * @param $errorLevel the level of the error if an error happens. There are 4 levels:
+    *                    (1) ignore, (2) notice, (3) warning and (4) error. The ignore
+    *                    level doesn't display anything, the notice level output an error
+    *                    in light-cyan, the warning level output an error message in yellow
+    *                    color and a error error output an error message in red and 
+    *                    stops the execution of the script. 
+    * 
+    * @return Return TRUE if the comman succeeded, FALSE otherwise
     */
-    public function chdir($dir)
+    public function chdir($dir, $errorLevel = 'error')
     {
       $this->log(array('cd '.$dir), TRUE);      
-      chdir($dir);
-    }    
+
+      $error = chdir($dir);
+      
+      if($error)
+      {
+        switch(strtolower($errorLevel))
+        {
+          case 'notice':
+            $this->cecho("An occured but the script continue its process. Check the log to see what was the error: ".$this->log_file."\n", 'LIGHT_CYAN');
+          break;
+          
+          case 'warning':
+            $this->cecho("An occured but the script continue its process. Check the log to see what was the error: ".$this->log_file."\n", 'YELLOW');
+          break;
+          
+          case 'error':
+            $this->cecho("A non-recoverable error happened. Check the log to see what was the error: ".$this->log_file."\n", 'RED');
+            exit(1);
+          break;
+        }      
+        
+        return(FALSE);
+      }
+      else
+      {
+        return(TRUE);
+      }
+    }  
     
     /**
     * Colorize an output to the shell terminal.
