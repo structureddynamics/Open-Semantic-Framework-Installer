@@ -598,8 +598,6 @@
       
       $this->exec('pear channel-discover pear.symfony-project.com');
       
-      $this->exec('pear channel-discover pear.phpunit.de');
-      
       $this->exec('pear upgrade-all');
       
       $this->exec('pear install --force --alldeps phpunit/PHPUnit');
