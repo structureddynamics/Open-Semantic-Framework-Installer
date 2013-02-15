@@ -111,8 +111,13 @@
     * Install the structWSF-PHP-API library
     * 
     */
-    public function installStructWSFPHPAPI()
-    {                                                            
+    public function installStructWSFPHPAPI($version = '')
+    {                                                  
+      if($version == '')
+      {
+        $version = $this->structwsf_php_api_version;
+      }
+                    
       $this->cecho("\n\n", 'WHITE');
       $this->cecho("------------------------------\n", 'WHITE');
       $this->cecho(" Installing structWSF-PHP-API \n", 'WHITE');
@@ -130,17 +135,17 @@
       $this->exec('mkdir /tmp/structwsfphpapi');
 
       $this->cecho("Downloading the structWSF-PHP-API...\n", 'WHITE');
-      $this->exec('wget -q -P /tmp/structwsfphpapi https://github.com/structureddynamics/structWSF-PHP-API/archive/'.$this->structwsf_php_api_version.'.zip');
+      $this->exec('wget -q -P /tmp/structwsfphpapi https://github.com/structureddynamics/structWSF-PHP-API/archive/'.$version.'.zip');
 
       $this->cecho("Installing the structWSF-PHP-API...\n", 'WHITE');
-      $this->exec('unzip -o /tmp/structwsfphpapi/'.$this->structwsf_php_api_version.'.zip -d /tmp/structwsfphpapi/');      
+      $this->exec('unzip -o /tmp/structwsfphpapi/'.$version.'.zip -d /tmp/structwsfphpapi/');      
       
       if(!is_dir($this->structwsf_folder.'/'))
       {
         $this->exec('mkdir '.$this->structwsf_folder.'/');      
       }
       
-      $this->exec('cp -af /tmp/structwsfphpapi/structWSF-PHP-API-'.$this->structwsf_php_api_version.'/StructuredDynamics '.$this->structwsf_folder.'/');
+      $this->exec('cp -af /tmp/structwsfphpapi/structWSF-PHP-API-'.$version.'/StructuredDynamics '.$this->structwsf_folder.'/');
 
       $this->cecho("Cleaning installation folder...\n", 'WHITE');
       $this->exec('rm -rf /tmp/structwsfphpapi/');
@@ -149,8 +154,13 @@
     /**
     * Upgrade a structWSF-PHP-API installation
     */
-    public function upgradeStructWSFPHPAPI()
+    public function upgradeStructWSFPHPAPI($version = '')
     {
+      if($version == '')
+      {
+        $version = $this->structwsf_php_api_version;
+      }
+            
       $this->cecho("\n\n", 'WHITE');
       $this->cecho("-----------------------------\n", 'WHITE');
       $this->cecho(" Upgrading structWSF-PHP-API \n", 'WHITE');
@@ -169,17 +179,17 @@
       $this->exec('mkdir /tmp/structwsfphpapi');
 
       $this->cecho("Downloading the latest code of the structWSF-PHP-API...\n", 'WHITE');
-      $this->exec('wget -q -P /tmp/structwsfphpapi https://github.com/structureddynamics/structWSF-PHP-API/archive/'.$this->structwsf_php_api_version.'.zip');
+      $this->exec('wget -q -P /tmp/structwsfphpapi https://github.com/structureddynamics/structWSF-PHP-API/archive/'.$version.'.zip');
 
       $this->cecho("Upgrading the structWSF-PHP-API...\n", 'WHITE');
-      $this->exec('unzip /tmp/structwsfphpapi/'.$this->structwsf_php_api_version.'.zip -d /tmp/structwsfphpapi/ -o');      
+      $this->exec('unzip /tmp/structwsfphpapi/'.$version.'.zip -d /tmp/structwsfphpapi/ -o');      
       
       if(!is_dir($this->structwsf_folder.'/'))
       {
         $this->exec('mkdir '.$this->structwsf_folder.'/');      
       }
       
-      $this->exec('cp -af /tmp/structwsfphpapi/structWSF-PHP-API-'.$this->structwsf_php_api_version.'/StructuredDynamics '.$this->structwsf_folder.'/');
+      $this->exec('cp -af /tmp/structwsfphpapi/structWSF-PHP-API-'.$version.'/StructuredDynamics '.$this->structwsf_folder.'/');
 
       $this->cecho("Cleaning upgrade folder...\n", 'WHITE');
       $this->exec('rm -rf /tmp/structwsfphpapi/');   
@@ -188,8 +198,13 @@
     /**
     * Install the Datasets Management Tool
     */
-    public function installDatasetsManagementTool()
+    public function installDatasetsManagementTool($version = '')
     {
+      if($version == '')
+      {
+        $version = $this->datasets_management_tool_version;
+      }
+            
       $this->cecho("\n\n", 'WHITE');
       $this->cecho("------------------------------------\n", 'WHITE');
       $this->cecho(" Installing Datasets Management Tool \n", 'WHITE');
@@ -207,14 +222,14 @@
       $this->exec('mkdir /tmp/dmt');
 
       $this->cecho("Downloading the Datasets Management Tool...\n", 'WHITE');
-      $this->exec('wget -q -P /tmp/dmt https://github.com/structureddynamics/structWSF-Datasets-Management-Tool/archive/'.$this->datasets_management_tool_version.'.zip');
+      $this->exec('wget -q -P /tmp/dmt https://github.com/structureddynamics/structWSF-Datasets-Management-Tool/archive/'.$version.'.zip');
 
       $this->cecho("Installing the Datasets Management Tool...\n", 'WHITE');
-      $this->exec('unzip -o /tmp/dmt/'.$this->datasets_management_tool_version.'.zip -d /tmp/dmt/');      
+      $this->exec('unzip -o /tmp/dmt/'.$version.'.zip -d /tmp/dmt/');      
       
       $this->exec('mkdir '.$this->datasets_management_tool_folder.'/');      
       
-      $this->exec('cp -af /tmp/dmt/structWSF-Datasets-Management-Tool-'.$this->datasets_management_tool_version.'/* '.$this->datasets_management_tool_folder.'/');
+      $this->exec('cp -af /tmp/dmt/structWSF-Datasets-Management-Tool-'.$version.'/* '.$this->datasets_management_tool_folder.'/');
 
       $this->exec('chmod 755 '.$this->datasets_management_tool_folder.'/dmt');
       
@@ -231,8 +246,13 @@
     /**
     * Upgrade a Datasets Management Tool installation
     */
-    public function upgradeDatasetsManagementTool()
+    public function upgradeDatasetsManagementTool($version = '')
     {
+      if($version == '')
+      {
+        $version = $this->datasets_management_tool_version;
+      }      
+      
       $this->cecho("\n\n", 'WHITE');
       $this->cecho("----------------------------------------\n", 'WHITE');
       $this->cecho(" Upgrading the Datasets Management Tool \n", 'WHITE');
@@ -251,18 +271,18 @@
       $this->exec('mkdir /tmp/dmt');
 
       $this->cecho("Downloading the Datasets Management Tool...\n", 'WHITE');
-      $this->exec('wget -q -P /tmp/dmt https://github.com/structureddynamics/structWSF-Datasets-Management-Tool/archive/'.$this->datasets_management_tool_version.'.zip');
+      $this->exec('wget -q -P /tmp/dmt https://github.com/structureddynamics/structWSF-Datasets-Management-Tool/archive/'.$version.'.zip');
 
       $this->cecho("Upgrading the Datasets Management Tool...\n", 'WHITE');
-      $this->exec('unzip -o /tmp/dmt/'.$this->datasets_management_tool_version.'.zip -d /tmp/dmt/');      
+      $this->exec('unzip -o /tmp/dmt/'.$version.'.zip -d /tmp/dmt/');      
       
       // Make sure not to overwrite the data, missing and datasetIndexes folders and the sync.ini file
-      $this->exec('rm -rf /tmp/dmt/structWSF-Datasets-Management-Tool-'.$this->datasets_management_tool_version.'/data/');
-      $this->exec('rm -rf /tmp/dmt/structWSF-Datasets-Management-Tool-'.$this->datasets_management_tool_version.'/missing/');
-      $this->exec('rm -rf /tmp/dmt/structWSF-Datasets-Management-Tool-'.$this->datasets_management_tool_version.'/datasetIndexes/');
-      $this->exec('rm -f /tmp/dmt/structWSF-Datasets-Management-Tool-'.$this->datasets_management_tool_version.'/sync.ini');      
+      $this->exec('rm -rf /tmp/dmt/structWSF-Datasets-Management-Tool-'.$version.'/data/');
+      $this->exec('rm -rf /tmp/dmt/structWSF-Datasets-Management-Tool-'.$version.'/missing/');
+      $this->exec('rm -rf /tmp/dmt/structWSF-Datasets-Management-Tool-'.$version.'/datasetIndexes/');
+      $this->exec('rm -f /tmp/dmt/structWSF-Datasets-Management-Tool-'.$version.'/sync.ini');      
       
-      $this->exec("cp -af /tmp/dmt/structWSF-Datasets-Management-Tool-'.$this->datasets_management_tool_version.'/* ".$this->datasets_management_tool_folder."/");
+      $this->exec("cp -af /tmp/dmt/structWSF-Datasets-Management-Tool-".$version."/* ".$this->datasets_management_tool_folder."/");
 
       $this->cecho("Cleaning installation folder...\n", 'WHITE');
       $this->exec('rm -rf /tmp/dmt/');      
@@ -271,8 +291,13 @@
     /**
     * Install structWSF
     */
-    public function installStructWSF()
+    public function installStructWSF($version='')
     {
+      if($version == '')
+      {
+        $version = $this->structwsf_version;
+      }
+      
       $this->cecho("\n\n", 'WHITE');
       $this->cecho("----------------------\n", 'WHITE');
       $this->cecho(" Installing structWSF \n", 'WHITE');
@@ -290,14 +315,14 @@
       $this->exec('mkdir /tmp/structwsf-install');
 
       $this->cecho("Downloading structWSF...\n", 'WHITE');
-      $this->exec('wget -q -P /tmp/structwsf-install https://github.com/structureddynamics/structWSF-Open-Semantic-Framework/archive/'.$this->structwsf_version.'.zip');
+      $this->exec('wget -q -P /tmp/structwsf-install https://github.com/structureddynamics/structWSF-Open-Semantic-Framework/archive/'.$version.'.zip');
 
       $this->cecho("Installing structWSF...\n", 'WHITE');
-      $this->exec('unzip -o /tmp/structwsf-install/'.$this->structwsf_version.'.zip -d /tmp/structwsf-install/');      
+      $this->exec('unzip -o /tmp/structwsf-install/'.$version.'.zip -d /tmp/structwsf-install/');      
       
       $this->exec('mkdir '.$this->structwsf_folder.'/');      
       
-      $this->exec('cp -af /tmp/structwsf-install/structWSF-Open-Semantic-Framework-'.$this->structwsf_version.'/* '.$this->structwsf_folder.'/');
+      $this->exec('cp -af /tmp/structwsf-install/structWSF-Open-Semantic-Framework-'.$version.'/* '.$this->structwsf_folder.'/');
 
       $this->cecho("Configuring structWSF...\n", 'WHITE');
       
@@ -558,8 +583,13 @@
     /**
     * Install the structWSF PHPUNIT Tests Suites
     */
-    public function installStructWSFTestsSuites()
+    public function installStructWSFTestsSuites($version = '')
     {
+      if($version == '')
+      {
+        $version = $this->structwsf_tests_suites_version;
+      }
+            
       $this->cecho("Installing PHPUNIT\n", 'WHITE');
       
       $this->exec('apt-get install -y php-pear');
@@ -580,11 +610,11 @@
       
       $this->chdir($this->structwsf_folder.'/StructuredDynamics/structwsf/tests/');
       
-      $this->exec('wget -q https://github.com/structureddynamics/structWSF-Tests-Suites/archive/'.$this->structwsf_tests_suites_version.'.zip');
+      $this->exec('wget -q https://github.com/structureddynamics/structWSF-Tests-Suites/archive/'.$version.'.zip');
       
-      $this->exec('unzip '.$this->structwsf_tests_suites_version.'.zip');      
+      $this->exec('unzip '.$version.'.zip');      
       
-      $this->chdir($this->structwsf_folder.'/StructuredDynamics/structwsf/tests/structWSF-Tests-Suites-'.$this->structwsf_tests_suites_version.'/StructuredDynamics/structwsf/tests/');
+      $this->chdir($this->structwsf_folder.'/StructuredDynamics/structwsf/tests/structWSF-Tests-Suites-'.$version.'/StructuredDynamics/structwsf/tests/');
       
       $this->exec('mv * ../../../../');
 
@@ -592,7 +622,51 @@
       
       $this->exec('rm *.zip');
             
-      $this->exec('rm -rf structWSF-Tests-Suites-'.$this->structwsf_tests_suites_version.'');
+      $this->exec('rm -rf structWSF-Tests-Suites-'.$version.'');
+      
+      $this->cecho("Configure the tests suites...\n", 'WHITE');
+      
+      $this->exec('sed -i "s>REPLACEME>'.$this->structwsf_folder.'/StructuredDynamics/structwsf>" phpunit.xml');
+
+      $this->exec('sudo sed -i "s>$this-\>structwsfInstanceFolder = \"/usr/share/structwsf/\";>$this-\>structwsfInstanceFolder = \"'.$this->structwsf_folder.'/\";>" Config.php');
+      $this->exec('sudo sed -i "s>$this-\>endpointUrl = \"http://localhost/ws/\";>$this-\>endpointUrl = \"http://'.$this->structwsf_domain.'/ws/\";>" Config.php');      
+      $this->exec('sudo sed -i "s>$this-\>endpointUri = \"http://localhost/wsf/ws/\";>$this-\>endpointUri = \"http://'.$this->structwsf_domain.'/wsf/ws/\";>" Config.php');      
+      
+      $this->chdir($this->currentWorkingDirectory);
+    }    
+    
+
+    /**
+    * Update the structWSF PHPUNIT Tests Suites
+    */
+    public function updateStructWSFTestsSuites($version = '')
+    {
+      if($version == '')
+      {
+        $version = $this->structwsf_tests_suites_version;
+      }
+      
+      $this->cecho("Updating tests suites...\n", 'WHITE');
+      
+      $this->exec('rm -rf '.$this->structwsf_folder.'/StructuredDynamics/structwsf/tests/');
+      
+      $this->exec('mkdir -p '.$this->structwsf_folder.'/StructuredDynamics/structwsf/tests/');
+      
+      $this->chdir($this->structwsf_folder.'/StructuredDynamics/structwsf/tests/');
+      
+      $this->exec('wget -q https://github.com/structureddynamics/structWSF-Tests-Suites/archive/'.$version.'.zip');
+      
+      $this->exec('unzip '.$version.'.zip');      
+      
+      $this->chdir($this->structwsf_folder.'/StructuredDynamics/structwsf/tests/structWSF-Tests-Suites-'.$version.'/StructuredDynamics/structwsf/tests/');
+      
+      $this->exec('mv * ../../../../');
+
+      $this->chdir($this->structwsf_folder.'/StructuredDynamics/structwsf/tests/');
+      
+      $this->exec('rm *.zip');
+            
+      $this->exec('rm -rf structWSF-Tests-Suites-'.$version.'');
       
       $this->cecho("Configure the tests suites...\n", 'WHITE');
       
@@ -608,8 +682,13 @@
     /**
     * Install the Ontologies Management Tool
     */
-    public function installOntologiesManagementTool()
+    public function installOntologiesManagementTool($version = '')
     {
+      if($version == '')
+      {
+        $version = $this->ontologies_management_tool_version;
+      }
+            
       $this->cecho("\n\n", 'WHITE');
       $this->cecho("---------------------------------------\n", 'WHITE');
       $this->cecho(" Installing Ontologies Management Tool \n", 'WHITE');
@@ -627,14 +706,14 @@
       $this->exec('mkdir /tmp/omt');
 
       $this->cecho("Downloading the Ontologies Management Tool...\n", 'WHITE');
-      $this->exec('wget -q -P /tmp/omt https://github.com/structureddynamics/structWSF-Ontologies-Management-Tool/archive/'.$this->ontologies_management_tool_version.'.zip');
+      $this->exec('wget -q -P /tmp/omt https://github.com/structureddynamics/structWSF-Ontologies-Management-Tool/archive/'.$version.'.zip');
 
       $this->cecho("Installing the Ontologies Management Tool...\n", 'WHITE');
-      $this->exec('unzip -o /tmp/omt/'.$this->ontologies_management_tool_version.'.zip -d /tmp/omt/');      
+      $this->exec('unzip -o /tmp/omt/'.$version.'.zip -d /tmp/omt/');      
       
       $this->exec('mkdir '.$this->ontologies_management_tool_folder.'/');      
       
-      $this->exec('cp -af /tmp/omt/structWSF-Ontologies-Management-Tool-'.$this->ontologies_management_tool_version.'/* '.$this->ontologies_management_tool_folder.'/');
+      $this->exec('cp -af /tmp/omt/structWSF-Ontologies-Management-Tool-'.$version.'/* '.$this->ontologies_management_tool_folder.'/');
 
       $this->exec('chmod 755 '.$this->ontologies_management_tool_folder.'/omt');
       
@@ -651,8 +730,13 @@
     /**
     * Update an Ontologies Management Tool installation
     */
-    public function upgradeOntologiesManagementTool()
+    public function upgradeOntologiesManagementTool($version = '')
     {
+      if($version == '')
+      {
+        $version = $this->ontologies_management_tool_version;
+      }
+            
       $this->cecho("\n\n", 'WHITE');
       $this->cecho("------------------------------------------\n", 'WHITE');
       $this->cecho(" Upgrading the Ontologies Management Tool \n", 'WHITE');
@@ -671,15 +755,15 @@
       $this->exec('mkdir /tmp/omt');
 
       $this->cecho("Downloading the Ontologies Management Tool...\n", 'WHITE');
-      $this->exec('wget -q -P /tmp/omt https://github.com/structureddynamics/structWSF-Ontologies-Management-Tool/archive/'.$this->ontologies_management_tool_version.'.zip');
+      $this->exec('wget -q -P /tmp/omt https://github.com/structureddynamics/structWSF-Ontologies-Management-Tool/archive/'.$version.'.zip');
 
       $this->cecho("Upgrading the Ontologies Management Tool...\n", 'WHITE');
-      $this->exec('unzip -o /tmp/omt/'.$this->ontologies_management_tool_version.'.zip -d /tmp/omt/');      
+      $this->exec('unzip -o /tmp/omt/'.$version.'.zip -d /tmp/omt/');      
       
       // Make sure not to overwrite the data, missing and datasetIndexes folders and the sync.ini file
-      $this->exec('rm -rf /tmp/omt/structWSF-Ontologies-Management-Tool-'.$this->ontologies_management_tool_version.'/sync.ini');
+      $this->exec('rm -rf /tmp/omt/structWSF-Ontologies-Management-Tool-'.$version.'/sync.ini');
       
-      $this->exec("cp -af /tmp/omt/structWSF-Ontologies-Management-Tool-'.$this->ontologies_management_tool_version.'/* ".$this->ontologies_management_tool_folder."/");
+      $this->exec("cp -af /tmp/omt/structWSF-Ontologies-Management-Tool-".$version."/* ".$this->ontologies_management_tool_folder."/");
 
       $this->cecho("Cleaning installation folder...\n", 'WHITE');
       $this->exec('rm -rf /tmp/omt/');      
