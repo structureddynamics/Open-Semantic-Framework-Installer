@@ -11,8 +11,12 @@ Requirements
 Installing the Open Semantic Framework
 --------------------------------------
 The only steps needed to install the Open Semantic Framework are to:
-
+                       
 ```
+mkdir -p /usr/share/osf-installer/
+
+cd /usr/share/osf-installer/
+
 wget https://raw.github.com/structureddynamics/Open-Semantic-Framework-Installer/master/install.sh
 
 chmod 755 install.sh
