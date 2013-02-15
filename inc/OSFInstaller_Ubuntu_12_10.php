@@ -193,7 +193,7 @@
       
       // Then we have to install the libiodbc2 by hand
       
-      $this->exec('mkdir /tmp/libodbc2-install/');
+      $this->exec('mkdir -p /tmp/libodbc2-install/');
       
       $this->chdir('/tmp/libodbc2-install/');
       
@@ -210,7 +210,7 @@
       // This is required to have the possibility
       // to test the connection with iodbctest
       
-      $this->exec('mkdir /tmp/iodbc-install/');
+      $this->exec('mkdir -p /tmp/iodbc-install/');
       
       $this->chdir('/tmp/iodbc-install/');
       
@@ -304,7 +304,7 @@
       
       $this->cecho("Preparing installation...\n", 'WHITE');
 
-      $this->exec('mkdir /tmp/solr-install/');
+      $this->exec('mkdir -p /tmp/solr-install/');
       
       $this->chdir('/tmp/solr-install/');
       
@@ -316,7 +316,7 @@
 
       $this->exec('tar -xzvf apache-solr-3.6.0.tgz');
 
-      $this->exec('mkdir /usr/share/solr');
+      $this->exec('mkdir -p /usr/share/solr');
       
       $this->exec('cp -af /tmp/solr-install/apache-solr-3.6.0/* /usr/share/solr/');
       
