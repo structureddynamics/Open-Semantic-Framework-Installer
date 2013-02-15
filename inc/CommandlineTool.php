@@ -36,7 +36,7 @@
       
       $this->log($output);      
       
-      if($return == 0)
+      if($return > 0)
       {
         switch(strtolower($errorLevel))
         {
@@ -54,11 +54,11 @@
           break;
         }
         
-        return(TRUE);
+        return(FALSE);
       }
       else
       {
-        return(FALSE);
+        return(TRUE);
       }
     }
     
