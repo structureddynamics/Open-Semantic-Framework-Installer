@@ -67,7 +67,7 @@
       if(!$this->config)
       {
         $this->cecho('An error occured when we tried to parse the '.$configFile.' file. Make sure it is parseable and try again.'."\n", 'RED');  
-        die;
+        exit(1);
       }      
       else
       {
