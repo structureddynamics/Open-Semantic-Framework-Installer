@@ -50,7 +50,13 @@
           
           case 'error':
             $this->cecho("A non-recoverable error happened. Check the log to see what was the error: ".$this->log_file."\n", 'RED');
-            exit(1);
+            
+            $yes = $this->isYes($this->getInput("Do you want to continue the execution. If yes, then try to fix this error by hands before continuing, otherwise errors may occurs later in the process? (yes/no)\n"));             
+            
+            if(!$yes)
+            {
+              exit(1);
+            }                        
           break;
         }
         
@@ -95,7 +101,13 @@
           
           case 'error':
             $this->cecho("A non-recoverable error happened. Check the log to see what was the error: ".$this->log_file."\n", 'RED');
-            exit(1);
+
+            $yes = $this->isYes($this->getInput("Do you want to continue the execution. If yes, then try to fix this error by hands before continuing, otherwise errors may occurs later in the process? (yes/no)\n"));             
+            
+            if(!$yes)
+            {
+              exit(1);
+            }                                    
           break;
         }      
         
