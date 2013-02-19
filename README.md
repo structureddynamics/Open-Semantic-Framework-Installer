@@ -35,8 +35,12 @@ Usage: osf-install [OPTIONS]
 General Options:
 -h, --help                              Show this help section
 -v, --verbose                           Make this insaller verbose
+-c, --configure-installer               Configure the options used by this installer
+--list-configurations                   List the current configuration used by the installer tool
 
 Installation Options:
+Note: the [VERSION] parameter is optional.
+      If no version is specified, the latest DEV version will be used
 --install-osf                           Install the Open Semantic Framework
 --install-apache2                       Install Apache2
 --install-mysql                         Install MySQL
@@ -44,16 +48,19 @@ Installation Options:
 --install-virtuoso                      Install Virtuoso
 --install-solr                          Install Solr
 --install-php5                          Install PHP5
---install-structwsf-php-api             Install the structWSF-PHP-API library
---install-structwsf-tests-suites        Install the structWSF tests suites
---install-datasets-management-tool      Install the Datasets Management Tool
---install-ontologies-management-tool    Install the Ontologies Management Tool
+--install-structwsf-php-api="[VERSION]             Install the structWSF-PHP-API library
+--install-structwsf-tests-suites="[VERSION]        Install the structWSF tests suites
+--install-datasets-management-tool="[VERSION]      Install the Datasets Management Tool
+--install-ontologies-management-tool="[VERSION]    Install the Ontologies Management Tool
 
 Upgrade Options:
---upgrade-structwsf-php-api             Upgrade the structWSF-PHP-API library
---upgrade-structwsf-tests-suites        Upgrade the structWSF tests suites
---upgrade-datasets-management-tool      Upgrade the Datasets Management Tool
---upgrade-ontologies-management-tool    Upgrade the Ontologies Management Tool
+Note: the [VERSION] parameter is optional.
+      If no version is specified, the latest DEV version will be used
+--upgrade-structwsf="[VERSION]"                     Upgrade structWSF
+--upgrade-structwsf-php-api="[VERSION]"             Upgrade the structWSF-PHP-API library
+--upgrade-structwsf-tests-suites="[VERSION]"        Upgrade the structWSF tests suites
+--upgrade-datasets-management-tool="[VERSION]"      Upgrade the Datasets Management Tool
+--upgrade-ontologies-management-tool="[VERSION]"    Upgrade the Ontologies Management Tool
 ```
 
 Next Steps
