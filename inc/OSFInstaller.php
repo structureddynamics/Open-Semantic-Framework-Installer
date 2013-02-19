@@ -182,7 +182,7 @@
       $this->exec('wget -q -P /tmp/structwsfphpapi https://github.com/structureddynamics/structWSF-PHP-API/archive/'.$version.'.zip');
 
       $this->cecho("Upgrading the structWSF-PHP-API...\n", 'WHITE');
-      $this->exec('unzip /tmp/structwsfphpapi/'.$version.'.zip -d /tmp/structwsfphpapi/ -o');      
+      $this->exec('unzip -o /tmp/structwsfphpapi/'.$version.'.zip -d /tmp/structwsfphpapi/');      
       
       if(!is_dir($this->structwsf_folder.'/'))
       {
