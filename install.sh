@@ -41,6 +41,7 @@ echo -e "\n\n"
 cecho "\n\nInstalling requirements...\n"
 
 sudo apt-get -y update
+sudo apt-get -y --no-upgrade install php5
 sudo apt-get -y install unzip
 
 cecho "\n\nDownload the latest version of the OSF Installer tool...\n"
