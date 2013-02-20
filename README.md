@@ -48,10 +48,10 @@ Note: the [VERSION] parameter is optional.
 --install-virtuoso                      Install Virtuoso
 --install-solr                          Install Solr
 --install-php5                          Install PHP5
---install-structwsf-php-api="[VERSION]             Install the structWSF-PHP-API library
---install-structwsf-tests-suites="[VERSION]        Install the structWSF tests suites
---install-datasets-management-tool="[VERSION]      Install the Datasets Management Tool
---install-ontologies-management-tool="[VERSION]    Install the Ontologies Management Tool
+--install-structwsf-php-api="[VERSION]"             Install the structWSF-PHP-API library
+--install-structwsf-tests-suites="[VERSION]"        Install the structWSF tests suites
+--install-datasets-management-tool="[VERSION]"      Install the Datasets Management Tool
+--install-ontologies-management-tool="[VERSION]"    Install the Ontologies Management Tool
 
 Upgrade Options:
 Note: the [VERSION] parameter is optional.

@@ -77,10 +77,10 @@
     $installer->cecho("--install-virtuoso                      Install Virtuoso \n", 'WHITE');
     $installer->cecho("--install-solr                          Install Solr \n", 'WHITE');
     $installer->cecho("--install-php5                          Install PHP5 \n", 'WHITE');
-    $installer->cecho("--install-structwsf-php-api=\"[VERSION]             Install the structWSF-PHP-API library \n", 'WHITE');
-    $installer->cecho("--install-structwsf-tests-suites=\"[VERSION]        Install the structWSF tests suites \n", 'WHITE');
-    $installer->cecho("--install-datasets-management-tool=\"[VERSION]      Install the Datasets Management Tool \n", 'WHITE');
-    $installer->cecho("--install-ontologies-management-tool=\"[VERSION]    Install the Ontologies Management Tool \n", 'WHITE');
+    $installer->cecho("--install-structwsf-php-api=\"[VERSION]\"             Install the structWSF-PHP-API library \n", 'WHITE');
+    $installer->cecho("--install-structwsf-tests-suites=\"[VERSION]\"        Install the structWSF tests suites \n", 'WHITE');
+    $installer->cecho("--install-datasets-management-tool=\"[VERSION]\"      Install the Datasets Management Tool \n", 'WHITE');
+    $installer->cecho("--install-ontologies-management-tool=\"[VERSION]\"    Install the Ontologies Management Tool \n", 'WHITE');
     $installer->cecho("\nUpgrade Options:\n", 'WHITE');
     $installer->cecho("Note: the [VERSION] parameter is optional.\n", 'WHITE');
     $installer->cecho("      If no version is specified, the latest DEV version will be used\n", 'WHITE');
