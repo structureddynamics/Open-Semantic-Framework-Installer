@@ -40,9 +40,14 @@ echo -e "\n\n"
 
 cecho "\n\nInstalling requirements...\n"
 
-sudo apt-get -y update
-sudo apt-get -y --no-upgrade install php5
-sudo apt-get -y install unzip
+# Make sure that apt-get exists for this linux distribution
+if which apt-get >/dev/null; then
+  sudo apt-get -y update
+  sudo apt-get -y --no-upgrade install php5
+  sudo apt-get -y install unzip
+else
+  cecho "\nMake sure that PHP 5, unzip and the wget softwares are installed on your server\n" yellow
+fi
 
 cecho "\n\nDownload the latest version of the OSF Installer tool...\n"
 
