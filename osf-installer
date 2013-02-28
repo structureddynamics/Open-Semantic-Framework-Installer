@@ -126,7 +126,7 @@
   // Upgrade the structWSF-PHP-API library
   if(isset($arguments['upgrade-structwsf-php-api']))
   {
-    $installer->upgradeStructWSFPHPAPI();
+    $installer->upgradeStructWSFPHPAPI($arguments['upgrade-structwsf-php-api']);
   }
 
   // Install the Datasets Management Tool library
