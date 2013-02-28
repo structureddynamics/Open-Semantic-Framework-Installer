@@ -40,9 +40,9 @@ echo -e "\n\n"
 
 cecho "\n\nDownload the latest version of the OSF Installer tool...\n"
 
-sudo wget https://github.com/structureddynamics/Open-Semantic-Framework-Installer/archive/2.0-php.zip
+sudo wget https://github.com/structureddynamics/Open-Semantic-Framework-Installer/archive/master.zip
 
-unzip 2.0-php.zip
+unzip master.zip
 
 cd Open-Semantic-Framework-Installer*
 
@@ -53,7 +53,7 @@ sudo mv -f * ../
 cd ..
 
 sudo rm -rf Open-Semantic-Framework-Installer*
-sudo rm -f 2.0-php.zip
+sudo rm -f master-php.zip
 
 cecho "\n\nThe OSD-Installer has been upgraded\n"
 
