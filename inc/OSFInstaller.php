@@ -599,7 +599,7 @@
       
       $this->exec('wget http://pear.php.net/go-pear.phar');
       
-      $this->exec('php go-pear.phar');
+      passthru('php go-pear.phar');
       
       $this->exec('pear channel-discover pear.phpunit.de', 'warning');
       
