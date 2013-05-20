@@ -399,25 +399,9 @@
       $this->exec('sudo sed -i "s>enable_lrl = \"FALSE\">enable_lrl = \"TRUE\">" "'.$this->structwsf_folder.$this->structwsf_ns.'/data.ini"');
 
 
-      
       if(!$this->isYes($this->getInput("Do you want to enable logging in structWSF? (yes/no) (default: yes)")))
       {
         $this->exec('sudo sed -i "s>log_enable = \"true\">log_enable = \"false\">" "'.$this->structwsf_folder.$this->structwsf_ns.'/network.ini"');
-      }
-      
-      if($this->isYes($this->getInput("Do you want to enable changes tracking for the CRUD: Create web service endpoint? (yes/no) (default: no)")))
-      {
-        $this->exec('sudo sed -i "s>track_create = \"false\">track_create = \"true\">" "'.$this->structwsf_folder.$this->structwsf_ns.'/network.ini"');
-      }
-      
-      if($this->isYes($this->getInput("Do you want to enable changes tracking for the CRUD: Update web service endpoint? (yes/no) (default: no)")))
-      {
-        $this->exec('sudo sed -i "s>track_update = \"false\">track_update = \"true\">" "'.$this->structwsf_folder.$this->structwsf_ns.'/network.ini"');
-      }
-      
-      if($this->isYes($this->getInput("Do you want to enable changes tracking for the CRUD: Delete web service endpoint? (yes/no) (default: no)")))
-      {
-        $this->exec('sudo sed -i "s>track_delete = \"false\">track_delete = \"true\">" "'.$this->structwsf_folder.$this->structwsf_ns.'/network.ini"');
       }
       
       if($this->isYes($this->getInput("Do you want to geo-enable structWSF? (yes/no) (default: no)")))
