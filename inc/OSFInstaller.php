@@ -389,7 +389,7 @@
 
       // fix fields_index_folder
       $this->exec('sudo sed -i "s>fields_index_folder = \"/tmp/\">fields_index_folder = \"'.$this->data_folder.'/structwsf/tmp/\">" "'.$this->structwsf_folder.$this->structwsf_ns.'/data.ini"');
-
+      
       // fix wsf_base_url
       $this->exec('sudo sed -i "s>wsf_base_url = \"http://localhost\">wsf_base_url = \"http://'.$this->structwsf_domain.'\">" "'.$this->structwsf_folder.$this->structwsf_ns.'/network.ini"');
 
@@ -398,6 +398,9 @@
 
       $this->exec('sudo sed -i "s>enable_lrl = \"FALSE\">enable_lrl = \"TRUE\">" "'.$this->structwsf_folder.$this->structwsf_ns.'/data.ini"');
 
+      $this->cecho("Create structWSF tmp folder...\n", 'WHITE');
+      $this->exec('mkdir -p '.$this->data_folder.'/structwsf/tmp/');
+      $this->exec('chmod -R 755 '.$this->data_folder.'/structwsf/tmp/');      
 
       if(!$this->isYes($this->getInput("Do you want to enable logging in structWSF? (yes/no) (default: yes)")))
       {
