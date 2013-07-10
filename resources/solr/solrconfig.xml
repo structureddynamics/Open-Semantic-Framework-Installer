@@ -736,7 +736,19 @@
        <str name="echoParams">explicit</str>
        <int name="rows">10</int>
        <!--str name="df">text</str-->
+       
+       <str name="spellcheck.onlyMorePopular">false</str>
+       <str name="spellcheck.extendedResults">true</str>
+       <str name="spellcheck.dictionary">freq</str>
+       <str name="spellcheck.count">3</str>
+       <str name="spellcheck.collate">true</str>              
+       
      </lst>
+     
+    <arr name="last-components">
+      <str>spellcheck</str>
+    </arr>         
+     
     <!-- In addition to defaults, "appends" params can be specified
          to identify values which should be appended to the list of
          multi-val params from the query (or the existing "defaults").
@@ -1128,14 +1140,14 @@
       -->
     <lst name="spellchecker">
       <str name="name">default</str>
-      <str name="field">name</str>
+      <str name="field">all_text_en</str>
       <str name="spellcheckIndexDir">spellchecker</str>
+      <str name="buildOnOptimize">true</str>
+      
       <!-- uncomment this to require terms to occur in 1% of the documents 
            in order to be included in the dictionary
         -->
-      <!--
-      	<float name="thresholdTokenFrequency">.01</float>
-      -->
+    	<float name="thresholdTokenFrequency">.01</float>
     </lst>
 
     <!-- a spellchecker that uses a different distance measure -->
@@ -1157,25 +1169,23 @@
           2. freq (Frequency first, then score)
           3. A fully qualified class name
       -->
-    <!--
-       <lst name="spellchecker">
-         <str name="name">freq</str>
-         <str name="field">lowerfilt</str>
-         <str name="spellcheckIndexDir">spellcheckerFreq</str>
-         <str name="comparatorClass">freq</str>
-         <str name="buildOnCommit">true</str>
-      -->
+     <lst name="spellchecker">
+       <str name="name">freq</str>
+       <str name="field">lowerfilt</str>
+       <str name="spellcheckIndexDir">spellcheckerFreq</str>
+       <str name="comparatorClass">freq</str>
+       <str name="buildOnCommit">true</str>
+     </lst>
 
     <!-- A spellchecker that reads the list of words from a file -->
-    <!--
-       <lst name="spellchecker">
-         <str name="classname">solr.FileBasedSpellChecker</str>
-         <str name="name">file</str>
-         <str name="sourceLocation">spellings.txt</str>
-         <str name="characterEncoding">UTF-8</str>
-         <str name="spellcheckIndexDir">spellcheckerFile</str>
-       </lst>
-      -->
+
+     <lst name="spellchecker">
+       <str name="classname">solr.FileBasedSpellChecker</str>
+       <str name="name">file</str>
+       <str name="sourceLocation">spellings.txt</str>
+       <str name="characterEncoding">UTF-8</str>
+       <str name="spellcheckIndexDir">spellcheckerFile</str>
+     </lst>
   </searchComponent>
 
   <!-- A request handler for demonstrating the spellcheck component.  
