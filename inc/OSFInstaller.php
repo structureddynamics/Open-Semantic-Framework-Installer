@@ -399,8 +399,11 @@
       $this->exec('sudo sed -i "s>enable_lrl = \"FALSE\">enable_lrl = \"TRUE\">" "'.$this->structwsf_folder.$this->structwsf_ns.'/data.ini"');
 
       $this->cecho("Create structWSF tmp folder...\n", 'WHITE');
+      
       $this->exec('mkdir -p '.$this->data_folder.'/structwsf/tmp/');
-      $this->exec('chmod -R 755 '.$this->data_folder.'/structwsf/tmp/');      
+      
+      $this->exec('chown -R www-data:www-data '.$this->data_folder.'/structwsf/');
+      $this->exec('chmod -R 755 '.$this->data_folder.'/structwsf/');      
 
       if(!$this->isYes($this->getInput("Do you want to enable logging in structWSF? (yes/no) (default: yes)")))
       {
