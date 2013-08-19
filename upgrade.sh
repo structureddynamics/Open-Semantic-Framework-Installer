@@ -42,6 +42,12 @@ cecho "\n\nDownload the latest version of the OSF Installer tool...\n"
 
 sudo wget https://github.com/structureddynamics/Open-Semantic-Framework-Installer/archive/master.zip
 
+while [ $? -ne 0 ]; do
+  cecho "Connection error while downloading the latest version of the Open Semantic Framework Installer; retrying...\n" "yellow"
+  sudo rm -rf master.zip
+  sudo wget https://github.com/structureddynamics/Open-Semantic-Framework-Installer/archive/master.zip
+done
+
 unzip master.zip
 
 cd Open-Semantic-Framework-Installer*
