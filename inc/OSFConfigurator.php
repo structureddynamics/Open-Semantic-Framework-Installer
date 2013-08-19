@@ -417,7 +417,7 @@ logging-folder = \"".$this->logging_folder."\"
       
       $this->chdir('/tmp/structwsftestssuites-upgrade/');
       
-      $this->exec('wget -q https://github.com/structureddynamics/structWSF-Tests-Suites/archive/'.$this->structwsf_tests_suites_version.'.zip');
+      $this->wget('https://github.com/structureddynamics/structWSF-Tests-Suites/archive/'.$this->structwsf_tests_suites_version.'.zip');
       
       $this->exec('unzip '.$this->structwsf_tests_suites_version.'.zip');
       

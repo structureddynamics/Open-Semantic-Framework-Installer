@@ -135,7 +135,7 @@
       $this->exec('mkdir -p /tmp/structwsfphpapi');
 
       $this->cecho("Downloading the structWSF-PHP-API...\n", 'WHITE');
-      $this->exec('wget -q -P /tmp/structwsfphpapi https://github.com/structureddynamics/structWSF-PHP-API/archive/'.$version.'.zip');
+      $this->wget('https://github.com/structureddynamics/structWSF-PHP-API/archive/'.$version.'.zip','/tmp/structwsfphpapi');
 
       $this->cecho("Installing the structWSF-PHP-API...\n", 'WHITE');
       $this->exec('unzip -o /tmp/structwsfphpapi/'.$version.'.zip -d /tmp/structwsfphpapi/');      
@@ -179,8 +179,8 @@
       $this->exec('mkdir -p /tmp/structwsfphpapi');
 
       $this->cecho("Downloading the latest code of the structWSF-PHP-API...\n", 'WHITE');
-      $this->exec('wget -q -P /tmp/structwsfphpapi https://github.com/structureddynamics/structWSF-PHP-API/archive/'.$version.'.zip');
-
+      $this->wget('https://github.com/structureddynamics/structWSF-PHP-API/archive/'.$version.'.zip', '/tmp/structwsfphpapi');
+      
       $this->cecho("Upgrading the structWSF-PHP-API...\n", 'WHITE');
       $this->exec('unzip -o /tmp/structwsfphpapi/'.$version.'.zip -d /tmp/structwsfphpapi/');      
       
@@ -222,7 +222,7 @@
       $this->exec('mkdir -p /tmp/dmt');
 
       $this->cecho("Downloading the Datasets Management Tool...\n", 'WHITE');
-      $this->exec('wget -q -P /tmp/dmt https://github.com/structureddynamics/structWSF-Datasets-Management-Tool/archive/'.$version.'.zip');
+      $this->wget('https://github.com/structureddynamics/structWSF-Datasets-Management-Tool/archive/'.$version.'.zip', '/tmp/dmt');
 
       $this->cecho("Installing the Datasets Management Tool...\n", 'WHITE');
       $this->exec('unzip -o /tmp/dmt/'.$version.'.zip -d /tmp/dmt/');      
@@ -271,7 +271,7 @@
       $this->exec('mkdir -p /tmp/dmt');
 
       $this->cecho("Downloading the Datasets Management Tool...\n", 'WHITE');
-      $this->exec('wget -q -P /tmp/dmt https://github.com/structureddynamics/structWSF-Datasets-Management-Tool/archive/'.$version.'.zip');
+      $this->wget('https://github.com/structureddynamics/structWSF-Datasets-Management-Tool/archive/'.$version.'.zip', '/tmp/dmt');
 
       $this->cecho("Upgrading the Datasets Management Tool...\n", 'WHITE');
       $this->exec('unzip -o /tmp/dmt/'.$version.'.zip -d /tmp/dmt/');      
@@ -318,7 +318,7 @@
       $this->exec('mkdir -p /tmp/structwsf-install');
 
       $this->cecho("Downloading structWSF...\n", 'WHITE');
-      $this->exec('wget -q -P /tmp/structwsf-install https://github.com/structureddynamics/structWSF-Open-Semantic-Framework/archive/'.$version.'.zip');
+      $this->wget('https://github.com/structureddynamics/structWSF-Open-Semantic-Framework/archive/'.$version.'.zip', '/tmp/structwsf-install');
 
       $this->cecho("Installing structWSF...\n", 'WHITE');
       $this->exec('unzip -o /tmp/structwsf-install/'.$version.'.zip -d /tmp/structwsf-install/');      
@@ -434,7 +434,7 @@
       
       $this->chdir($this->structwsf_folder.$this->structwsf_ns.'/framework/arc2/');
       
-      $this->exec('wget -q https://github.com/semsol/arc2/archive/v2.1.1.zip');
+      $this->wget('https://github.com/semsol/arc2/archive/v2.1.1.zip');
       
       $this->exec('unzip v2.1.1.zip');
       
@@ -461,7 +461,7 @@
       
       $this->chdir('/var/lib/tomcat6/webapps/');
       
-      $this->exec('wget -q http://techwiki.openstructs.org/files/OWLAPI.war');
+      $this->wget('http://techwiki.openstructs.org/files/OWLAPI.war');
       
       $this->cecho("Starting Tomcat6 to install the OWLAPI war installation file...\n", 'WHITE');
       
@@ -536,15 +536,15 @@
 
       $this->chdir($this->data_folder.'/ontologies/files');
             
-      $this->exec('wget -q https://raw.github.com/structureddynamics/Ontologies-Open-Semantic-Framework/master/aggr/aggr.owl');
-      $this->exec('wget -q https://raw.github.com/structureddynamics/Ontologies-Open-Semantic-Framework/master/iron/iron.owl');
-      $this->exec('wget -q https://raw.github.com/structureddynamics/Ontologies-Open-Semantic-Framework/master/owl/owl.rdf');
-      $this->exec('wget -q https://raw.github.com/structureddynamics/Ontologies-Open-Semantic-Framework/master/rdf/rdf.xml');
-      $this->exec('wget -q https://raw.github.com/structureddynamics/Ontologies-Open-Semantic-Framework/master/rdf/rdfs.xml');
-      $this->exec('wget -q https://raw.github.com/structureddynamics/Ontologies-Open-Semantic-Framework/master/sco/sco.owl');
-      $this->exec('wget -q https://raw.github.com/structureddynamics/Ontologies-Open-Semantic-Framework/master/wgs84/wgs84.owl');
-      $this->exec('wget -q https://raw.github.com/structureddynamics/Ontologies-Open-Semantic-Framework/master/wsf/wsf.owl');
-
+      $this->wget('https://raw.github.com/structureddynamics/Ontologies-Open-Semantic-Framework/master/aggr/aggr.owl');      
+      $this->wget('https://raw.github.com/structureddynamics/Ontologies-Open-Semantic-Framework/master/iron/iron.owl');
+      $this->wget('https://raw.github.com/structureddynamics/Ontologies-Open-Semantic-Framework/master/owl/owl.rdf');
+      $this->wget('https://raw.github.com/structureddynamics/Ontologies-Open-Semantic-Framework/master/rdf/rdf.xml');
+      $this->wget('https://raw.github.com/structureddynamics/Ontologies-Open-Semantic-Framework/master/rdf/rdfs.xml');
+      $this->wget('https://raw.github.com/structureddynamics/Ontologies-Open-Semantic-Framework/master/sco/sco.owl');
+      $this->wget('https://raw.github.com/structureddynamics/Ontologies-Open-Semantic-Framework/master/wgs84/wgs84.owl');
+      $this->wget('https://raw.github.com/structureddynamics/Ontologies-Open-Semantic-Framework/master/wsf/wsf.owl');
+      
       $this->cecho("Load ontologies...\n", 'WHITE');
       
       $this->chdir($this->ontologies_management_tool_folder);
@@ -587,7 +587,7 @@
 
       $this->chdir('/tmp');
       
-      $this->exec('wget http://pear.php.net/go-pear.phar');
+      $this->wget('http://pear.php.net/go-pear.phar');
       
       passthru('php go-pear.phar');
       
@@ -610,7 +610,7 @@
       
       $this->chdir($this->structwsf_folder.'/StructuredDynamics/structwsf/tests/');
       
-      $this->exec('wget -q https://github.com/structureddynamics/structWSF-Tests-Suites/archive/'.$version.'.zip');
+      $this->wget('https://github.com/structureddynamics/structWSF-Tests-Suites/archive/'.$version.'.zip');
       
       $this->exec('unzip '.$version.'.zip');      
       
@@ -654,7 +654,7 @@
       
       $this->chdir($this->structwsf_folder.'/StructuredDynamics/structwsf/tests/');
       
-      $this->exec('wget -q https://github.com/structureddynamics/structWSF-Tests-Suites/archive/'.$version.'.zip');
+      $this->wget('https://github.com/structureddynamics/structWSF-Tests-Suites/archive/'.$version.'.zip');
       
       $this->exec('unzip '.$version.'.zip');      
       
@@ -706,7 +706,7 @@
       $this->exec('mkdir -p /tmp/omt');
 
       $this->cecho("Downloading the Ontologies Management Tool...\n", 'WHITE');
-      $this->exec('wget -q -P /tmp/omt https://github.com/structureddynamics/structWSF-Ontologies-Management-Tool/archive/'.$version.'.zip');
+      $this->wget('https://github.com/structureddynamics/structWSF-Ontologies-Management-Tool/archive/'.$version.'.zip', '/tmp/omt');
 
       $this->cecho("Installing the Ontologies Management Tool...\n", 'WHITE');
       $this->exec('unzip -o /tmp/omt/'.$version.'.zip -d /tmp/omt/');      
@@ -755,7 +755,7 @@
       $this->exec('mkdir -p /tmp/omt');
 
       $this->cecho("Downloading the Ontologies Management Tool...\n", 'WHITE');
-      $this->exec('wget -q -P /tmp/omt https://github.com/structureddynamics/structWSF-Ontologies-Management-Tool/archive/'.$version.'.zip');
+      $this->wget('https://github.com/structureddynamics/structWSF-Ontologies-Management-Tool/archive/'.$version.'.zip', '/tmp/omt');
 
       $this->cecho("Upgrading the Ontologies Management Tool...\n", 'WHITE');
       $this->exec('unzip -o /tmp/omt/'.$version.'.zip -d /tmp/omt/');      

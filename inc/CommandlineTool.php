@@ -247,6 +247,71 @@
       
       return($answer);
     }    
+    
+    public function wget($url, $save_folder = '')
+    {
+      $output = array();
+      
+      $this->log(array($url), TRUE);   
+      
+      if(!empty($save_folder))
+      {   
+        exec('wget -q -P '.$save_folder.' '.$url, $output, $return);
+      }
+      else
+      {
+        exec('wget -q '.$url, $output, $return);
+      }
+      
+      $this->log($output);      
+      
+      if($return > 0)
+      {
+        // get the file that was being download from the URL
+        $pos = strrpos($url, '/');
+        
+        $filename = substr($url, $pos + 1);
+        
+        // Remove the file it tries to install
+        exec('rm '.$filename);        
+        
+        $this->cecho("Connection error while downloading the file $filename: retrying...\n", 'YELLOW');
+        
+        $this->wget($url);
+      }
+
+      return(TRUE);
+    }  
+    
+    public function curl($command, $download_file = '')
+    {
+      $output = array();
+      
+      $this->log(array($command), TRUE);   
+         
+      exec('curl '.$command, $output, $return);
+      
+      $this->log($output);      
+      
+      if($return > 0)
+      {
+        if(!empty($download_file))
+        {
+          // Remove the file it tries to install
+          exec('rm '.$download_file);        
+          
+          $this->cecho("Connection error downloading file $download_file; retrying...\n", 'YELLOW');
+        }
+        else
+        {
+          $this->cecho("Connection error using Curl; retrying...\n", 'YELLOW');          
+        }
+        
+        $this->curl($command, $download_file);
+      }
+
+      return(TRUE);
+    }          
   }
   
 ?>

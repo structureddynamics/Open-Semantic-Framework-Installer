@@ -310,7 +310,7 @@
       
       $this->cecho("Downloading Solr...\n", 'WHITE');
       
-      $this->exec('wget -q http://archive.apache.org/dist/lucene/solr/3.6.0/apache-solr-3.6.0.tgz');
+      $this->wget('http://archive.apache.org/dist/lucene/solr/3.6.0/apache-solr-3.6.0.tgz');
       
       $this->cecho("Installing Solr...\n", 'WHITE');
 

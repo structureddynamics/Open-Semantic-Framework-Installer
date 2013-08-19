@@ -59,7 +59,7 @@
       
       $this->cecho("Download structWSF version ".$version."...\n");
       
-      $this->exec('wget -q https://github.com/structureddynamics/structWSF-Open-Semantic-Framework/archive/version-'.$version.'.zip');
+      $this->wget('https://github.com/structureddynamics/structWSF-Open-Semantic-Framework/archive/version-'.$version.'.zip');
 
       $this->cecho("Preparing structWSF version ".$version."...\n");
       
