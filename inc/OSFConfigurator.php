@@ -15,9 +15,6 @@
     /* version of virtuoso to install */
     protected $virtuoso_version = "6.1.6";
     
-    /* Version of drupal to install */
-    protected $drupal_version = "7.19";
-
     /* Version of structWSF to install */
     protected $structwsf_version = "dev";
 
@@ -26,9 +23,6 @@
 
     /* Version of structWSF Tests Suites to install */
     protected $structwsf_tests_suites_version = "dev";
-
-    /* Version of conStruct to install */
-    protected $construct_version = "7.x-1.0";
 
     /* Folder where the data is managed */
     protected $data_folder = "/data";
@@ -88,11 +82,6 @@
           $this->virtuoso_version = $this->config['data']['virtuoso-version'];
         }
         
-        if(isset($this->config['construct']['drupal-version']))
-        {
-          $this->drupal_version = $this->config['construct']['drupal-version'];
-        }
-        
         if(isset($this->config['structwsf']['structwsf-version']))
         {
           if(strtolower($this->config['structwsf']['structwsf-version']) == 'dev')
@@ -128,11 +117,6 @@
             $this->structwsf_tests_suites_version = $this->config['structwsf']['structwsf-tests-suites-version'];
           }
         }        
-        
-        if(isset($this->config['construct']['construct-version']))
-        {
-          $this->construct_version = $this->config['construct']['construct-version'];
-        }
         
         if(isset($this->config['structwsf']['structwsf-domain']))
         {
@@ -251,23 +235,7 @@
       {
         $this->structwsf_domain = $return;
       }    
-      
-      $this->cecho("\n\nconStruct related configuration settings:\n", 'CYAN');
             
-      $return = $this->getInput("What is the Drupal version you want to install or upgrade? (default: ".$this->drupal_version.")");
-      
-      if($return != '')
-      {
-        $this->drupal_version = $return;
-      }          
-      
-      $return = $this->getInput("What is the conStruct version you want to install or upgrade? (default: ".$this->construct_version.")");
-      
-      if($return != '')
-      {
-        $this->construct_version = $return;
-      }          
-      
       $this->cecho("\n\nOther tools related configuration settings:\n", 'CYAN');
 
       $return = $this->getInput("What is the Datasets Management Tool version you want to install or upgrade? (default: ".($this->datasets_management_tool_version == 'master' ? 'dev' : $this->datasets_management_tool_ver).")");
@@ -350,10 +318,6 @@ structwsf-domain = \"".$this->structwsf_domain."\"
 structwsf-php-api-version = \"".$this->structwsf_version."\"
 structwsf-tests-suites-version = \"".$this->structwsf_version."\"
 
-[construct]
-drupal-version = \"".$this->drupal_version."\"
-construct-version = \"".$this->construct_version."\"
-
 [tools]
 datasets-management-tool-folder = \"".$this->datasets_management_tool_folder."\"
 datasets-management-tool-version = \"".$this->datasets_management_tool_version."\"
@@ -383,11 +347,6 @@ logging-folder = \"".$this->logging_folder."\"
       $this->cecho("structwsf-domain: ".$this->structwsf_domain."\n", 'WHITE');
       $this->cecho("structwsf-php-api-version: ".($this->structwsf_php_api_version == 'master' ? 'dev' : $this->structwsf_php_api_version)."\n", 'WHITE');
       $this->cecho("structwsf-tests-suites-version: ".($this->structwsf_tests_suites_version == 'master' ? 'dev' : $this->structwsf_tests_suites_version)."\n", 'WHITE');
-      
-      $this->cecho("\n\nconStruct related configuration settings:\n", 'CYAN');
-            
-      $this->cecho("drupal-version: ".$this->drupal_version."\n", 'WHITE');
-      $this->cecho("construct-version: ".$this->construct_version."\n", 'WHITE');
       
       $this->cecho("\n\nOther tools related configuration settings:\n", 'CYAN');
 
