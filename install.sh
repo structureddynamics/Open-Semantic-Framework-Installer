@@ -62,8 +62,6 @@ mv -f * ../
 cd ..
 
 rm -rf Open-Semantic-Framework-Installer*
-rm -f 2.0-php.zip
-
 
 chmod 755 osf-installer
 chmod 755 upgrade.sh
