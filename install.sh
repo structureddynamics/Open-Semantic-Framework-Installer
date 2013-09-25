@@ -62,6 +62,7 @@ mv -f * ../
 cd ..
 
 rm -rf Open-Semantic-Framework-Installer*
+rm -f master.zip
 
 chmod 755 osf-installer
 chmod 755 upgrade.sh
