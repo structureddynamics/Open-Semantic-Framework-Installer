@@ -55,6 +55,8 @@
                                          'upgrade-structwsf-tests-suites::',
                                          'install-datasets-management-tool::',
                                          'upgrade-datasets-management-tool::',  
+                                         'install-data-validator-tool::',
+                                         'upgrade-data-validator-tool::',  
                                          'install-ontologies-management-tool::',
                                          'upgrade-ontologies-management-tool::'));  
   
@@ -80,6 +82,7 @@
     $installer->cecho("--install-structwsf-php-api=\"[VERSION]\"             Install the structWSF-PHP-API library \n", 'WHITE');
     $installer->cecho("--install-structwsf-tests-suites=\"[VERSION]\"        Install the structWSF tests suites \n", 'WHITE');
     $installer->cecho("--install-datasets-management-tool=\"[VERSION]\"      Install the Datasets Management Tool \n", 'WHITE');
+    $installer->cecho("--install-data-validator-tool=\"[VERSION]\"      Install the Data Validator Tool \n", 'WHITE');
     $installer->cecho("--install-ontologies-management-tool=\"[VERSION]\"    Install the Ontologies Management Tool \n", 'WHITE');
     $installer->cecho("\nUpgrade Options:\n", 'WHITE');
     $installer->cecho("Note: the [VERSION] parameter is optional.\n", 'WHITE');
@@ -88,6 +91,7 @@
     $installer->cecho("--upgrade-structwsf-php-api=\"[VERSION]\"             Upgrade the structWSF-PHP-API library \n", 'WHITE');
     $installer->cecho("--upgrade-structwsf-tests-suites=\"[VERSION]\"        Upgrade the structWSF tests suites \n", 'WHITE');
     $installer->cecho("--upgrade-datasets-management-tool=\"[VERSION]\"      Upgrade the Datasets Management Tool \n", 'WHITE');
+    $installer->cecho("--upgrade-data-validator-tool=\"[VERSION]\"      Upgrade the Data Validator Tool \n", 'WHITE');
     $installer->cecho("--upgrade-ontologies-management-tool=\"[VERSION]\"    Upgrade the Ontologies Management Tool \n", 'WHITE');
     $installer->cecho("\n\n", 'WHITE');
     die;
@@ -139,6 +143,18 @@
   if(isset($arguments['upgrade-datasets-management-tool']))
   {
     $installer->upgradeDatasetsManagementTool($arguments['upgrade-datasets-management-tool']);
+  }
+
+  // Install the Data Validator Tool library
+  if(isset($arguments['install-data-validator-tool']))
+  {
+    $installer->installDataValidatorTool($arguments['install-data-validator-tool']);
+  }
+  
+  // Upgrade the Data Validator Tool library
+  if(isset($arguments['upgrade-data-validator-tool']))
+  {
+    $installer->upgradeDataValidatorTool($arguments['upgrade-data-validator-tool']);
   }
 
   // Install the Ontologies Management Tool library

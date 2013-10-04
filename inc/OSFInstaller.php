@@ -244,6 +244,56 @@
     }
     
     /**
+    * Install the Datasets Management Tool
+    */
+    public function installDataValidatorTool($version = '')
+    {
+      if($version == '')
+      {
+        $version = $this->data_validator_tool_version;
+      }
+            
+      $this->cecho("\n\n", 'WHITE');
+      $this->cecho("--------------------------------\n", 'WHITE');
+      $this->cecho(" Installing Data Validator Tool \n", 'WHITE');
+      $this->cecho("--------------------------------\n", 'WHITE');
+      $this->cecho("\n\n", 'WHITE');          
+      
+      $dataValidatorFolder = $this->structwsf_folder.'/StructuredDynamics/structwsf/validator/';
+      
+      if(is_dir($dataValidatorFolder))                
+      {
+        $this->cecho("The Data Validator Tool is already installed. Consider upgrading it with the option: --upgrade-data-validator-tool\n", 'YELLOW');
+        
+        return;
+      }
+                                              
+      $this->cecho("Preparing installation...\n", 'WHITE');
+      $this->exec('mkdir -p /tmp/dvt');
+
+      $this->cecho("Downloading the Data Validator Tool...\n", 'WHITE');
+      $this->exec('wget -q -P /tmp/dvt https://github.com/structureddynamics/structWSF-Data-Validator-Tool/archive/'.$version.'.zip');
+
+      $this->cecho("Installing the Data Validator Tool...\n", 'WHITE');
+      $this->exec('unzip -o /tmp/dvt/'.$version.'.zip -d /tmp/dvt/');      
+      
+      $this->exec('mkdir -p '.$dataValidatorFolder);      
+      
+      $this->exec('cp -af /tmp/dvt/structWSF-Data-Validator-Tool-'.$version.'/StructuredDynamics/structwsf/validator/* '.$dataValidatorFolder);
+
+      $this->exec('chmod 755 '.$dataValidatorFolder.'dvt');
+      
+      $this->chdir('/usr/bin');
+      
+      $this->exec('ln -s '.$dataValidatorFolder.'dvt dvt');
+      
+      $this->chdir($this->currentWorkingDirectory);
+      
+      $this->cecho("Cleaning installation folder...\n", 'WHITE');
+      $this->exec('rm -rf /tmp/dvt/');      
+    }    
+    
+    /**
     * Upgrade a Datasets Management Tool installation
     */
     public function upgradeDatasetsManagementTool($version = '')
@@ -290,6 +340,50 @@
       $this->cecho("Cleaning installation folder...\n", 'WHITE');
       $this->exec('rm -rf /tmp/dmt/');      
     }    
+    
+    /**
+    * Upgrade a Data Validator Tool installation
+    */
+    public function upgradeDataValidatorTool($version = '')
+    {
+      if($version == '')
+      {
+        $version = $this->data_validator_tool_version;
+      }      
+      
+      $this->cecho("\n\n", 'WHITE');
+      $this->cecho("-----------------------------------\n", 'WHITE');
+      $this->cecho(" Upgrading the Data Validator Tool \n", 'WHITE');
+      $this->cecho("-----------------------------------\n", 'WHITE');
+      $this->cecho("\n\n", 'WHITE');      
+      
+      $dataValidatorFolder = $this->structwsf_folder.'/StructuredDynamics/structwsf/validator/';
+      
+      $backupFolder = '/tmp/dvt-'.date('Y-m-d_H-i-s');  
+      
+      $this->cecho("Moving old version into: ".$backupFolder."/ ...\n", 'WHITE');
+      
+      $this->exec('mkdir -p '.$backupFolder);
+      
+      $this->exec('cp -af '.$dataValidatorFolder.' '.$backupFolder);
+                                              
+      $this->cecho("Preparing upgrade...\n", 'WHITE');
+      $this->exec('mkdir -p /tmp/dvt');
+
+      $this->cecho("Downloading the Data Validator Tool...\n", 'WHITE');
+      $this->exec('wget -q -P /tmp/dvt https://github.com/structureddynamics/structWSF-Data-Validator-Tool/archive/'.$version.'.zip');
+
+      $this->cecho("Upgrading the Data Validator Tool...\n", 'WHITE');
+      $this->exec('unzip -o /tmp/dvt/'.$version.'.zip -d /tmp/dvt/');      
+      
+      $this->exec('cp -af /tmp/dvt/structWSF-Data-Validator-Tool-'.$version.'/StructuredDynamics/structwsf/validator/* '.$dataValidatorFolder);
+
+      // Make "dvt" executable
+      $this->exec('chmod 755 '.$dataValidatorFolder.'dvt');
+      
+      $this->cecho("Cleaning installation folder...\n", 'WHITE');
+      $this->exec('rm -rf /tmp/dvt/');      
+    }     
     
     /**
     * Install structWSF
@@ -735,7 +829,7 @@
             
       $this->cecho("Cleaning installation folder...\n", 'WHITE');
       $this->exec('rm -rf /tmp/omt/');      
-    }
+    }   
     
     /**
     * Update an Ontologies Management Tool installation

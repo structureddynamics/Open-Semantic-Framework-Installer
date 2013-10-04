@@ -51,6 +51,7 @@ Note: the [VERSION] parameter is optional.
 --install-structwsf-php-api="[VERSION]"             Install the structWSF-PHP-API library
 --install-structwsf-tests-suites="[VERSION]"        Install the structWSF tests suites
 --install-datasets-management-tool="[VERSION]"      Install the Datasets Management Tool
+--install-data-validator-tool="[VERSION]"      Install the Data Validator Tool
 --install-ontologies-management-tool="[VERSION]"    Install the Ontologies Management Tool
 
 Upgrade Options:
@@ -60,6 +61,7 @@ Note: the [VERSION] parameter is optional.
 --upgrade-structwsf-php-api="[VERSION]"             Upgrade the structWSF-PHP-API library
 --upgrade-structwsf-tests-suites="[VERSION]"        Upgrade the structWSF tests suites
 --upgrade-datasets-management-tool="[VERSION]"      Upgrade the Datasets Management Tool
+--upgrade-data-validator-tool="[VERSION]"      Upgrade the Data Validator Tool
 --upgrade-ontologies-management-tool="[VERSION]"    Upgrade the Ontologies Management Tool
 ```
 
