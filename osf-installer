@@ -41,6 +41,7 @@
                                          'configure-installer::',
                                          'list-configurations::',
                                          'install-osf::',
+                                         'install-construct::',
                                          'install-apache2::',
                                          'install-mysql::',
                                          'install-phpmyadmin::',
@@ -55,6 +56,8 @@
                                          'upgrade-structwsf-tests-suites::',
                                          'install-datasets-management-tool::',
                                          'upgrade-datasets-management-tool::',  
+                                         'install-data-validator-tool::',
+                                         'upgrade-data-validator-tool::',  
                                          'install-ontologies-management-tool::',
                                          'upgrade-ontologies-management-tool::'));  
   
@@ -67,7 +70,7 @@
     $installer->cecho("-v, --verbose                           Make this insaller verbose\n", 'WHITE');
     $installer->cecho("-c, --configure-installer               Configure the options used by this installer\n", 'WHITE');
     $installer->cecho("--list-configurations                   List the current configuration used by the installer tool\n\n", 'WHITE');
-    $installer->cecho("Installation Options:\n", 'WHITE');
+    $installer->cecho("OSF Installation Options:\n", 'WHITE');
     $installer->cecho("Note: the [VERSION] parameter is optional.\n", 'WHITE');
     $installer->cecho("      If no version is specified, the latest DEV version will be used\n", 'WHITE');
     $installer->cecho("--install-osf                           Install the Open Semantic Framework \n", 'WHITE');
@@ -80,7 +83,10 @@
     $installer->cecho("--install-structwsf-php-api=\"[VERSION]\"             Install the structWSF-PHP-API library \n", 'WHITE');
     $installer->cecho("--install-structwsf-tests-suites=\"[VERSION]\"        Install the structWSF tests suites \n", 'WHITE');
     $installer->cecho("--install-datasets-management-tool=\"[VERSION]\"      Install the Datasets Management Tool \n", 'WHITE');
+    $installer->cecho("--install-data-validator-tool=\"[VERSION]\"      Install the Data Validator Tool \n", 'WHITE');
     $installer->cecho("--install-ontologies-management-tool=\"[VERSION]\"    Install the Ontologies Management Tool \n", 'WHITE');
+    $installer->cecho("\nconStruct/Drupal Installation Options:\n", 'WHITE');
+    $installer->cecho("--install-construct                           Install the Drupal with the conStruct modules \n", 'WHITE');
     $installer->cecho("\nUpgrade Options:\n", 'WHITE');
     $installer->cecho("Note: the [VERSION] parameter is optional.\n", 'WHITE');
     $installer->cecho("      If no version is specified, the latest DEV version will be used\n", 'WHITE');
@@ -88,16 +94,31 @@
     $installer->cecho("--upgrade-structwsf-php-api=\"[VERSION]\"             Upgrade the structWSF-PHP-API library \n", 'WHITE');
     $installer->cecho("--upgrade-structwsf-tests-suites=\"[VERSION]\"        Upgrade the structWSF tests suites \n", 'WHITE');
     $installer->cecho("--upgrade-datasets-management-tool=\"[VERSION]\"      Upgrade the Datasets Management Tool \n", 'WHITE');
+    $installer->cecho("--upgrade-data-validator-tool=\"[VERSION]\"      Upgrade the Data Validator Tool \n", 'WHITE');
     $installer->cecho("--upgrade-ontologies-management-tool=\"[VERSION]\"    Upgrade the Ontologies Management Tool \n", 'WHITE');
     $installer->cecho("\n\n", 'WHITE');
     die;
   }
   
   // Configure installer
-  if(!$installer->installer_configured || isset($arguments['c']) || isset($arguments['configure-installer']))
+  
+  // Run both configurations if the user specifically want to configure them
+  if(isset($arguments['c']) || isset($arguments['configure-installer']))
   {
-    $installer->configureInstaller();
+    $installer->configureInstallerOSF();
+    $installer->configureInstallerConstruct();
   }  
+  // Run the conStruct configuration if the user wants to install it without having it
+  // configured
+  elseif(isset($arguments['install-construct']) && !$installer->installer_construct_configured)
+  {
+    $installer->configureInstallerConstruct();
+  }
+  // If the user wants to do anything else and that the OSF configuration is not done
+  elseif(!$installer->installer_osf_configured && !isset($arguments['install-construct']))
+  {
+    $installer->configureInstallerOSF();
+  }
 
   // List current configuration settings
   if(isset($arguments['list-configurations']))
@@ -115,6 +136,12 @@
   if(isset($arguments['install-osf']))
   {
     $installer->installOSF();
+  }
+  
+  // Install the Drupal & conStruct
+  if(isset($arguments['install-construct']))
+  {
+    $installer->installConstruct();
   }
 
   // Install the structWSF-PHP-API library
@@ -139,6 +166,18 @@
   if(isset($arguments['upgrade-datasets-management-tool']))
   {
     $installer->upgradeDatasetsManagementTool($arguments['upgrade-datasets-management-tool']);
+  }
+
+  // Install the Data Validator Tool library
+  if(isset($arguments['install-data-validator-tool']))
+  {
+    $installer->installDataValidatorTool($arguments['install-data-validator-tool']);
+  }
+  
+  // Upgrade the Data Validator Tool library
+  if(isset($arguments['upgrade-data-validator-tool']))
+  {
+    $installer->upgradeDataValidatorTool($arguments['upgrade-data-validator-tool']);
   }
 
   // Install the Ontologies Management Tool library

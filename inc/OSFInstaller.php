@@ -106,6 +106,240 @@
       $this->installStructWSF();      
     }
     
+    /**
+    * Install Drupal and the conStruct modules
+    */
+    public function installConstruct()
+    {
+      // Install Pear
+      
+      // First check if Pear is installed
+      if($this->exec('pear', 'ignore') === FALSE)
+      {
+        $this->cecho("\n\n", 'WHITE');
+        $this->cecho("-----------------\n", 'WHITE');
+        $this->cecho(" Installing Pear \n", 'WHITE');
+        $this->cecho("-----------------\n", 'WHITE');
+        $this->cecho("\n\n", 'WHITE');
+
+        $this->chdir('/tmp/');
+                 
+        $this->wget('http://pear.php.net/go-pear.phar');
+      
+        passthru('php go-pear.phar');
+      }
+      
+      // Install Drush
+      
+      // Check if Drush is installed
+      if($this->exec('drush', 'ignore') === FALSE)
+      {
+        $this->cecho("\n\n", 'WHITE');
+        $this->cecho("------------------\n", 'WHITE');
+        $this->cecho(" Installing Drush\n", 'WHITE');
+        $this->cecho("------------------\n", 'WHITE');
+        $this->cecho("\n\n", 'WHITE');
+
+        $this->exec('pear upgrade --force Console_Getopt', 'warning');
+        $this->exec('pear upgrade --force pear', 'warning');
+        $this->exec('pear upgrade-all', 'warning');
+        
+        $this->exec('pear channel-discover pear.drush.org', 'warning');
+        
+        $this->exec('pear install drush/drush', 'warning');
+      }
+      
+      // Install Drupal
+            
+      $this->cecho("\n\n", 'WHITE');
+      $this->cecho("-------------------------------\n", 'WHITE');
+      $this->cecho(" Installing Drupal & conStruct\n", 'WHITE');
+      $this->cecho("-------------------------------\n", 'WHITE');
+      $this->cecho("\n\n", 'WHITE');      
+      
+      $this->chdir($this->currentWorkingDirectory);
+      
+      if($this->exec('dpkg -s git') === FALSE)
+      {
+        $this->exec('apt-get -y install git', 'error');
+      }
+      
+      if($this->exec('dpkg -s php5-curl') === FALSE)
+      {
+        $this->exec('apt-get -y install php5-curl', 'error');
+      }
+      
+      $this->exec('drush make --prepare-install resources/construct/construct.make '.$this->drupal_folder, 'error');
+      
+      // Configure/install Drupal
+      $mysqlUsername = 'root';     
+      
+      $return = $this->getInput("What is the username that Drupal should use connect to MySQL (default: $mysqlUsername)");
+
+      if($return != '')
+      {
+        $mysqlUsername = $return;
+      }  
+      
+      $mysqlPassword = 'root';     
+      
+      $return = $this->getInput("What is the password of the $mysqlUsername user to connect to MySQL (default: $mysqlPassword)");
+
+      if($return != '')
+      {
+        $mysqlPassword = $return;
+      }
+      
+      $mysqlDatabaseName = 'drupal7';     
+      
+      $return = $this->getInput("What is the name of the database to use to install Drupal in MySQL (default: $mysqlDatabaseName)");
+
+      if($return != '')
+      {
+        $mysqlDatabaseName = $return;
+      }      
+      
+      $drupalUsername = 'admin';     
+      
+      $return = $this->getInput("What is the username to use to connect to Drupal (default: $drupalUsername)");
+
+      if($return != '')
+      {
+        $drupalUsername = $return;
+      }  
+      
+      $drupalPassword = 'admin';     
+      
+      $return = $this->getInput("What is the password of the $drupalUsername user to connect to Drupal (default: $drupalPassword)");
+
+      if($return != '')
+      {
+        $drupalPassword = $return;
+      } 
+      
+      $this->chdir($this->drupal_folder);     
+      
+      passthru("drush site-install standard --account-name=$drupalUsername --account-pass=$drupalPassword --db-url=mysql://$mysqlUsername:$mysqlPassword@localhost/$mysqlDatabaseName -y");
+      
+      $this->chdir($this->currentWorkingDirectory);
+      
+      // Configuring Apache2 for Drupal      
+      $this->cecho("Configure Apache2 for Drupal...\n", 'WHITE');
+      
+      $this->exec('cp resources/construct/drupal /etc/apache2/sites-available/');
+
+      $this->exec('sudo ln -s /etc/apache2/sites-available/drupal /etc/apache2/sites-enabled/drupal');
+      
+      // Fix the structWSF path in the apache config file
+      $this->exec('sudo sed -i "s>/usr/share/drupal>'.$this->drupal_folder.'>" "/etc/apache2/sites-available/drupal"');
+      
+      // Delete the default Apache2 enabled site file
+      if(file_exists('/etc/apache2/sites-enabled/000-default'))
+      {
+        $this->exec('rm /etc/apache2/sites-enabled/000-default', 'warning');
+      }
+      
+      $this->cecho("Restarting Apache2...\n", 'WHITE');
+      
+      $this->exec('/etc/init.d/apache2 restart');      
+
+      
+      // Install the required files for the colorpicker module
+      $this->chdir($this->drupal_folder.'/sites/all/libraries/');
+      
+      $this->exec('mkdir -p colorpicker');
+      
+      $this->chdir('colorpicker');
+      
+      $this->wget('http://www.eyecon.ro/colorpicker/colorpicker.zip');
+      
+      $this->exec('unzip colorpicker.zip');
+      
+      $this->exec('rm colorpicker.zip');
+      
+      
+      // Enable conStruct modules
+      
+      $this->chdir($this->drupal_folder);     
+      
+      $this->cecho("Enable conStruct modules...\n", 'WHITE');
+      passthru("drush en construct -y");
+      passthru("drush en structentities -y");
+      passthru("drush en structconf -y");
+      passthru("drush en structfieldstorage -y");
+      passthru("drush en structsearchapi -y");
+      passthru("drush en structexport -y");
+      passthru("drush en structontology -y");
+      passthru("drush en devel -y");
+      passthru("drush en facetapi -y");
+      passthru("drush en search_api_facetapi -y");
+      passthru("drush en search_api_page -y");
+
+      // Re-enable structImport once it get migrated to Drupal 7 
+      //passthru("drush en structimport -y");
+
+      
+      // Create Drupal roles for conStruct
+      $this->cecho("Create Drupal roles for conStruct...\n", 'WHITE');
+      
+      passthru("drush role-create 'contributor' -y");
+      passthru("drush role-create 'owner/curator' -y");
+      
+      // Change the namespaces.csv file permissions on the server
+      $this->exec("chmod 777 ".$this->drupal_folder."/sites/all/libraries/structWSF-PHP-API/StructuredDynamics/structwsf/framework/namespaces.csv", 'warning');
+
+      // Setup structOntology settings
+      $this->cecho("Configure error level settings...\n", 'WHITE');
+      passthru('drush vset error_level 1');
+      
+      // Configure domain name
+      $this->cecho("\n", 'WHITE');
+      $domainName = $this->getInput("What is the domain name where this Drupal portal will be accessible? (examples: mydomain.com, www.mydomain.com)");
+
+      passthru('drush vset construct_UrisDomain "'.str_replace('http://', '', trim($domainName)).'"');
+      
+      // Setup structOntology settings
+      $this->cecho("Configure structOntology settings...\n", 'WHITE');
+      
+      // Create the schemas folder used by structOntology
+      $this->exec('mkdir -p '.$this->drupal_folder.'/schemas/', 'warning');
+      $this->exec('chmod 777 '.$this->drupal_folder.'/schemas/', 'warning');
+      $this->exec('chmod 777 -R '.$this->data_folder.'/ontologies/', 'warning');
+      
+      // Configure structEntities
+      $this->cecho("Configure structEntities settings...\n", 'WHITE');
+      
+      // Configure structSearchAPI settings
+      $this->cecho("Configure structSearchAPI settings...\n", 'WHITE');
+      
+      // Setup default interface
+      passthru('drush vset structsearchapi_settings_interface_name "DefaultSourceInterface"');
+      passthru('drush vset structsearchapi_settings_interface_version "1.0"');
+      
+      // Create the default search index, page and server
+      passthru('drush sqlq \'INSERT INTO `search_api_server` (`id`, `name`, `machine_name`, `description`, `class`, `options`, `enabled`, `status`, `module`) VALUES (1, "Struct Search", "struct_search", "The server handler for Struct Search API", "structsearchapi_service", "a:1:{s:7:\"network\";s:38:\"https://'.$this->structwsf_domain.'/ws/\";}", 1, 1, NULL);\'');
+      passthru('drush sqlq \'INSERT INTO `search_api_index` (`id`, `name`, `machine_name`, `description`, `server`, `item_type`, `options`, `enabled`, `read_only`, `status`, `module`) VALUES (2, "Struct Search Index", "struct_search_index", NULL, "struct_search", "structwsf", "a:3:{s:14:\"index_directly\";i:0;s:10:\"cron_limit\";s:2:\"50\";s:6:\"fields\";a:2:{s:2:\"id\";a:1:{s:4:\"type\";s:6:\"string\";}s:19:\"search_api_language\";a:1:{s:4:\"type\";s:6:\"string\";}}}", 1, 0, 1, NULL);\'');
+      passthru('drush sqlq \'INSERT INTO `search_api_page` (`id`, `index_id`, `path`, `name`, `machine_name`, `description`, `options`, `enabled`, `status`, `module`) VALUES (1, "struct_search_index", "lookup", "Struct Search", "struct_search", "", "a:5:{s:4:\"mode\";s:5:\"terms\";s:6:\"fields\";a:0:{}s:8:\"per_page\";s:2:\"10\";s:12:\"get_per_page\";i:1;s:9:\"view_mode\";s:22:\"search_api_page_result\";}", 1, 1, NULL);\'');
+      
+      // Make sure the read mode is OFF
+      passthru('drush vset construct_OntologySettings_read_mode 0');
+      
+      // Configure: "Ontologies Files Path folder"
+      passthru('drush vset construct_OntologySettings_ontologies_files_folder "'.$this->data_folder.'/ontologies/files/"');
+
+      // Configure: "Ontologies Cache Path folder"
+      passthru('drush vset construct_OntologySettings_ontologies_cache_folder "'.$this->data_folder.'/ontologies/structure/"');
+      
+      // Configure: "Ontologies ironXML Schema Cache Path folder"
+      passthru('drush vset construct_OntologySettings_ontologies_ironxml_cache_folder "'.$this->drupal_folder.'/schemas/"');
+      
+      // Configure: "Ontologies ironJSON Schema Cache Path folder"
+      passthru('drush vset construct_OntologySettings_ontologies_ironjson_cache_folder "'.$this->drupal_folder.'/schemas/"');
+      
+      
+      
+      $this->chdir($this->currentWorkingDirectory);
+    }    
     
     /**
     * Install the structWSF-PHP-API library
@@ -244,6 +478,56 @@
     }
     
     /**
+    * Install the Datasets Management Tool
+    */
+    public function installDataValidatorTool($version = '')
+    {
+      if($version == '')
+      {
+        $version = $this->data_validator_tool_version;
+      }
+            
+      $this->cecho("\n\n", 'WHITE');
+      $this->cecho("--------------------------------\n", 'WHITE');
+      $this->cecho(" Installing Data Validator Tool \n", 'WHITE');
+      $this->cecho("--------------------------------\n", 'WHITE');
+      $this->cecho("\n\n", 'WHITE');          
+      
+      $dataValidatorFolder = $this->structwsf_folder.'/StructuredDynamics/structwsf/validator/';
+      
+      if(is_dir($dataValidatorFolder))                
+      {
+        $this->cecho("The Data Validator Tool is already installed. Consider upgrading it with the option: --upgrade-data-validator-tool\n", 'YELLOW');
+        
+        return;
+      }
+                                              
+      $this->cecho("Preparing installation...\n", 'WHITE');
+      $this->exec('mkdir -p /tmp/dvt');
+
+      $this->cecho("Downloading the Data Validator Tool...\n", 'WHITE');
+      $this->exec('wget -q -P /tmp/dvt https://github.com/structureddynamics/structWSF-Data-Validator-Tool/archive/'.$version.'.zip');
+
+      $this->cecho("Installing the Data Validator Tool...\n", 'WHITE');
+      $this->exec('unzip -o /tmp/dvt/'.$version.'.zip -d /tmp/dvt/');      
+      
+      $this->exec('mkdir -p '.$dataValidatorFolder);      
+      
+      $this->exec('cp -af /tmp/dvt/structWSF-Data-Validator-Tool-'.$version.'/StructuredDynamics/structwsf/validator/* '.$dataValidatorFolder);
+
+      $this->exec('chmod 755 '.$dataValidatorFolder.'dvt');
+      
+      $this->chdir('/usr/bin');
+      
+      $this->exec('ln -s '.$dataValidatorFolder.'dvt dvt');
+      
+      $this->chdir($this->currentWorkingDirectory);
+      
+      $this->cecho("Cleaning installation folder...\n", 'WHITE');
+      $this->exec('rm -rf /tmp/dvt/');      
+    }    
+    
+    /**
     * Upgrade a Datasets Management Tool installation
     */
     public function upgradeDatasetsManagementTool($version = '')
@@ -290,6 +574,50 @@
       $this->cecho("Cleaning installation folder...\n", 'WHITE');
       $this->exec('rm -rf /tmp/dmt/');      
     }    
+    
+    /**
+    * Upgrade a Data Validator Tool installation
+    */
+    public function upgradeDataValidatorTool($version = '')
+    {
+      if($version == '')
+      {
+        $version = $this->data_validator_tool_version;
+      }      
+      
+      $this->cecho("\n\n", 'WHITE');
+      $this->cecho("-----------------------------------\n", 'WHITE');
+      $this->cecho(" Upgrading the Data Validator Tool \n", 'WHITE');
+      $this->cecho("-----------------------------------\n", 'WHITE');
+      $this->cecho("\n\n", 'WHITE');      
+      
+      $dataValidatorFolder = $this->structwsf_folder.'/StructuredDynamics/structwsf/validator/';
+      
+      $backupFolder = '/tmp/dvt-'.date('Y-m-d_H-i-s');  
+      
+      $this->cecho("Moving old version into: ".$backupFolder."/ ...\n", 'WHITE');
+      
+      $this->exec('mkdir -p '.$backupFolder);
+      
+      $this->exec('cp -af '.$dataValidatorFolder.' '.$backupFolder);
+                                              
+      $this->cecho("Preparing upgrade...\n", 'WHITE');
+      $this->exec('mkdir -p /tmp/dvt');
+
+      $this->cecho("Downloading the Data Validator Tool...\n", 'WHITE');
+      $this->exec('wget -q -P /tmp/dvt https://github.com/structureddynamics/structWSF-Data-Validator-Tool/archive/'.$version.'.zip');
+
+      $this->cecho("Upgrading the Data Validator Tool...\n", 'WHITE');
+      $this->exec('unzip -o /tmp/dvt/'.$version.'.zip -d /tmp/dvt/');      
+      
+      $this->exec('cp -af /tmp/dvt/structWSF-Data-Validator-Tool-'.$version.'/StructuredDynamics/structwsf/validator/* '.$dataValidatorFolder);
+
+      // Make "dvt" executable
+      $this->exec('chmod 755 '.$dataValidatorFolder.'dvt');
+      
+      $this->cecho("Cleaning installation folder...\n", 'WHITE');
+      $this->exec('rm -rf /tmp/dvt/');      
+    }     
     
     /**
     * Install structWSF
@@ -549,7 +877,7 @@
       
       $this->chdir($this->ontologies_management_tool_folder);
       
-      $this->exec('omt --load-all --load-list="'.rtrim($this->currentWorkingDirectory, '/').'/resources/structwsf/ontologies.lst" --structwsf="http://'.$this->structwsf_domain.'/ws/"');
+      $this->exec('omt --load-advanced-index --load-all --load-list="'.rtrim($this->currentWorkingDirectory, '/').'/resources/structwsf/ontologies.lst" --structwsf="http://'.$this->structwsf_domain.'/ws/"');
 
       $this->cecho("Create underlying ontological structures...\n", 'WHITE');
       

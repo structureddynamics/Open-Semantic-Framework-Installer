@@ -10,13 +10,14 @@
     // Configufation options
 
     /* Determine if the installer is configured */
-    public $installer_configured = FALSE;
+    public $installer_osf_configured = FALSE;
+    public $installer_construct_configured = FALSE;
     
     /* version of virtuoso to install */
     protected $virtuoso_version = "6.1.6";
     
     /* Version of drupal to install */
-    protected $drupal_version = "7.19";
+    protected $drupal_version = "7.23";
 
     /* Version of structWSF to install */
     protected $structwsf_version = "dev";
@@ -28,13 +29,16 @@
     protected $structwsf_tests_suites_version = "dev";
 
     /* Version of conStruct to install */
-    protected $construct_version = "7.x-1.0";
+    protected $construct_version = "7.x-2.x";
 
     /* Folder where the data is managed */
     protected $data_folder = "/data";
 
     /* Folder where to install structWSF */
     protected $structwsf_folder = "/usr/share/structwsf";
+
+    /* Folder where to install Drupal/conStruct */
+    protected $drupal_folder = "/usr/share/drupal";
     
     /* Namespace extension of the structwsf folder. This is where the code resides */
     protected $structwsf_ns = "/StructuredDynamics/structwsf/ws";
@@ -71,15 +75,27 @@
       }      
       else
       {
-        if(isset($this->config['installer']['configured']))
+        if(isset($this->config['installer']['osfConfigured']))
         {
-          if(strtolower($this->config['installer']['configured']) === 'false')
+          if(strtolower($this->config['installer']['osfConfigured']) === 'false')
           {
-            $this->installer_configured = FALSE;
+            $this->installer_osf_configured = FALSE;
           }
           else
           {
-            $this->installer_configured = TRUE;
+            $this->installer_osf_configured = TRUE;
+          }
+        }
+        
+        if(isset($this->config['installer']['constructConfigured']))
+        {
+          if(strtolower($this->config['installer']['constructConfigured']) === 'false')
+          {
+            $this->installer_construct_configured = FALSE;
+          }
+          else
+          {
+            $this->installer_construct_configured = TRUE;
           }
         }
         
@@ -149,6 +165,11 @@
           $this->structwsf_folder = rtrim($this->config['structwsf']['strucwsf-folder'], '/');
         }
         
+        if(isset($this->config['construct ']['drupal-folder']))
+        {
+          $this->drupal_folder = rtrim($this->config['construct']['drupal-folder'], '/');
+        }
+        
         if(isset($this->config['tools']['datasets-management-tool-folder']))
         {
           $this->datasets_management_tool_folder = rtrim($this->config['tools']['datasets-management-tool-folder'], '/');
@@ -193,9 +214,9 @@
     }
     
     /**
-    * Ask a series of questions to the user to configure the installer software.
+    * Ask a series of questions to the user to configure the installer software related to structWSF.
     */
-    public function configureInstaller()
+    public function configureInstallerOSF()
     {
       $this->cecho("Configure the OSF-Installer Tool\n\n", 'WHITE');
       $this->cecho("Note: if you want to use the default value, you simply have to press Enter on your keyboard.\n\n", 'WHITE');
@@ -251,22 +272,6 @@
       {
         $this->structwsf_domain = $return;
       }    
-      
-      $this->cecho("\n\nconStruct related configuration settings:\n", 'CYAN');
-            
-      $return = $this->getInput("What is the Drupal version you want to install or upgrade? (default: ".$this->drupal_version.")");
-      
-      if($return != '')
-      {
-        $this->drupal_version = $return;
-      }          
-      
-      $return = $this->getInput("What is the conStruct version you want to install or upgrade? (default: ".$this->construct_version.")");
-      
-      if($return != '')
-      {
-        $this->construct_version = $return;
-      }          
       
       $this->cecho("\n\nOther tools related configuration settings:\n", 'CYAN');
 
@@ -333,15 +338,45 @@
         $this->logging_folder = $return;
       }   
       
-      $this->installer_configured = TRUE;   
+      $this->installer_osf_configured = TRUE;   
       
       $this->saveConfigurations(); 
     }
     
+    /**
+    * Ask a series of questions to the user to configure the installer software related to conStruct.
+    */
+    public function configureInstallerConstruct()
+    {
+      $this->cecho("Configure the OSF-Installer Tool\n\n", 'WHITE');
+      $this->cecho("Note: if you want to use the default value, you simply have to press Enter on your keyboard.\n\n", 'WHITE');
+
+      $this->cecho("\n\n Drupal/conStruct related configuration settings:\n", 'CYAN');
+      
+      $return = $this->getInput("What is the Drupal version you want to install? (default: ".$this->drupal_version.")");
+      
+      if($return != '')
+      {
+        $this->drupal_version = $return;
+      }          
+      
+      $return = $this->getInput("What is the conStruct version you want to install? (default: ".$this->construct_version.")");
+      
+      if($return != '')
+      {
+        $this->construct_version = $return;
+      }                 
+      
+      $this->installer_construct_configured = TRUE;   
+      
+      $this->saveConfigurations(); 
+    }    
+    
     private function saveConfigurations()
     {
       $ini = "[installer]
-configured = \"".($this->installer_configured ? 'true' : 'false')."\"
+osfConfigured = \"".($this->installer_osf_configured ? 'true' : 'false')."\"
+constructConfigured = \"".($this->installer_construct_configured ? 'true' : 'false')."\"
 
 [structwsf]
 structwsf-version = \"".$this->structwsf_version."\"

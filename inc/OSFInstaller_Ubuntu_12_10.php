@@ -284,6 +284,20 @@
         }
       }
       
+      // Configuring Virtuoso to be able to access the files from the DMT tool
+      $this->cecho("Configuring virtuoso.ini...\n", 'WHITE');
+      
+      $this->exec('sed -i \'s>DirsAllowed                     = ., /usr/share/virtuoso-opensource-6.1/vad>DirsAllowed                     = ., /usr/share/virtuoso-opensource-6.1/vad, /usr/share/datasets-management-tool/data>\' "/etc/virtuoso-opensource-6.1/virtuoso.ini"');
+      
+      $this->cecho("Restarting Virtuoso...\n", 'WHITE');
+      
+      $this->exec('/etc/init.d/virtuoso stop');
+      
+      sleep(20);
+      
+      $this->exec('/etc/init.d/virtuoso start');      
+      
+      
       $this->cecho("You can start Virtuoso using this command: /etc/default/virtuoso start\n", 'LIGHT_BLUE');
     }
     
@@ -310,15 +324,15 @@
       
       $this->cecho("Downloading Solr...\n", 'WHITE');
       
-      $this->wget('http://archive.apache.org/dist/lucene/solr/3.6.0/apache-solr-3.6.0.tgz');
+      $this->wget('http://archive.apache.org/dist/lucene/solr/4.3.1/solr-4.3.1.tgz');
       
       $this->cecho("Installing Solr...\n", 'WHITE');
 
-      $this->exec('tar -xzvf apache-solr-3.6.0.tgz');
+      $this->exec('tar -xzvf solr-4.3.1.tgz');
 
       $this->exec('mkdir -p /usr/share/solr');
       
-      $this->exec('cp -af /tmp/solr-install/apache-solr-3.6.0/* /usr/share/solr/');
+      $this->exec('cp -af /tmp/solr-install/solr-4.3.1/* /usr/share/solr/');
       
       $this->cecho("Configuring Solr...\n", 'WHITE');
       
@@ -329,17 +343,17 @@
       $this->exec('chmod 755 /etc/init.d/solr');
       
       $this->exec('mv /usr/share/solr/example/ /usr/share/solr/structwsf/');      
-      
+/*      
       $this->cecho("Installing SOLR-2155...\n", 'WHITE');
       
       $this->chdir('/usr/share/solr/dist/');
       
-      $this->exec('wget -q https://github.com/downloads/dsmiley/SOLR-2155/Solr2155-1.0.5.jar');
+      $this->wget('https://github.com/downloads/dsmiley/SOLR-2155/Solr2155-1.0.5.jar');
       
       $this->chdir($this->currentWorkingDirectory);
       
-      $this->exec('cp -af resources/solr/solrconfig.xml /usr/share/solr/structwsf/solr/conf/');
-
+      $this->exec('cp -af resources/solr/solrconfig.xml /usr/share/solr/structwsf/solr/collection1/conf/');
+*/
       $this->cecho("Starting Solr...\n", 'WHITE');
 
       $this->exec('/etc/init.d/solr start');
