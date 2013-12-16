@@ -268,20 +268,8 @@
         
         if($errors == 'errors')
         {
-          $this->cecho("\n\nThe EXST() procedure couldn't be created. Try to create it after this installation process referring you to these instructions: http://techwiki.openstructs.org/index.php/StructWSF_Installation_Guide#Open_Virtuoso_Conductor...\n", 'YELLOW');
-        }
-        
-        
-        $this->cecho("Installing the logging procedures and tables...\n", 'WHITE');
-        
-        $this->exec('sed -i \'s>"dba", "dba">"dba", "'.$dbaPassword.'">\' "resources/virtuoso/install_logging.php"');
-        
-        $errors = shell_exec('php resources/virtuoso/install_logging.php');
-        
-        if($errors == 'errors')
-        {
-          $this->cecho("\n\nThe logging procedures couldn't be created. Try to create them after this installation process referring you to these instructions: http://techwiki.openstructs.org/index.php/StructWSF_Installation_Guide#Configure_Logger...\n", 'YELLOW');
-        }
+          $this->cecho("\n\nThe EXST() procedure couldn't be created. Try to create it after this installation process...\n", 'YELLOW');
+        }        
       }
       
       // Configuring Virtuoso to be able to access the files from the DMT tool
@@ -306,6 +294,64 @@
     */
     public function installSolr()
     {
+      $this->cecho("\n\n", 'WHITE');
+      $this->cecho("-----------------\n", 'WHITE');
+      $this->cecho(" Installing Solr \n", 'WHITE');
+      $this->cecho("-----------------\n", 'WHITE');
+      $this->cecho("\n\n", 'WHITE');
+      
+      $this->cecho("Installing prerequirements...\n", 'WHITE');
+      
+      $this->exec('apt-get -y install openjdk-7-jdk');
+      
+      $this->cecho("Preparing installation...\n", 'WHITE');
+
+      $this->exec('mkdir -p /tmp/solr-install/');
+      
+      $this->chdir('/tmp/solr-install/');
+      
+      $this->cecho("Downloading Solr...\n", 'WHITE');
+      
+      $this->wget('http://archive.apache.org/dist/lucene/solr/3.6.0/apache-solr-3.6.0.tgz');
+      
+      $this->cecho("Installing Solr...\n", 'WHITE');
+
+      $this->exec('tar -xzvf apache-solr-3.6.0.tgz');
+
+      $this->exec('mkdir -p /usr/share/solr');
+      
+      $this->exec('cp -af /tmp/solr-install/apache-solr-3.6.0/* /usr/share/solr/');
+      
+      $this->cecho("Configuring Solr...\n", 'WHITE');
+      
+      $this->chdir($this->currentWorkingDirectory);
+
+      $this->exec('cp -f resources/solr/solr /etc/init.d/');
+      
+      $this->exec('chmod 755 /etc/init.d/solr');
+      
+      $this->exec('mv /usr/share/solr/example/ /usr/share/solr/osf-web-services/');
+      
+      $this->cecho("Installing SOLR-2155...\n", 'WHITE');
+      
+      $this->chdir('/usr/share/solr/dist/');
+      
+      $this->exec('wget -q https://github.com/downloads/dsmiley/SOLR-2155/Solr2155-1.0.5.jar');
+      
+      $this->chdir($this->currentWorkingDirectory);
+      
+      $this->exec('cp -af resources/solr/solrconfig.xml /usr/share/solr/osf-web-services/solr/conf/');
+
+      $this->cecho("Starting Solr...\n", 'WHITE');
+
+      $this->exec('/etc/init.d/solr start');
+      
+      $this->cecho('Register Solr to automatically start at the system\'s startup...', 'WHITE');
+      
+      $this->exec('sudo update-rc.d solr defaults');
+      
+      $this->cecho("You can start Solr using this command: /etc/init.d/solr start\n", 'LIGHT_BLUE');      
+/*      
       $this->cecho("\n\n", 'WHITE');
       $this->cecho("-----------------\n", 'WHITE');
       $this->cecho(" Installing Solr \n", 'WHITE');
@@ -342,18 +388,18 @@
       
       $this->exec('chmod 755 /etc/init.d/solr');
       
-      $this->exec('mv /usr/share/solr/example/ /usr/share/solr/structwsf/');      
-/*      
-      $this->cecho("Installing SOLR-2155...\n", 'WHITE');
+      $this->exec('mv /usr/share/solr/example/ /usr/share/solr/osf-web-services/');      
       
-      $this->chdir('/usr/share/solr/dist/');
+//      $this->cecho("Installing SOLR-2155...\n", 'WHITE');
       
-      $this->wget('https://github.com/downloads/dsmiley/SOLR-2155/Solr2155-1.0.5.jar');
+//      $this->chdir('/usr/share/solr/dist/');
       
-      $this->chdir($this->currentWorkingDirectory);
+//      $this->wget('https://github.com/downloads/dsmiley/SOLR-2155/Solr2155-1.0.5.jar');
       
-      $this->exec('cp -af resources/solr/solrconfig.xml /usr/share/solr/structwsf/solr/collection1/conf/');
-*/
+//      $this->chdir($this->currentWorkingDirectory);
+      
+//      $this->exec('cp -af resources/solr/solrconfig.xml /usr/share/solr/osf-web-services/solr/collection1/conf/');
+
       $this->cecho("Starting Solr...\n", 'WHITE');
 
       $this->exec('/etc/init.d/solr start');
@@ -363,6 +409,7 @@
       $this->exec('sudo update-rc.d solr defaults');      
       
       $this->cecho("You can start Solr using this command: /etc/init.d/solr start\n", 'LIGHT_BLUE');
+*/      
     }    
 
     /**
@@ -391,15 +438,6 @@
       if(strpos(shell_exec('curl -s http://localhost'), 'It works!') === FALSE)
       {
         $this->cecho("[Error] Apache2 is not currently running...\n", 'YELLOW');
-      }
-      else
-      {
-        $this->cecho("Checking if the Apache2 instance is using IPv6...\n", 'WHITE');
-        
-        if(strpos(shell_exec('netstat -tulpn | grep apache2'), ':::80') !== FALSE)
-        {
-          $this->cecho("Apache2 is running using IPv6. Check this web page for more information on what to do: http://techwiki.openstructs.org/index.php/StructWSF_Installation_Guide#IPv6_Not_Supported...\n", 'YELLOW');
-        }
       }
     }
 
@@ -455,7 +493,69 @@
       
       // This cannot be logged into the log
       passthru('apt-get -y install phpmyadmin');
-    }          
+    }       
+    
+    /**
+    * Install Memcached as required by OSF
+    */    
+    public function installMemcached()
+    {
+      $this->cecho("\n\n", 'WHITE');
+      $this->cecho("----------------------\n", 'WHITE');
+      $this->cecho(" Installing Memcached \n", 'WHITE');
+      $this->cecho("----------------------\n", 'WHITE');
+      $this->cecho("\n\n", 'WHITE');
+
+      $this->cecho("Installing Memcached...\n", 'WHITE');
+      
+      $this->exec('apt-get install memcached');      
+      $this->exec('apt-get install php5-memcache');      
+      
+      $this->cecho("Restarting Apache2...\n", 'WHITE');
+      
+      $this->exec('/etc/init.d/apache2 restart');      
+      
+      $this->cecho("Starting Memcached...\n", 'WHITE');
+
+      $this->exec('/etc/init.d/memcached restart');      
+   
+      $this->cecho("Installing Memcached User Interface...\n", 'WHITE');
+      
+      $this->chdir('/usr/share/');
+      
+      $this->exec('mkdir -p memcached-ui');      
+      
+      $this->chdir('/usr/share/memcached-ui/');
+      
+      $this->wget('http://artur.ejsmont.org/blog/misc/uploads/memcache_stats_v0.1.tgz');
+      $this->exec('tar -xvf memcache_stats_v0.1.tgz');      
+      
+      $this->chdir('memcache_stats_v01/');      
+      
+      $this->exec('mv * ../');      
+      
+      $this->chdir('/usr/share/memcached-ui/');
+      
+      $this->exec('rm -rf memcache_stats_v01');      
+      $this->exec('rm -rf *.tgz');      
+      $this->exec('mv memcache.php index.php');      
+      
+      $adminPassword = $this->getInput("What is the password you want to use to log into the Memcached user interface for the 'admin' user? ");
+
+      $this->exec('sed -i "s>define(\'ADMIN_PASSWORD\',\'pass\');>define(\'ADMIN_PASSWORD\',\''.$adminPassword.'\');>" index.php');
+      
+      $this->cecho("Configuring Apache2 for the Memcached User Interface...\n", 'WHITE');
+      
+      $this->chdir($this->currentWorkingDirectory);
+      
+      $this->exec('cp resources/memcached/memcached /etc/apache2/sites-available/');
+
+      $this->exec('sudo ln -s /etc/apache2/sites-available/memcached /etc/apache2/sites-enabled/memcached');      
+      
+      $this->cecho("Restarting Apache2...\n", 'WHITE');
+      
+      $this->exec('/etc/init.d/apache2 restart');      
+    }       
     
     /**
     * Validate that the OS where the script is running is a Ubuntu instance greater than supported version

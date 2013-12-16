@@ -1,6 +1,6 @@
-Alias /ws /usr/share/structwsf
+Alias /ws /usr/share/osf
 
-<Directory /usr/share/structwsf/>
+<Directory /usr/share/osf/>
   Options +FollowSymLinks
   AllowOverride All
   order allow,deny

@@ -2,13 +2,13 @@
 # SOLR auto-start
 #
 # description: auto-starts solr engine
-# processname: solr-structwsf
-# pidfile: /var/run/solr-structwsf.pid
+# processname: solr-osf-web-services
+# pidfile: /var/run/solr-osf-web-services.pid
 
 NAME="solr"
-PIDFILE="/var/run/solr-structwsf.pid"
-LOG_FILE="/var/log/solr-structwsf.log"
-SOLR_DIR="/usr/share/solr/structwsf"
+PIDFILE="/var/run/solr-osf-web-services.pid"
+LOG_FILE="/var/log/solr-osf-web-services.log"
+SOLR_DIR="/usr/share/solr/osf-web-services"
 JAVA_OPTIONS="-Xmx1024m -DSTOP.PORT=8079 -DSTOP.KEY=stopkey -jar start.jar"
 JAVA="/usr/bin/java"
 

@@ -1,6 +1,6 @@
 <?php
   
-  class StructWSFUpgrader extends OSFConfigurator
+  class OSFWebServicesUpgrader extends OSFConfigurator
   {
     private $latestVersion = '2.0.0';
     
@@ -10,9 +10,9 @@
     {
       parent::__construct($configFile);
       
-      // Find the current version of structWSF
+      // Find the current version of the OSF Web Services
       
-      $versionIni = parse_ini_file($this->structwsf_folder.$this->structwsf_ns.'/VERSION.ini', TRUE);
+      $versionIni = parse_ini_file($this->osf_web_services_folder.$this->osf_web_services_ns.'/VERSION.ini', TRUE);
       
       $this->currentInstalledVersion = $versionIni['version']['version'];
       
@@ -30,66 +30,64 @@
         break;
         
         default:
-          $this->cecho("You are running an unknown structWSF version: ".$this->currentInstalledVersion.". structWSF cannot be upgraded using this upgrade tool.\n", 'YELLOW');
+          $this->cecho("You are running an unknown version of the OSF Web Services: ".$this->currentInstalledVersion.". The OSF Web Services cannot be upgraded using this upgrade tool.\n", 'YELLOW');
         break;
       }
       
-      $this->upgradeStructWSFTestsSuites();
-      $this->runStructWSFTestsSuites();      
+      $this->upgradeOSFTestsSuites();
+      $this->runOSFTestsSuites();      
     } 
     
     private function backupInstalledVersion()
     {
-      $backupFolder = '/tmp/structwsf-backup-'.$this->currentInstalledVersion;  
+      $backupFolder = '/tmp/osf-web-services-backup-'.$this->currentInstalledVersion;  
       
       $this->cecho("Backuping the current version of the files into: ".$backupFolder."/ ...\n", 'WHITE');
       
       $this->exec('mkdir -p '.$backupFolder);
       
-      $this->exec('cp -af '.$this->structwsf_folder.$this->structwsf_ns.'/ '.$backupFolder);      
+      $this->exec('cp -af '.$this->osf_web_services_folder.$this->osf_web_services_ns.'/ '.$backupFolder);      
     }   
     
     private function upgradeCodebase($version)
     {
       $this->cecho("Upgrading codebase...\n", 'WHITE');
       
-      $this->exec('mkdir -p /tmp/structwsf-'.$version.'/');
+      $this->exec('mkdir -p /tmp/osf-web-services-'.$version.'/');
       
-      $this->chdir('/tmp/structwsf-'.$version.'/');
+      $this->chdir('/tmp/osf-web-services-'.$version.'/');
       
-      $this->cecho("Download structWSF version ".$version."...\n");
+      $this->cecho("Download the OSF Web Services version ".$version."...\n");
       
-      $this->wget('https://github.com/structureddynamics/structWSF-Open-Semantic-Framework/archive/version-'.$version.'.zip');
+      $this->wget('https://github.com/structureddynamics/OSF-Web-Services/archive/version-'.$version.'.zip');
 
-      $this->cecho("Preparing structWSF version ".$version."...\n");
+      $this->cecho("Preparing the OSF Web Services version ".$version."...\n");
       
       $this->exec('unzip version-'.$version.'.zip');
 
-      $this->chdir('structWSF-Open-Semantic-Framework-version-'.$version);
+      $this->chdir('OSF-Web-Services-version-'.$version);
 
       $this->cecho("Remove default settings...\n");
       
-      $this->exec('rm -rf data.ini');
-      $this->exec('rm -rf network.ini');
+      $this->exec('rm -rf osf.ini');
       $this->exec('rm -rf framework/WebService.php');
       $this->exec('rm -rf index.php');
-      $this->exec('rm -rf auth/wsf_indexer.php');
       $this->exec('rm -rf scones/config.ini');
       
-      $this->cecho("\n\nMove new files to the current structWSF installation folder...\n", 'WHITE');
+      $this->cecho("\n\nMove new files to the current OSF Web Services installation folder...\n", 'WHITE');
 
-      $this->exec('cp -af * '.$this->structwsf_folder.$this->structwsf_ns.'/');
+      $this->exec('cp -af * '.$this->osf_web_services_folder.$this->osf_web_services_ns.'/');
 
       $this->chdir('/tmp/');
       
-      $this->exec('rm -rf structwsf-'.$version.'/');
+      $this->exec('rm -rf osf-web-services-'.$version.'/');
 
       $this->cecho("Codebase upgraded...\n", 'GREEN');
     }
     
     private function latestVersion()
     {                    
-      $this->cecho("Upgrade finished, latest version installed: structWSF ".$this->latestVersion."\n\n", 'WHITE');
+      $this->cecho("Upgrade finished, latest version installed: OSF Web Services ".$this->latestVersion."\n\n", 'WHITE');
     }    
     
     private function upgradeTo_2_0_1()
@@ -104,7 +102,7 @@
       // in which case it will simply be ignored.
       //
 
-      // 1) Delete files in the previous version of structWSF that are not needed anymore
+      // 1) Delete files in the previous version of the OSF Web Services that are not needed anymore
       // 2) If the WebService.php file got modified, do re-create it using the same $data_ini and $network_ini settings
       // 3) If new data.ini settings got added, add them to the end of the current data.ini file
       // 4) If new network.ini settings got added, add them to the end of the current network.ini file

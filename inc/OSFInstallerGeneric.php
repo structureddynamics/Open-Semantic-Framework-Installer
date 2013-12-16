@@ -65,5 +65,13 @@
     {
       $this->cecho("Option not supported for this Linux distribution and version.\n", 'RED');
     }    
+    
+    /**
+    * Install MySQL as required by OSF
+    */
+    public function installMemcached()
+    {
+      $this->cecho("Option not supported for this Linux distribution and version.\n", 'RED');
+    }    
   }
 ?>

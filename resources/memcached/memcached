@@ -1,0 +1,8 @@
+Alias /memcached /usr/share/memcached-ui
+
+<Directory /usr/share/memcached-ui/>
+  Options +FollowSymLinks
+  AllowOverride All
+  order allow,deny
+  allow from all
+</Directory> 

@@ -11,7 +11,7 @@
 
     /* Determine if the installer is configured */
     public $installer_osf_configured = FALSE;
-    public $installer_construct_configured = FALSE;
+    public $installer_osf_drupal_configured = FALSE;
     
     /* version of virtuoso to install */
     protected $virtuoso_version = "6.1.6";
@@ -19,38 +19,44 @@
     /* Version of drupal to install */
     protected $drupal_version = "7.23";
 
-    /* Version of structWSF to install */
-    protected $structwsf_version = "dev";
+    /* Version of OSF Web Services to install */
+    protected $osf_web_services_version = "dev";
 
-    /* Version of structWSF-PHP-API to install */
-    protected $structwsf_php_api_version = "dev";
+    /* Version of OSF-WS-PHP-API to install */
+    protected $osf_ws_php_api_version = "dev";
 
-    /* Version of structWSF Tests Suites to install */
-    protected $structwsf_tests_suites_version = "dev";
+    /* Version of OSF Tests Suites to install */
+    protected $osf_tests_suites_version = "dev";
 
-    /* Version of conStruct to install */
-    protected $construct_version = "7.x-2.x";
+    /* Version of OSF Drupal to install */
+    protected $osf_drupal_version = "7.x-2.x";
 
     /* Folder where the data is managed */
     protected $data_folder = "/data";
 
-    /* Folder where to install structWSF */
-    protected $structwsf_folder = "/usr/share/structwsf";
+    /* Folder where to install OSF Web Services */
+    protected $osf_web_services_folder = "/usr/share/osf";
 
-    /* Folder where to install Drupal/conStruct */
+    /* Folder where to install Drupal/OSF Drupal */
     protected $drupal_folder = "/usr/share/drupal";
     
-    /* Namespace extension of the structwsf folder. This is where the code resides */
-    protected $structwsf_ns = "/StructuredDynamics/structwsf/ws";
+    /* Namespace extension of the OSF Web Services folder. This is where the code resides */
+    protected $osf_web_services_ns = "/StructuredDynamics/osf/ws";
     
     /* Folder where to install the Datasets Management Tool */
-    protected $datasets_management_tool_folder = "/usr/share/datasets-management-tool";
+    protected $datasets_management_tool_folder = "/usr/share/osf-datasets-management-tool";
+
+    /* Folder where to install the Permissions Management Tool */
+    protected $permissions_management_tool_folder = "/usr/share/osf-permissions-management-tool";
 
     /* Folder where to install the Ontologies Management Tool */
-    protected $ontologies_management_tool_folder = "/usr/share/ontologies-management-tool";
+    protected $ontologies_management_tool_folder = "/usr/share/osf-ontologies-management-tool";
 
     /* Version of the Datasets Management Tool to install */
     protected $datasets_management_tool_version = "dev";
+
+    /* Version of the Permissions Management Tool to install */
+    protected $permissions_management_tool_version = "dev";
 
     /* Version of the Ontologies Management Tool to install */
     protected $ontologies_management_tool_version = "dev";
@@ -58,8 +64,12 @@
     /* Folder where to put the logging files */
     protected $logging_folder = "/tmp";
     
-    /* Domain name where to access the structWSF instance */
-    protected $structwsf_domain = "localhost";    
+    /* Domain name where to access the OSF Web Services instance */
+    protected $osf_web_services_domain = "localhost";    
+    
+    protected $application_id = 'administer';
+    
+    protected $api_key = 'some-key';
     
     function __construct($configFile)
     {
@@ -87,15 +97,15 @@
           }
         }
         
-        if(isset($this->config['installer']['constructConfigured']))
+        if(isset($this->config['installer']['osfDrupalConfigured']))
         {
-          if(strtolower($this->config['installer']['constructConfigured']) === 'false')
+          if(strtolower($this->config['installer']['osfDrupalConfigured']) === 'false')
           {
-            $this->installer_construct_configured = FALSE;
+            $this->installer_osf_drupal_configured = FALSE;
           }
           else
           {
-            $this->installer_construct_configured = TRUE;
+            $this->installer_osf_drupal_configured = TRUE;
           }
         }
         
@@ -104,55 +114,55 @@
           $this->virtuoso_version = $this->config['data']['virtuoso-version'];
         }
         
-        if(isset($this->config['construct']['drupal-version']))
+        if(isset($this->config['osf-drupal']['drupal-version']))
         {
-          $this->drupal_version = $this->config['construct']['drupal-version'];
+          $this->drupal_version = $this->config['osf-drupal']['drupal-version'];
         }
         
-        if(isset($this->config['structwsf']['structwsf-version']))
+        if(isset($this->config['osf-web-services']['osf-web-services-version']))
         {
-          if(strtolower($this->config['structwsf']['structwsf-version']) == 'dev')
+          if(strtolower($this->config['osf-web-services']['osf-web-services-version']) == 'dev')
           {
-            $this->structwsf_version = 'master';
+            $this->osf_web_services_version = 'master';
           }
           else
           {
-            $this->structwsf_version = $this->config['structwsf']['structwsf-version'];
+            $this->osf_web_services_version = $this->config['osf-web-services']['osf-web-services-version'];
           }
         }        
         
-        if(isset($this->config['structwsf']['structwsf-php-api-version']))
+        if(isset($this->config['osf-web-services']['osf-ws-php-api-version']))
         {
-          if(strtolower($this->config['structwsf']['structwsf-php-api-version']) == 'dev')
+          if(strtolower($this->config['osf-web-services']['osf-ws-php-api-version']) == 'dev')
           {
-            $this->structwsf_php_api_version = 'master';
+            $this->osf_ws_php_api_version = 'master';
           }
           else
           {
-            $this->structwsf_php_api_version = $this->config['structwsf']['structwsf-php-api-version'];
+            $this->osf_ws_php_api_version = $this->config['osf-web-services']['osf-ws-php-api-version'];
           }
         }        
 
-        if(isset($this->config['structwsf']['structwsf-tests-suites-version']))
+        if(isset($this->config['osf-web-services']['osf-tests-suites-version']))
         {
-          if(strtolower($this->config['structwsf']['structwsf-tests-suites-version']) == 'dev')
+          if(strtolower($this->config['osf-web-services']['osf-tests-suites-version']) == 'dev')
           {
-            $this->structwsf_tests_suites_version = 'master';
+            $this->osf_tests_suites_version = 'master';
           }
           else
           {
-            $this->structwsf_tests_suites_version = $this->config['structwsf']['structwsf-tests-suites-version'];
+            $this->osf_tests_suites_version = $this->config['osf-web-services']['osf-tests-suites-version'];
           }
         }        
         
-        if(isset($this->config['construct']['construct-version']))
+        if(isset($this->config['osf-drupal']['osf-drupal-version']))
         {
-          $this->construct_version = $this->config['construct']['construct-version'];
+          $this->osf_drupal_version = $this->config['osf-drupal']['osf-drupal-version'];
         }
         
-        if(isset($this->config['structwsf']['structwsf-domain']))
+        if(isset($this->config['osf-web-services']['osf-web-services-domain']))
         {
-          $this->strucwsf_domain = $this->config['structwsf']['structwsf-domain'];
+          $this->osf_web_services_domain = $this->config['osf-web-services']['osf-web-services-domain'];
         }
         
         if(isset($this->config['data']['data-folder']))
@@ -160,14 +170,14 @@
           $this->data_folder = rtrim($this->config['data']['data-folder'], '/');
         }
         
-        if(isset($this->config['structwsf']['strucwsf-folder']))
+        if(isset($this->config['osf-web-services']['osf-web-services-folder']))
         {
-          $this->structwsf_folder = rtrim($this->config['structwsf']['strucwsf-folder'], '/');
+          $this->osf_web_services_folder = rtrim($this->config['osf-web-services']['osf-web-services-folder'], '/');
         }
         
-        if(isset($this->config['construct ']['drupal-folder']))
+        if(isset($this->config['osf-drupal ']['drupal-folder']))
         {
-          $this->drupal_folder = rtrim($this->config['construct']['drupal-folder'], '/');
+          $this->drupal_folder = rtrim($this->config['osf-drupal']['drupal-folder'], '/');
         }
         
         if(isset($this->config['tools']['datasets-management-tool-folder']))
@@ -175,10 +185,27 @@
           $this->datasets_management_tool_folder = rtrim($this->config['tools']['datasets-management-tool-folder'], '/');
         }
         
+        if(isset($this->config['tools']['permissions-management-tool-folder']))
+        {
+          $this->permissions_management_tool_folder = rtrim($this->config['tools']['permissions-management-tool-folder'], '/');
+        }
+        
         if(isset($this->config['tools']['ontologies-management-tool-folder']))
         {
           $this->ontologies_management_tool_folder = rtrim($this->config['tools']['ontologies-management-tool-folder'], '/');
-        }
+        }        
+        
+        if(isset($this->config['tools']['permissions-management-tool-version']))
+        {
+          if(strtolower($this->config['tools']['permissions-management-tool-version']) == 'dev')
+          {
+            $this->permissions_management_tool_version = 'master';
+          }
+          else
+          {
+            $this->permissions_management_tool_version = $this->config['tools']['permissions-management-tool-version'];
+          }
+        }         
         
         if(isset($this->config['tools']['ontologies-management-tool-version']))
         {
@@ -214,16 +241,16 @@
     }
     
     /**
-    * Ask a series of questions to the user to configure the installer software related to structWSF.
+    * Ask a series of questions to the user to configure the installer software related to OSF Web Services.
     */
     public function configureInstallerOSF()
     {
       $this->cecho("Configure the OSF-Installer Tool\n\n", 'WHITE');
       $this->cecho("Note: if you want to use the default value, you simply have to press Enter on your keyboard.\n\n", 'WHITE');
 
-      $this->cecho("\n\nstructWSF related configuration settings:\n", 'CYAN');
+      $this->cecho("\n\nOSF Web Services related configuration settings:\n", 'CYAN');
       
-      $return = $this->getInput("What is the structWSF version you want to install or upgrade? (default: ".($this->structwsf_version == 'master' ? 'dev' : $this->structwsf_version).")");
+      $return = $this->getInput("What is the OSF Web Services version you want to install or upgrade? (default: ".($this->osf_web_services_version == 'master' ? 'dev' : $this->osf_web_services_version).")");
       
       if($return != '')
       {
@@ -232,10 +259,10 @@
           $return = 'master';
         }
         
-        $this->structwsf_version = $return;
+        $this->osf_web_services_version = $return;
       }          
       
-      $return = $this->getInput("What is the structWSF-PHP-API version you want to install or upgrade? (default: ".($this->structwsf_php_api_version == 'master' ? 'dev' : $this->structwsf_php_api_version).")");
+      $return = $this->getInput("What is the OSF-WS-PHP-API version you want to install or upgrade? (default: ".($this->osf_ws_php_api_version == 'master' ? 'dev' : $this->osf_ws_php_api_version).")");
       
       if($return != '')
       {
@@ -244,10 +271,10 @@
           $return = 'master';
         }
                 
-        $this->structwsf_php_api_version = $return;
+        $this->osf_ws_php_api_version = $return;
       }          
       
-      $return = $this->getInput("What is the structWSF Tests Suites version you want to install or upgrade? (default: ".($this->structwsf_tests_suites_version == 'master' ? 'dev' : $this->structwsf_tests_suites_version).")");
+      $return = $this->getInput("What is the OSF Tests Suites version you want to install or upgrade? (default: ".($this->osf_tests_suites_version == 'master' ? 'dev' : $this->osf_tests_suites_version).")");
       
       if($return != '')
       {
@@ -256,26 +283,46 @@
           $return = 'master';
         }
         
-        $this->structwsf_tests_suites_version = $return;
+        $this->osf_tests_suites_version = $return;
       }          
       
-      $return = $this->getInput("Where do you what to install structWSF, or where is structWSF installed? (default: ".$this->structwsf_folder.")");
+      $return = $this->getInput("Where do you what to install the OSF Web Services, or where are the OSF Web Services installed? (default: ".$this->osf_web_services_folder.")");
       
       if($return != '')
       {
-        $this->structwsf_folder = $return;
+        $this->osf_web_services_folder = $return;
       }       
       
-      $return = $this->getInput("What is the domain name where the structWSF instance will be accessible (default: ".$this->structwsf_domain.")");
+      $return = $this->getInput("What is the domain name where the OSF Web Services instance will be accessible (default: ".$this->osf_web_services_domain.")");
       
       if($return != '')
       {
-        $this->structwsf_domain = $return;
+        $this->osf_web_services_domain = $return;
       }    
       
       $this->cecho("\n\nOther tools related configuration settings:\n", 'CYAN');
 
-      $return = $this->getInput("What is the Datasets Management Tool version you want to install or upgrade? (default: ".($this->datasets_management_tool_version == 'master' ? 'dev' : $this->datasets_management_tool_ver).")");
+      $return = $this->getInput("What is the Permissions Management Tool version you want to install or upgrade? (default: ".($this->permissions_management_tool_version == 'master' ? 'dev' : $this->permissions_management_tool_version).")");
+      
+      if($return != '')
+      {
+        if($return == 'dev')
+        {
+          $return = 'master';
+        }
+                
+        $this->permissions_management_tool_version = $return;
+      }       
+            
+      $return = $this->getInput("Where do you what to install the Permissions Management Tool, or where is Permissions Management Tool installed? (default: ".$this->permissions_management_tool_folder.")");
+      
+      if($return != '')
+      {
+        $this->permissions_management_tool_folder = $return;
+      }       
+      
+      
+      $return = $this->getInput("What is the Datasets Management Tool version you want to install or upgrade? (default: ".($this->datasets_management_tool_version == 'master' ? 'dev' : $this->datasets_management_tool_version).")");
       
       if($return != '')
       {
@@ -344,14 +391,14 @@
     }
     
     /**
-    * Ask a series of questions to the user to configure the installer software related to conStruct.
+    * Ask a series of questions to the user to configure the installer software related to OSF Drupal.
     */
-    public function configureInstallerConstruct()
+    public function configureInstallerOSFDrupal()
     {
       $this->cecho("Configure the OSF-Installer Tool\n\n", 'WHITE');
       $this->cecho("Note: if you want to use the default value, you simply have to press Enter on your keyboard.\n\n", 'WHITE');
 
-      $this->cecho("\n\n Drupal/conStruct related configuration settings:\n", 'CYAN');
+      $this->cecho("\n\n Drupal/OSF Drupal related configuration settings:\n", 'CYAN');
       
       $return = $this->getInput("What is the Drupal version you want to install? (default: ".$this->drupal_version.")");
       
@@ -360,14 +407,14 @@
         $this->drupal_version = $return;
       }          
       
-      $return = $this->getInput("What is the conStruct version you want to install? (default: ".$this->construct_version.")");
+      $return = $this->getInput("What is the OSF Drupal version you want to install? (default: ".$this->osf_drupal_version.")");
       
       if($return != '')
       {
-        $this->construct_version = $return;
+        $this->osf_drupal_version = $return;
       }                 
       
-      $this->installer_construct_configured = TRUE;   
+      $this->installer_osf_drupal_configured = TRUE;   
       
       $this->saveConfigurations(); 
     }    
@@ -376,18 +423,18 @@
     {
       $ini = "[installer]
 osfConfigured = \"".($this->installer_osf_configured ? 'true' : 'false')."\"
-constructConfigured = \"".($this->installer_construct_configured ? 'true' : 'false')."\"
+osfDrupalConfigured = \"".($this->installer_osf_drupal_configured ? 'true' : 'false')."\"
 
-[structwsf]
-structwsf-version = \"".$this->structwsf_version."\"
-strucwsf-folder = \"".$this->structwsf_folder."\"
-structwsf-domain = \"".$this->structwsf_domain."\"
-structwsf-php-api-version = \"".$this->structwsf_version."\"
-structwsf-tests-suites-version = \"".$this->structwsf_version."\"
+[osf-web-services]
+osf-web-services-version = \"".$this->osf_web_services_version."\"
+osf-web-services-folder = \"".$this->osf_web_services_folder."\"
+osf-web-services-domain = \"".$this->osf_web_services_domain."\"
+osf-ws-php-api-version = \"".$this->osf_web_services_version."\"
+osf-tests-suites-version = \"".$this->osf_web_services_version."\"
 
-[construct]
+[osf-drupal]
 drupal-version = \"".$this->drupal_version."\"
-construct-version = \"".$this->construct_version."\"
+osf-drupal-version = \"".$this->osf_drupal_version."\"
 
 [tools]
 datasets-management-tool-folder = \"".$this->datasets_management_tool_folder."\"
@@ -411,18 +458,18 @@ logging-folder = \"".$this->logging_folder."\"
     */
     public function listConfigurations()
     {
-      $this->cecho("\n\nstructWSF related configuration settings:\n", 'CYAN');
+      $this->cecho("\n\nOSF Web Services related configuration settings:\n", 'CYAN');
 
-      $this->cecho("structwsf-version: ".($this->structwsf_version == 'master' ? 'dev' : $this->structwsf_version)."\n", 'WHITE');
-      $this->cecho("structwsf-folder: ".$this->structwsf_folder."\n", 'WHITE');
-      $this->cecho("structwsf-domain: ".$this->structwsf_domain."\n", 'WHITE');
-      $this->cecho("structwsf-php-api-version: ".($this->structwsf_php_api_version == 'master' ? 'dev' : $this->structwsf_php_api_version)."\n", 'WHITE');
-      $this->cecho("structwsf-tests-suites-version: ".($this->structwsf_tests_suites_version == 'master' ? 'dev' : $this->structwsf_tests_suites_version)."\n", 'WHITE');
+      $this->cecho("osf-web-services-version: ".($this->osf_web_services_version == 'master' ? 'dev' : $this->osf_web_services_version)."\n", 'WHITE');
+      $this->cecho("osf-web-services-folder: ".$this->osf_web_services_folder."\n", 'WHITE');
+      $this->cecho("osf-web-services-domain: ".$this->osf_web_services_domain."\n", 'WHITE');
+      $this->cecho("osf-ws-php-api-version: ".($this->osf_ws_php_api_version == 'master' ? 'dev' : $this->osf_ws_php_api_version)."\n", 'WHITE');
+      $this->cecho("osf-tests-suites-version: ".($this->osf_tests_suites_version == 'master' ? 'dev' : $this->osf_tests_suites_version)."\n", 'WHITE');
       
-      $this->cecho("\n\nconStruct related configuration settings:\n", 'CYAN');
+      $this->cecho("\n\nOSF Drupal related configuration settings:\n", 'CYAN');
             
       $this->cecho("drupal-version: ".$this->drupal_version."\n", 'WHITE');
-      $this->cecho("construct-version: ".$this->construct_version."\n", 'WHITE');
+      $this->cecho("osf-drupal-version: ".$this->osf_drupal_version."\n", 'WHITE');
       
       $this->cecho("\n\nOther tools related configuration settings:\n", 'CYAN');
 
@@ -442,49 +489,49 @@ logging-folder = \"".$this->logging_folder."\"
     }
     
     /**
-    * Upgrade the structWSF PHPUNIT Tests Suites
+    * Upgrade the OSF PHPUNIT Tests Suites
     */
-    public function upgradeStructWSFTestsSuites()
+    public function upgradeOSFTestsSuites()
     {
       $this->cecho("Upgrading tests suites...\n", 'WHITE');
       
-      $this->exec('mkdir -p /tmp/structwsftestssuites-upgrade/');
+      $this->exec('mkdir -p /tmp/osftestssuites-upgrade/');
       
-      $this->chdir('/tmp/structwsftestssuites-upgrade/');
+      $this->chdir('/tmp/osftestssuites-upgrade/');
       
-      $this->wget('https://github.com/structureddynamics/structWSF-Tests-Suites/archive/'.$this->structwsf_tests_suites_version.'.zip');
+      $this->wget('https://github.com/structureddynamics/OSF-Tests-Suites/archive/'.$this->osf_tests_suites_version.'.zip');
       
-      $this->exec('unzip '.$this->structwsf_tests_suites_version.'.zip');
+      $this->exec('unzip '.$this->osf_tests_suites_version.'.zip');
       
-      $this->chdir('/tmp/structwsftestssuites-upgrade/structWSF-Tests-Suites-'.$this->structwsf_tests_suites_version.'/StructuredDynamics/structwsf/');
+      $this->chdir('/tmp/osftestssuites-upgrade/OSF-Web-Services-Tests-Suites-'.$this->osf_tests_suites_version.'/StructuredDynamics/osf/');
 
-      $this->exec('rm -rf '.$this->structwsf_folder.'/StructuredDynamics/structwsf/tests/');
+      $this->exec('rm -rf '.$this->osf_web_services_folder.'/StructuredDynamics/osf/tests/');
       
-      $this->exec('cp -af tests '.$this->structwsf_folder.'/StructuredDynamics/structwsf/');
+      $this->exec('cp -af tests '.$this->osf_web_services_folder.'/StructuredDynamics/osf/');
                   
       $this->cecho("Configure the tests suites...\n", 'WHITE');
 
-      $this->chdir($this->structwsf_folder.'/StructuredDynamics/structwsf/tests/');
+      $this->chdir($this->osf_web_services_folder.'/StructuredDynamics/osf/tests/');
       
-      $this->exec('sed -i "s>REPLACEME>'.$this->structwsf_folder.'/StructuredDynamics/structwsf>" phpunit.xml');
+      $this->exec('sed -i "s>REPLACEME>'.$this->osf_web_services_folder.'/StructuredDynamics/osf>" phpunit.xml');
 
-      $this->exec('sudo sed -i "s>$this-\>structwsfInstanceFolder = \"/usr/share/structwsf/\";>$this-\>structwsfInstanceFolder = \"'.$this->structwsf_folder.'/\";>" Config.php');
-      $this->exec('sudo sed -i "s>$this-\>endpointUrl = \"http://localhost/ws/\";>$this-\>endpointUrl = \"http://'.$this->structwsf_domain.'/ws/\";>" Config.php');      
-      $this->exec('sudo sed -i "s>$this-\>endpointUri = \"http://localhost/wsf/ws/\";>$this-\>endpointUri = \"http://'.$this->structwsf_domain.'/wsf/ws/\";>" Config.php');      
+      $this->exec('sudo sed -i "s>$this-\>osfInstanceFolder = \"/usr/share/osf/\";>$this-\>osfInstanceFolder = \"'.$this->osf_web_services_folder.'/\";>" Config.php');
+      $this->exec('sudo sed -i "s>$this-\>endpointUrl = \"http://localhost/ws/\";>$this-\>endpointUrl = \"http://'.$this->osf_web_services_domain.'/ws/\";>" Config.php');      
+      $this->exec('sudo sed -i "s>$this-\>endpointUri = \"http://localhost/wsf/ws/\";>$this-\>endpointUri = \"http://'.$this->osf_web_services_domain.'/wsf/ws/\";>" Config.php');      
       
       $this->chdir($this->currentWorkingDirectory);
       
-      $this->exec('rm -rf /tmp/structwsftestssuites-install/');
+      $this->exec('rm -rf /tmp/osftestssuites-install/');
     }         
     
-    public function runStructWSFTestsSuites($installationFolder = '')
+    public function runOSFTestsSuites($installationFolder = '')
     {
       if($installationFolder == '')
       {
-        $installationFolder = $this->structwsf_folder;
+        $installationFolder = $this->osf_web_services_folder;
       }
       
-      $this->chdir($installationFolder.'/StructuredDynamics/structwsf/tests/');
+      $this->chdir($installationFolder.'/StructuredDynamics/osf/tests/');
       
       passthru('phpunit --configuration phpunit.xml --verbose --colors --log-junit log.xml');
       

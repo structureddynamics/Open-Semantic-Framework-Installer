@@ -8,9 +8,9 @@ Copyright 2008-2013. Structured Dynamics LLC.
 
 The Open Semantic Framework Installer is one of the contributing
 components to the Open Semantic Framework (OSF); 
-see http://openstructs.org. Additional technical documentation for
+see http://opensemanticframework.org. Additional technical documentation for
 OSF and its related OSF components is available at
-http://techwiki.openstructs.org.
+http://wiki.opensemanticframework.org.
 
 This application includes software developed by
 Structured Dynamics LLC (http://structureddynamics.com/).
@@ -40,4 +40,4 @@ http://www.apache.org/licenses/LICENSE-2.0.
 
 OSF also has hooks to other open source products; for a listing and license
 terms of these, see:
-http://techwiki.openstructs.org/index.php/Open_Source_Software_Licenses. 
+http://wiki.opensemanticframework.org/index.php/Open_Source_Software_Licenses. 

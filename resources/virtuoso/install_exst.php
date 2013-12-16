@@ -1,6 +1,6 @@
 <?php
 
-  $db_link = odbc_connect("structwsf-triples-store", "dba", "dba", SQL_CUR_USE_ODBC);
+  $db_link = odbc_connect("osf-triples-store", "dba", "dba", SQL_CUR_USE_ODBC);
 
   $exst= 'create procedure exst (in st varchar)
           {

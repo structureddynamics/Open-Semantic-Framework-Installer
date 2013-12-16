@@ -1,4 +1,4 @@
-The Open Semantic Framework Installer script is used to install and deploy a OSF stack. It can also be used to install, upgrade and configure parts of the stack, or related external tools such as the Datasets Management Tool, the Ontologies Management Tool, the structWSF-PHP-API, etc.
+The Open Semantic Framework Installer script is used to install and deploy a OSF stack. It can also be used to install, upgrade and configure parts of the stack, or related external tools such as the OSF Datasets Management Tool, the OSFOntologies Management Tool, the OSF WS PHP API, etc.
 
 Requirements
 ------------
@@ -38,9 +38,10 @@ General Options:
 -c, --configure-installer               Configure the options used by this installer
 --list-configurations                   List the current configuration used by the installer tool
 
-Installation Options:
+OSF Installation Options:
 Note: the [VERSION] parameter is optional.
       If no version is specified, the latest DEV version will be used
+
 --install-osf                           Install the Open Semantic Framework
 --install-apache2                       Install Apache2
 --install-mysql                         Install MySQL
@@ -48,33 +49,42 @@ Note: the [VERSION] parameter is optional.
 --install-virtuoso                      Install Virtuoso
 --install-solr                          Install Solr
 --install-php5                          Install PHP5
---install-structwsf-php-api="[VERSION]"             Install the structWSF-PHP-API library
---install-structwsf-tests-suites="[VERSION]"        Install the structWSF tests suites
---install-datasets-management-tool="[VERSION]"      Install the Datasets Management Tool
---install-ontologies-management-tool="[VERSION]"    Install the Ontologies Management Tool
+--install-osf-ws-php-api="[VERSION]"                    Install the OSF-WS-PHP-API library
+--install-osf-tests-suites="[VERSION]"                  Install the OSF Tests Suites
+--install-osf-datasets-management-tool="[VERSION]"      Install the OSF Datasets Management Tool
+--install-osf-permissions-management-tool="[VERSION]"   Install the OSF Permissions Management Tool
+--install-osf-data-validator-tool="[VERSION]"           Install the OSF Data Validator Tool
+--install-osf-ontologies-management-tool="[VERSION]"    Install the OSF Ontologies Management Tool
+
+OSF Drupal Installation Options:
+
+--install-osf-drupal                    Install Drupal with the OSF Drupal modules
 
 Upgrade Options:
 Note: the [VERSION] parameter is optional.
       If no version is specified, the latest DEV version will be used
---upgrade-structwsf="[VERSION]"                     Upgrade structWSF
---upgrade-structwsf-php-api="[VERSION]"             Upgrade the structWSF-PHP-API library
---upgrade-structwsf-tests-suites="[VERSION]"        Upgrade the structWSF tests suites
---upgrade-datasets-management-tool="[VERSION]"      Upgrade the Datasets Management Tool
---upgrade-ontologies-management-tool="[VERSION]"    Upgrade the Ontologies Management Tool
+
+--upgrade-osf-web-services="[VERSION]"               Upgrade the OSF Web Services
+--upgrade-osf-ws-php-api="[VERSION]"                 Upgrade the OSF-WS-PHP-API library
+--upgrade-osf-tests-suites="[VERSION]"               Upgrade the OSF Tests Suites
+--upgrade-osf-datasets-management-tool="[VERSION]"   Upgrade the OSF Datasets Management Tool
+--upgrade-osf-permissions-management-tool="[VERSION]"   Upgrade the OSF Permissions Management Tool
+--upgrade-osf-data-validator-tool="[VERSION]"        Upgrade the OSF Data Validator Tool
+--upgrade-osf-ontologies-management-tool="[VERSION]" Upgrade the OSF Ontologies Management Tool
 ```
 
 Next Steps
 ----------
-Once you have installed the OSF stack, you next query the [structWSF](http://techwiki.openstructs.org/index.php/StructWSF) Web service endpoints, and import datasets using [conStruct](http://techwiki.openstructs.org/index.php/ConStruct). Here are a few things you can do to start exploring the Open Semantic Framework:
+Once you have installed the OSF stack, you next query the [OSF Web Services](http://wiki.opensemanticframework.org/index.php/OSF_Web_Services)  endpoints, and import datasets using [OSF for Drupal](http://wiki.opensemanticframework.org/index.php/OSF_for_Drupal). Here are a few things you can do to start exploring the Open Semantic Framework:
 
-* Start exploring [structWSF](http://techwiki.openstructs.org/index.php/Category:StructWSF)
-* Start exploring [conStruct](http://techwiki.openstructs.org/index.php/Category:ConStruct)
-* Start exploring [Ontologies usage in OSF](http://techwiki.openstructs.org/index.php/Category:Ontologies)
-* Start [importing and manipulating datasets](http://techwiki.openstructs.org/index.php/Category:Datasets)
-* Start exploring the [Open Semantic Framework architecture](http://techwiki.openstructs.org/index.php/Category:Open_Semantic_Framework)
-* [Start playing with the structWSF web service endpoints](http://techwiki.openstructs.org/index.php/StructWSF_Web_Services_Tutorial).
+* Start exploring [OSF Web Services](http://wiki.opensemanticframework.org/index.php/OSF_Web_Services)
+* Start exploring [OSF for Drupal](http://wiki.opensemanticframework.org/index.php/OSF_for_Drupal)
+* Start exploring [Ontologies usage in OSF](http://wiki.opensemanticframework.org/index.php/Category:Ontologies)
+* Start [importing and manipulating datasets](http://wiki.opensemanticframework.org/index.php/Datasets_Management_Tool)
+* Start exploring the [Open Semantic Framework architecture](http://wiki.opensemanticframework.org/index.php/OSF_Web_Service_Architecture)
+* [Start using the OSF Web Services PHP API](http://wiki.opensemanticframework.org/index.php/OSF_Web_Service_PHP_API).
 
-When you are ready to begin developing and configuring your new instance in earnest, the best place to start is [A Basic Guide to Content](http://techwiki.openstructs.org/index.php/A_Basic_Guide_to_Content) on the TechWiki.
+When you are ready to begin developing and configuring your new instance in earnest, the best place to start is [A Basic Guide to Content](http://wiki.opensemanticframework.org/index.php/A_Basic_Guide_to_Content) on the TechWiki.
 
 For More Help
 -------------
