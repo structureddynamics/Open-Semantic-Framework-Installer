@@ -17,7 +17,7 @@ mkdir -p /usr/share/osf-installer/
 
 cd /usr/share/osf-installer/
 
-wget https://raw.github.com/structureddynamics/Open-Semantic-Framework-Installer/master/install.sh
+wget https://raw.github.com/structureddynamics/Open-Semantic-Framework-Installer/3.0/install.sh
 
 chmod 755 install.sh
 
