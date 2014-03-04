@@ -75,6 +75,6 @@ projects[xautoload][version] = 2.7
 ; OSF-WS-PHP-API
 
 libraries[OSF-WS-PHP-API][download][type] = git
-libraries[OSF-WS-PHP-API][download][url] = git://github.com/structureddynamics/OSF-Web-Services-PHP-API.git
+libraries[OSF-WS-PHP-API][download][url] = http://github.com/structureddynamics/OSF-Web-Services-PHP-API.git
 libraries[OSF-WS-PHP-API][download][branch] = 3.0
 ;libraries[OSF-WS-PHP-API][download][revision] = c57cc3dbdecd0599219bf60fd51dcfc5c43a9247
