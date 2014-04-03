@@ -609,6 +609,12 @@
       
       $this->chdir($this->currentWorkingDirectory);
       
+      $this->cecho("Configuring the the DMT tool...\n", 'WHITE');
+      $this->exec('sudo sed -i "s>osfWebServicesFolder = \"/usr/share/osf/\">osfWebServicesFolder = \"'.rtrim($this->osf_web_services_folder, '/').'/\">" "'.$this->datasets_management_tool_folder.'/dmt.ini"');
+      $this->exec('sudo sed -i "s>indexesFolder = \"/usr/share/datasets-management-tool/datasetIndexes/\">indexesFolder = \"'.rtrim($this->datasets_management_tool_folder, '/').'/datasetIndexes/\">" "'.$this->datasets_management_tool_folder.'/dmt.ini"');
+      $this->exec('sudo sed -i "s>ontologiesStructureFiles = \"/data/ontologies/structure/\">ontologiesStructureFiles = \"'.rtrim($this->data_folder, '/').'/ontologies/structure/\">" "'.$this->datasets_management_tool_folder.'/dmt.ini"');
+      $this->exec('sudo sed -i "s>missingVocabulary = \"/usr/share/datasets-management-tool/missing/\">missingVocabulary = \"'.rtrim($this->datasets_management_tool_folder, '/').'/missing/\">" "'.$this->datasets_management_tool_folder.'/dmt.ini"');
+      
       $this->cecho("Cleaning installation folder...\n", 'WHITE');
       $this->exec('rm -rf /tmp/dmt/');      
     }
@@ -656,6 +662,10 @@
       $this->exec('ln -s '.$this->permissions_management_tool_folder.'/pmt pmt');
       
       $this->chdir($this->currentWorkingDirectory);
+      
+      $this->cecho("Configuring the the PMT tool...\n", 'WHITE');
+      $this->exec('sudo sed -i "s>osfWebServicesFolder = \"/usr/share/osf/\">osfWebServicesFolder = \"'.rtrim($this->osf_web_services_folder, '/').'/\">" "'.$this->permissions_management_tool_folder.'/pmt.ini"');
+      $this->exec('sudo sed -i "s>osfWebServicesEndpointsUrl = \"http://localhost/ws/\">osfWebServicesEndpointsUrl = \"http://'.$this->osf_web_services_domain.'/ws/\">" "'.$this->permissions_management_tool_folder.'/pmt.ini"');
 
       $this->cecho("Cleaning installation folder...\n", 'WHITE');
       $this->exec('rm -rf /tmp/pmt/');      
@@ -1313,6 +1323,9 @@
       $this->exec('ln -s '.$this->ontologies_management_tool_folder.'/omt omt');
       
       $this->chdir($this->currentWorkingDirectory);
+            
+      $this->cecho("Configuring the the OMT tool...\n", 'WHITE');
+      $this->exec('sudo sed -i "s>osfWebServicesFolder = \"/usr/share/osf/\">osfWebServicesFolder = \"'.rtrim($this->osf_web_services_folder, '/').'/\">" "'.$this->ontologies_management_tool_folder.'/omt.ini"');
             
       $this->cecho("Cleaning installation folder...\n", 'WHITE');
       $this->exec('rm -rf /tmp/omt/');      
