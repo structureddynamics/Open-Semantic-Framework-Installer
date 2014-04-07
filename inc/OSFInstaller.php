@@ -1029,7 +1029,7 @@
       }
       else
       {
-        $this->exec('cp -f '.$this->osf_web_services_folder.$this->osf_web_services_ns.'/framework/solr_schema_v1_3_1.xml /usr/share/solr/osf-web-services/solr/conf/schema.xml');
+        $this->exec('cp -f '.$this->osf_web_services_folder.$this->osf_web_services_ns.'/framework/solr_schema_v1_3_2.xml /usr/share/solr/osf-web-services/solr/conf/schema.xml');
         
         $this->cecho("Restarting Solr...\n", 'WHITE');
         $this->exec('/etc/init.d/solr stop');
