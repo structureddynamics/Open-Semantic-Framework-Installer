@@ -1143,6 +1143,9 @@
       $this->cecho("Load ontologies...\n", 'WHITE');
       
       $this->chdir($this->ontologies_management_tool_folder);
+
+      
+      $this->exec('sudo sed -i "s>file://localhost/data>file://localhost'.rtrim($this->data_folder, '/').'>g" "'.rtrim($this->currentWorkingDirectory, '/').'/resources/osf-web-services/ontologies.lst"');
       
       $this->exec('omt --load-advanced-index="true" --load-all --load-list="'.rtrim($this->currentWorkingDirectory, '/').'/resources/osf-web-services/ontologies.lst" --osf-web-services="http://'.$this->osf_web_services_domain.'/ws/"');
 
