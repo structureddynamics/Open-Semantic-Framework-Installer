@@ -1237,51 +1237,7 @@
       $this->exec('sudo sed -i "s>$this-\>apiKey = \'some-key\';>$this-\>apiKey = \''.$this->api_key.'\';>" Config.php');      
       
       $this->chdir($this->currentWorkingDirectory);
-    }    
-    
-
-    /**
-    * Update the OSF PHPUNIT Tests Suites
-    */
-    public function updateOSFTestsSuites($version = '')
-    {
-      if($version == '')
-      {
-        $version = $this->osf_tests_suites_version;
-      }
-      
-      $this->cecho("Updating tests suites...\n", 'WHITE');
-      
-      $this->exec('rm -rf '.$this->osf_web_services_folder.'/StructuredDynamics/osf/tests/');
-      
-      $this->exec('mkdir -p '.$this->osf_web_services_folder.'/StructuredDynamics/osf/tests/');
-      
-      $this->chdir($this->osf_web_services_folder.'/StructuredDynamics/osf/tests/');
-      
-      $this->wget('https://github.com/structureddynamics/OSF-Tests-Suites/archive/'.$version.'.zip');
-      
-      $this->exec('unzip '.$version.'.zip');      
-      
-      $this->chdir($this->osf_web_services_folder.'/StructuredDynamics/osf/tests/OSF-Tests-Suites-'.$version.'/StructuredDynamics/osf/tests/');
-      
-      $this->exec('mv * ../../../../');
-
-      $this->chdir($this->osf_web_services_folder.'/StructuredDynamics/osf/tests/');
-      
-      $this->exec('rm *.zip');
-            
-      $this->exec('rm -rf OSF-Tests-Suites-'.$version.'');
-      
-      $this->cecho("Configure the tests suites...\n", 'WHITE');
-      
-      $this->exec('sed -i "s>REPLACEME>'.$this->osf_web_services_folder.'/StructuredDynamics/osf>" phpunit.xml');
-
-      $this->exec('sudo sed -i "s>$this-\>osfInstanceFolder = \"/usr/share/osf/StructuredDynamics/osf/ws/\";>$this-\>osfInstanceFolder = \"'.$this->osf_web_services_folder.$this->osf_web_services_ns.'/\";>" Config.php');
-      $this->exec('sudo sed -i "s>$this-\>endpointUrl = \"http://localhost/ws/\";>$this-\>endpointUrl = \"http://'.$this->osf_web_services_domain.'/ws/\";>" Config.php');      
-      $this->exec('sudo sed -i "s>$this-\>endpointUri = \"http://localhost/wsf/ws/\";>$this-\>endpointUri = \"http://'.$this->osf_web_services_domain.'/wsf/ws/\";>" Config.php');      
-      
-      $this->chdir($this->currentWorkingDirectory);
-    }    
+    }        
     
     /**
     * Install the Ontologies Management Tool
