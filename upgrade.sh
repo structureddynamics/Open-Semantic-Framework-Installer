@@ -40,26 +40,26 @@ echo -e "\n\n"
 
 cecho "\n\nDownload the latest version of the OSF Installer tool...\n"
 
-sudo wget https://github.com/structureddynamics/Open-Semantic-Framework-Installer/archive/master.zip
+sudo wget https://github.com/structureddynamics/Open-Semantic-Framework-Installer/archive/3.0.zip
 
 while [ $? -ne 0 ]; do
   cecho "Connection error while downloading the latest version of the Open Semantic Framework Installer; retrying...\n" "yellow"
   sudo rm -rf master.zip
-  sudo wget https://github.com/structureddynamics/Open-Semantic-Framework-Installer/archive/master.zip
+  sudo wget https://github.com/structureddynamics/Open-Semantic-Framework-Installer/archive/3.0.zip
 done
 
-unzip master.zip
+unzip 3.0.zip
 
 cd Open-Semantic-Framework-Installer*
 
-mv ../installer.ini ../installer.bak.ini
+rm -f installer.ini
 
-sudo mv -f * ../
+sudo cp -af * ../
 
 cd ..
 
 sudo rm -rf Open-Semantic-Framework-Installer*
-sudo rm -f master-php.zip
+sudo rm -f 3.0.zip
 
 cecho "\n\nThe OSD-Installer has been upgraded\n"
 
