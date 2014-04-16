@@ -49,6 +49,7 @@
                                          'install-virtuoso::',
                                          'install-solr::',
                                          'upgrade-osf-web-services::',
+                                         'upgrade-osf-web-services-code-base::',
                                          'install-osf-ws-php-api::',
                                          'upgrade-osf-ws-php-api::',
                                          'install-osf-tests-suites::',
@@ -95,7 +96,8 @@
     $installer->cecho("Note: the [VERSION] parameter is optional.\n", 'WHITE');
     $installer->cecho("      If no version is specified, the latest DEV version will be used\n", 'WHITE');
     $installer->cecho("\n", 'WHITE');
-    $installer->cecho("--upgrade-osf-web-services=\"[VERSION]\"               Upgrade the OSF Web Services \n", 'WHITE');
+    $installer->cecho("--upgrade-osf-web-services                             Upgrade the OSF Web Services \n", 'WHITE');
+    $installer->cecho("--upgrade-osf-web-services-code-base                   Upgrade the OSF Web Services to the latest dev code base\n", 'WHITE');
     $installer->cecho("--upgrade-osf-ws-php-api=\"[VERSION]\"                 Upgrade the OSF-WS-PHP-API library \n", 'WHITE');
     $installer->cecho("--upgrade-osf-tests-suites=\"[VERSION]\"               Upgrade the OSF Tests Suites \n", 'WHITE');
     $installer->cecho("--upgrade-osf-datasets-management-tool=\"[VERSION]\"   Upgrade the OSF Datasets Management Tool \n", 'WHITE');
@@ -257,8 +259,16 @@
   {
     include_once('inc/OSFWebServicesUpgrader.php');    
     
-    $upgrader = new OSFWebServicesUpgrader(getcwd().'/installer.ini', $arguments['upgrade-osf-web-services']);
+    $upgrader = new OSFWebServicesUpgrader(getcwd().'/installer.ini');
   }
+  
+  // Upgrade the OSF Web Services to the latest development code
+  if(isset($arguments['upgrade-osf-web-services-code-base']))
+  {
+    include_once('inc/OSFWebServicesUpgrader.php');    
+    
+    $upgrader = new OSFWebServicesUpgrader(getcwd().'/installer.ini', TRUE);
+  }  
   
   // Install Virtuoso on the system
   if(isset($arguments['install-virtuoso']))

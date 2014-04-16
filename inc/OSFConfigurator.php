@@ -44,13 +44,13 @@
     protected $osf_web_services_ns = "/StructuredDynamics/osf/ws";
     
     /* Folder where to install the Datasets Management Tool */
-    protected $datasets_management_tool_folder = "/usr/share/osf-datasets-management-tool";
+    protected $datasets_management_tool_folder = "/usr/share/datasets-management-tool";
 
     /* Folder where to install the Permissions Management Tool */
-    protected $permissions_management_tool_folder = "/usr/share/osf-permissions-management-tool";
+    protected $permissions_management_tool_folder = "/usr/share/permissions-management-tool";
 
     /* Folder where to install the Ontologies Management Tool */
-    protected $ontologies_management_tool_folder = "/usr/share/osf-ontologies-management-tool";
+    protected $ontologies_management_tool_folder = "/usr/share/ontologies-management-tool";
 
     /* Version of the Datasets Management Tool to install */
     protected $datasets_management_tool_version = "dev";
@@ -503,8 +503,30 @@ logging-folder = \"".$this->logging_folder."\"
       
       $this->exec('unzip '.$this->osf_tests_suites_version.'.zip');
       
-      $this->chdir('/tmp/osftestssuites-upgrade/OSF-Web-Services-Tests-Suites-'.$this->osf_tests_suites_version.'/StructuredDynamics/osf/');
+      $this->chdir('/tmp/osftestssuites-upgrade/OSF-Tests-Suites-'.$this->osf_tests_suites_version.'/StructuredDynamics/osf/');
 
+      // Extract existing settings
+      $configFile = file_get_contents($this->osf_web_services_folder.'/StructuredDynamics/osf/tests/Config.php');
+
+      preg_match('/this-\>osfInstanceFolder = "(.*)"/', $configFile, $matches);
+      $osfInstanceFolderExtracted = $matches[1];
+      preg_match('/this-\>endpointUrl = "(.*)"/', $configFile, $matches);
+      $endpointUrlExtracted = $matches[1];
+      preg_match('/this-\>endpointUri = "(.*)"/', $configFile, $matches);
+      $endpointUriExtracted = $matches[1];
+      preg_match('/this-\>userID = \'(.*)\'/', $configFile, $matches);
+      $userIDExtracted = $matches[1];
+      preg_match('/this-\>adminGroup = \'(.*)\'/', $configFile, $matches);
+      $adminGroupExtracted = $matches[1];
+      preg_match('/this-\>testGroup = "(.*)"/', $configFile, $matches);
+      $testGroupExtracted = $matches[1];
+      preg_match('/this-\>testUser = "(.*)"/', $configFile, $matches);
+      $testUserExtracted = $matches[1];
+      preg_match('/this-\>applicationID = \'(.*)\'/', $configFile, $matches);
+      $applicationIDExtracted = $matches[1];
+      preg_match('/this-\>apiKey = \'(.*)\'/', $configFile, $matches);
+      $apiKeyExtracted = $matches[1];      
+      
       $this->exec('rm -rf '.$this->osf_web_services_folder.'/StructuredDynamics/osf/tests/');
       
       $this->exec('cp -af tests '.$this->osf_web_services_folder.'/StructuredDynamics/osf/');
@@ -515,13 +537,20 @@ logging-folder = \"".$this->logging_folder."\"
       
       $this->exec('sed -i "s>REPLACEME>'.$this->osf_web_services_folder.'/StructuredDynamics/osf>" phpunit.xml');
 
-      $this->exec('sudo sed -i "s>$this-\>osfInstanceFolder = \"/usr/share/osf/\";>$this-\>osfInstanceFolder = \"'.$this->osf_web_services_folder.'/\";>" Config.php');
-      $this->exec('sudo sed -i "s>$this-\>endpointUrl = \"http://localhost/ws/\";>$this-\>endpointUrl = \"http://'.$this->osf_web_services_domain.'/ws/\";>" Config.php');      
-      $this->exec('sudo sed -i "s>$this-\>endpointUri = \"http://localhost/wsf/ws/\";>$this-\>endpointUri = \"http://'.$this->osf_web_services_domain.'/wsf/ws/\";>" Config.php');      
+      // Apply existing settings to new Config.php file
+      $this->exec('sudo sed -i "s>$this-\>osfInstanceFolder = \".*\";>$this-\>osfInstanceFolder = \"'.$osfInstanceFolderExtracted.'\";>" Config.php');
+      $this->exec('sudo sed -i "s>$this-\>endpointUrl = \".*\";>$this-\>endpointUrl = \"'.$endpointUrlExtracted.'\";>" Config.php');      
+      $this->exec('sudo sed -i "s>$this-\>endpointUri = \".*\";>$this-\>endpointUri = \"'.$endpointUriExtracted.'\";>" Config.php');      
+      $this->exec('sudo sed -i "s>$this-\>userID = \'.*\';>$this-\>userID = \''.$userIDExtracted.'\';>" Config.php');      
+      $this->exec('sudo sed -i "s>$this-\>adminGroup = \'.*\';>$this-\>adminGroup = \''.$adminGroupExtracted.'\';>" Config.php');      
+      $this->exec('sudo sed -i "s>$this-\>testGroup = \".*\";>$this-\>testGroup = \"'.$testGroupExtracted.'\";>" Config.php');      
+      $this->exec('sudo sed -i "s>$this-\>testUser = \".*\";>$this-\>testUser = \"'.$testUserExtracted.'\";>" Config.php');      
+      $this->exec('sudo sed -i "s>$this-\>applicationID = \'.*\';>$this-\>applicationID = \''.$applicationIDExtracted.'\';>" Config.php');      
+      $this->exec('sudo sed -i "s>$this-\>apiKey = \'.*\';>$this-\>apiKey = \''.$apiKeyExtracted.'\';>" Config.php');      
       
       $this->chdir($this->currentWorkingDirectory);
       
-      $this->exec('rm -rf /tmp/osftestssuites-install/');
+      $this->exec('rm -rf /tmp/osftestssuites-upgrade/');
     }         
     
     public function runOSFTestsSuites($installationFolder = '')

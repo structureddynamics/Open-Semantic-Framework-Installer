@@ -1258,7 +1258,7 @@
       
       $this->chdir($this->osf_web_services_folder.'/StructuredDynamics/osf/tests/');
       
-      $this->wget('https://github.com/structureddynamics/OSF-Web-Services-Tests-Suites/archive/'.$version.'.zip');
+      $this->wget('https://github.com/structureddynamics/OSF-Tests-Suites/archive/'.$version.'.zip');
       
       $this->exec('unzip '.$version.'.zip');      
       
