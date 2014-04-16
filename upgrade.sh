@@ -59,6 +59,8 @@ sudo cp -af * ../
 cd ..
 
 sudo chmod 755 osf-installer
+sudo chmod 755 upgrade.sh
+sudo chmod 755 install.sh
 
 sudo rm -rf Open-Semantic-Framework-Installer*
 sudo rm -f 3.0.zip
