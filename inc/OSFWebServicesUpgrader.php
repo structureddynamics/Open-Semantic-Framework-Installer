@@ -2,7 +2,7 @@
   
   class OSFWebServicesUpgrader extends OSFConfigurator
   {
-    private $latestVersion = '2.0.0';
+    private $latestVersion = '3.0.0';
     
     private $currentInstalledVersion = '';
     
@@ -20,13 +20,13 @@
       
       switch($this->currentInstalledVersion)
       {
-        case '2.0.0':
+        case '3.0.0':
           $this->latestVersion();
-          //$this->upgradeTo_2_0_1();
+          //$this->upgradeTo_3_0_1();
         break;
         
-        case '2.0.1':
-          //$this->upgradeTo_2_0_2();
+        case '3.0.1':
+          //$this->upgradeTo_3_0_2();
         break;
         
         default:
@@ -90,10 +90,10 @@
       $this->cecho("Upgrade finished, latest version installed: OSF Web Services ".$this->latestVersion."\n\n", 'WHITE');
     }    
     
-    private function upgradeTo_2_0_1()
+    private function upgradeTo_3_0_1()
     {                    
       /*
-      $this->upgradeCodebase('2.0.1');
+      $this->upgradeCodebase('3.0.1');
       */
       
       //
@@ -111,7 +111,7 @@
       // 7) If new software or libraries are needed for this upgrade, then simply install and configure them.      
       
       /*
-      $this->currentInstalledVersion = '2.0.1';
+      $this->currentInstalledVersion = '3.0.1';
       */
     }
   }
