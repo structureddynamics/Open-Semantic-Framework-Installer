@@ -491,7 +491,7 @@ logging-folder = \"".$this->logging_folder."\"
     /**
     * Upgrade the OSF PHPUNIT Tests Suites
     */
-    public function upgradeOSFTestsSuites()
+    public function upgradeOSFTestsSuites($version)
     {
       $this->cecho("Upgrading tests suites...\n", 'WHITE');
       
@@ -499,11 +499,11 @@ logging-folder = \"".$this->logging_folder."\"
       
       $this->chdir('/tmp/osftestssuites-upgrade/');
       
-      $this->wget('https://github.com/structureddynamics/OSF-Tests-Suites/archive/'.$this->osf_tests_suites_version.'.zip');
+      $this->wget('https://github.com/structureddynamics/OSF-Tests-Suites/archive/'.$version.'.zip');
       
-      $this->exec('unzip '.$this->osf_tests_suites_version.'.zip');
+      $this->exec('unzip '.$version.'.zip');
       
-      $this->chdir('/tmp/osftestssuites-upgrade/OSF-Tests-Suites-'.$this->osf_tests_suites_version.'/StructuredDynamics/osf/');
+      $this->chdir('/tmp/osftestssuites-upgrade/OSF-Tests-Suites-'.$version.'/StructuredDynamics/osf/');
 
       // Extract existing settings
       $configFile = file_get_contents($this->osf_web_services_folder.'/StructuredDynamics/osf/tests/Config.php');
