@@ -58,6 +58,8 @@ sudo cp -af * ../
 
 cd ..
 
+sudo chmod 755 osf-installer
+
 sudo rm -rf Open-Semantic-Framework-Installer*
 sudo rm -f 3.0.zip
 
