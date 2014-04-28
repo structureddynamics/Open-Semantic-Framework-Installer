@@ -417,9 +417,6 @@
       $this->cecho("Configure error level settings...\n", 'WHITE');
       passthru('drush vset error_level 1');
       
-      // Configure domain name
-      passthru('drush vset osf_UrisDomain "'.str_replace('http://', '', trim($domainName)).'"');
-      
       // Setup OSF Ontology settings
       $this->cecho("Configure OSF Ontology settings...\n", 'WHITE');
       
