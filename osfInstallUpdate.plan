@@ -1,0 +1,15 @@
+2014-07-25
+
+Ubuntu 14.04 OSF Installer update plan (Fred Giasson)
+
+(1) clone the OSF Installer repo
+(2) Create a new file OSFInstaller_Ubuntu_14_04.php
+(3) Fix the version in the method isWorkingInstaller() in that file
+(4) Add that new version in the file "osf-installer" around line #24
+(5) In OSFInstaller.php, at line #99, change "$this->installPhp5();" for "$this->installPhp5FromSource();"
+(6) Run the installer and hope for the best!
+    There will probably be issues.
+    If there are, then the installPhp5FromSource() should be called independently.
+    Do this by looking into "osf-installer" line #236, change it for the from-source function and run it directly in the command line.
+
+(7) Once all this works, the resulting deb files should be used in the php5 folder
