@@ -2,7 +2,7 @@
 
   include_once('inc/OSFInstaller.php');
 
-  class OSFInstaller_Ubuntu_12_10 extends OSFInstaller
+  class OSFInstaller_Ubuntu_14_04 extends OSFInstaller
   {
     public function installPhp5()
     {
@@ -572,7 +572,7 @@
           // Validate version
           $version = (float) shell_exec('lsb_release -rs');
           
-          if($version >= 12.10)
+          if($version >= 14.04)
           {
             return(TRUE);
           }
