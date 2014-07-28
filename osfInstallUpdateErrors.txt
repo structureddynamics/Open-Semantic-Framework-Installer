@@ -29,6 +29,40 @@ Date: Sun, 27 Jul 2014 17:09:01 -0500 (CDT)
 PHP Warning:  PHP Startup: Unable to load dynamic library '/usr/lib/php5/20121212/mysql.so' - /usr/lib/php5/20121212/mysql.so: cannot open shared object file: No such file or directory in Unknown on line 0
 
 20140728: this is possibly two errors:
-  (1) need unmet build dependencies
+  (1) need unmet build dependencies: hardening-wrapper, lemon, quilt
   (2) dynamic mysql.so library loading
   will deal with (1) first.
+
+debuild output error:
+
+PHP Warning:  PHP Startup: Unable to load dynamic library '/tmp/php5-install/update/build/php5-5.5.9+dfsg/apache2-build/modules/readline.so' - /tmp/php5-install/update/build/php5-5.5.9+dfsg/apache2-build/modules/readline.so: cannot open shared object file: No such file or directory in Unknown on line 0
+PHP Warning:  PHP Startup: Invalid library (appears to be a Zend Extension, try loading using zend_extension=opcache.so from php.ini) in Unknown on line 0
+PHP Warning:  Module 'PDO' already loaded in Unknown on line 0
+
+Warning: PHP Startup: Unable to load dynamic library '/tmp/php5-install/update/build/php5-5.5.9+dfsg/apache2-build/modules/json.so' - /tmp/php5-install/update/build/php5-5.5.9+dfsg/apache2-build/modules/json.so: cannot open shared object file: No such file or directory in Unknown on line 0
+
+Warning: PHP Startup: Unable to load dynamic library '/tmp/php5-install/update/build/php5-5.5.9+dfsg/apache2-build/modules/readline.so' - /tmp/php5-install/update/build/php5-5.5.9+dfsg/apache2-build/modules/readline.so: cannot open shared object file: No such file or directory in Unknown on line 0
+
+Warning: PHP Startup: Invalid library (appears to be a Zend Extension, try loading using zend_extension=opcache.so from php.ini) in Unknown on line 0
+
+Warning: Module 'PDO' already loaded in Unknown on line 0
+
+Fatal error: Method test::__call() cannot take arguments by reference in /tmp/php5-install/update/build/php5-5.5.9+dfsg/Zend/tests/magic_by_ref_007.php on line 4
+---- FAILED
+
+/bin/sh -x debian/setup-mysql.sh 2450 /tmp/php5-install/update/build/php5-5.5.9+dfsg/mysql_db stop
+ fakeroot debian/rules binary
+dh_testdir
+dh_testroot
+dh_prep
+dh_installdirs
+chmod 01733 debian/php5-common/var/lib/php5
+cp debian/php5_cgi.conf \
+		debian/php5-cgi/etc/apache2/mods-available/php5_cgi.conf
+cp: cannot stat ‘debian/php5_cgi.conf’: No such file or directory
+make: *** [install] Error 1
+dpkg-buildpackage: error: fakeroot debian/rules binary gave error exit status 2
+A non-recoverable error happened. Check the log to see what was the error: /tmp/osf-install-2014-07-28_12:48:30.log
+Do you want to continue the execution. If yes, then try to fix this error by hands before continuing, otherwise errors may occurs later in the process? (yes/no)
+: [USER-INPUT]: no
+
