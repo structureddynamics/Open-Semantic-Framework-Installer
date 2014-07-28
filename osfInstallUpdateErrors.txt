@@ -28,3 +28,7 @@ Date: Sun, 27 Jul 2014 17:09:01 -0500 (CDT)
 
 PHP Warning:  PHP Startup: Unable to load dynamic library '/usr/lib/php5/20121212/mysql.so' - /usr/lib/php5/20121212/mysql.so: cannot open shared object file: No such file or directory in Unknown on line 0
 
+20140728: this is possibly two errors:
+  (1) need unmet build dependencies
+  (2) dynamic mysql.so library loading
+  will deal with (1) first.
