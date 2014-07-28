@@ -20,7 +20,7 @@
   // Detects the version of the current linux distribution.
   // Let's use the installer for the good distribution and the good version.
   // If the distribution/version is not supported, the generic installer
-  // is used which means that some features may be disabled.
+  // is used; this means that some features may be disabled.
   if(OSFInstaller_Ubuntu_14_04::isWorkingInstaller())
   {    
     $installer = new OSFInstaller_Ubuntu_14_04(getcwd().'/installer.ini');  

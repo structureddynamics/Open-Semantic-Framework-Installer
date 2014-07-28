@@ -12,7 +12,7 @@
     }
     
     /**
-    * Tries to install PHP5 using the packages available for the linux distribution
+    * Tries to install PHP5 using the packages available for the Linux distribution
     */
     abstract public function installPhp5();
     
@@ -54,15 +54,15 @@
     abstract public function installPhpMyAdmin();    
 
     /**
-    * Install the entire OSF stack. Running this command will install the full stack on the server
+    * Install the entire OSF stack. Running this command installs the full stack on the server
     * according to the settings specified in the installer.ini file.
     */
     public function installOSF()
     {
       $this->cecho("You are about to install the Open Semantic Framework.\n", 'WHITE');
-      $this->cecho("This installation process will install all the softwares that are part of the OSF stack. It will take 10 minutes of your time, but the process will go on for a few hours because all pieces of software that get compiled.\n\n", 'WHITE');
+      $this->cecho("This installation process installs all the software components that are part of the OSF stack. It will take 10 minutes of your time, but the process will go on for a few hours because of the many pieces of software that get compiled.\n\n", 'WHITE');
       $this->cecho("The log of this installation is available here: ".$this->log_file."\n", 'WHITE');
-      $this->cecho("\n\nCopyright 2008-13. Structured Dynamics LLC. All rights reserved.\n\n", 'WHITE');
+      $this->cecho("\n\nCopyright 2008-14. Structured Dynamics LLC. All rights reserved.\n\n", 'WHITE');
       
       $this->cecho("\n\n");
       $this->cecho("---------------------------------\n", 'WHITE');
@@ -72,11 +72,11 @@
 
       $this->cecho("\n\n");
       $this->cecho("------------------------\n", 'WHITE');
-      $this->cecho(" Installing prerequires \n", 'WHITE');
+      $this->cecho(" Installing prerequisites \n", 'WHITE');
       $this->cecho("------------------------\n", 'WHITE');
       $this->cecho("\n\n");
 
-      $yes = $this->isYes($this->getInput("We recommand you to upgrade all softwares of the server. Would you like to do this right now? (yes/no)"));             
+      $yes = $this->isYes($this->getInput("We recommand that you upgrade all software on the server. Would you like to do this right now? (yes/no)"));             
       
       if($yes)
       {
@@ -116,7 +116,7 @@
 
       $this->installOSFWebServices();      
       
-      $this->cecho("Now the the OSF instance is installed, you can install OSF for Drupal on the same server using this command:\n\n", 'CYAN');
+      $this->cecho("Now that the OSF instance is installed, you can install OSF for Drupal on the same server using this command:\n\n", 'CYAN');
       $this->cecho("    ./osf-installer --install-osf-drupal\n\n", 'CYAN');
       
       
