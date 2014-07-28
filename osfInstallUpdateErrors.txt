@@ -1,0 +1,30 @@
+20140727: error 1:
+
+Processing triggers for libc-bin (2.19-0ubuntu6) ...
+debuild: fatal error at line 1364:
+dpkg-buildpackage -rfakeroot -D -us -uc failed
+ dpkg-buildpackage -rfakeroot -D -us -uc
+pkg-buildpackage: warning: using a gain-root-command while being root
+pkg-buildpackage: source package php5
+pkg-buildpackage: source version 5.5.9+dfsg-1ubuntu4.3
+pkg-buildpackage: source distribution trusty-security
+pkg-buildpackage: source changed by Marc Deslauriers <marc.deslauriers@ubuntu.com>
+ dpkg-source --before-build php5-5.5.9+dfsg
+pkg-buildpackage: host architecture amd64
+pkg-checkbuilddeps: Unmet build dependencies: hardening-wrapper lemon quilt
+pkg-buildpackage: warning: build dependencies/conflicts unsatisfied; aborting
+pkg-buildpackage: warning: (Use -d flag to override.)
+A non-recoverable error happened. Check the log to see what was the error: /tmp/osf-install-2014-07-27_16:34:40.log
+o you want to continue the execution. If yes, then try to fix this error by hands before continuing, otherwise errors may occurs later in the process? (yes/no)
+
+Subject: Cron <root@xenon>   [ -x /usr/lib/php5/maxlifetime ] && [ -x /usr/lib/php5/sessionclean ] && [ -d /var/lib/php5 ] && /usr/lib/php5/sessionclean /var/lib/php5 $(/usr/lib/php5/maxlifetime)
+Content-Type: text/plain; charset=ANSI_X3.4-1968
+X-Cron-Env: <SHELL=/bin/sh>
+X-Cron-Env: <HOME=/root>
+X-Cron-Env: <PATH=/usr/bin:/bin>
+X-Cron-Env: <LOGNAME=root>
+Message-Id: <20140727220901.7D325A1277@ubuntu>
+Date: Sun, 27 Jul 2014 17:09:01 -0500 (CDT)
+
+PHP Warning:  PHP Startup: Unable to load dynamic library '/usr/lib/php5/20121212/mysql.so' - /usr/lib/php5/20121212/mysql.so: cannot open shared object file: No such file or directory in Unknown on line 0
+
