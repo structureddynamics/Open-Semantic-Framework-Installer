@@ -1,0 +1,41 @@
+2014-07-28: (recap) I forgot to push the github changes from the 28th
+before restoring the starting snapshot, so there is no log
+file. [Lesson learned?]
+However, the main result from the 28th is that the debuild of php5
+from sources fails. dynamic libraries are not found in the build tree,
+the resulting make failure is that php5_conf.ini is not found.
+
+2014-07-29:
+- working through building Php5FromSource by hand
+
+apt-get -y install gcc debhelper fakeroot
+Reading package lists... Done
+Building dependency tree       
+Reading state information... Done
+fakeroot is already the newest version.
+fakeroot set to manually installed.
+gcc is already the newest version.
+[note: gcc and fakeroot are installed when debhelper is installed]
+The following extra packages will be installed:
+  dh-apparmor libmail-sendmail-perl libsys-hostname-long-perl po-debconf
+Suggested packages:
+  dh-make apparmor-easyprof libmail-box-perl
+The following NEW packages will be installed:
+  debhelper dh-apparmor libmail-sendmail-perl libsys-hostname-long-perl
+  po-debconf
+0 upgraded, 5 newly installed, 0 to remove and 0 not upgraded.
+
+[note: warning when downloading php5 source:
+Fetched 11.0 MB in 57s (190 kB/s)                                              
+gpgv: Signature made Mon 07 Jul 2014 11:16:45 AM CDT using RSA key ID A744BE93
+gpgv: Can't check signature: public key not found
+dpkg-source: warning: failed to verify signature on ./php5_5.5.9+dfsg-1ubuntu4.3.dsc]
+
+- setting up the build by hand required copying the OSF debian/control
+  and rules files to the build tree. There seem to be a number of
+  differences between the two files.
+  I tried just replacing the unixODBC lines with iodbc lines, but the
+  debuild failed.
+  [too many different variables; starting over and making fewer
+  changes]
+
