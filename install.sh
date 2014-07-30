@@ -44,7 +44,7 @@ cecho "\n\nInstalling requirements...\n"
 if which apt-get >/dev/null; then
   apt-get -y update
   apt-get -y --no-upgrade install php5
-  apt-get -y install unzip
+  apt-get -y install unzip wget
 else
   cecho "\nMake sure that PHP5, unzip, and wget packages are installed on the server.\n" yellow
 fi

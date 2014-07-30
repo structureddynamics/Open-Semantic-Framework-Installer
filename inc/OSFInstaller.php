@@ -76,7 +76,7 @@
       $this->cecho("------------------------\n", 'WHITE');
       $this->cecho("\n\n");
 
-      $yes = $this->isYes($this->getInput("We recommand that you upgrade all software on the server. Would you like to do this right now? (yes/no)"));             
+      $yes = $this->isYes($this->getInput("We recommend that you upgrade all software on the server. Would you like to do this right now? (yes/no)"));             
       
       if($yes)
       {

@@ -6,7 +6,7 @@ Requirements
 ------------
 * Ubuntu 14.04
 * PHP 5.3 or higher
-* 64 Bits Operating System
+* 64 Bit Operating System
 * Access to internet from your server
 * 5 GB of disk space on the partition where you are installing OSF
 
