@@ -39,3 +39,17 @@ dpkg-source: warning: failed to verify signature on ./php5_5.5.9+dfsg-1ubuntu4.3
   [too many different variables; starting over and making fewer
   changes]
 
+2014-07-30:
+ - woot! built php5 from source by hand, not via php scripts
+ - caveats:
+   1. do not know if the resulting packages will work
+   2. debuild was run with -d to override an odbc dependency
+      (not sure where this is yet)
+   3. only edited the php5 source "rules" file to replace unixODBC
+   with iodbc; did not use the OSF-Installer resources/php5/rules
+   file. this needs to be investigated.
+   4. debuild ended with a lintian warning about running as root, and
+   a GPG signature error (see ...Errors.txt file).
+      need to decide on how to handle these exceptions.
+
+   5. NOTE: did not run debuild with the latest Ubuntu 14.04.1 updates!

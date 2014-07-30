@@ -70,3 +70,44 @@ Do you want to continue the execution. If yes, then try to fix this error by han
   - only changes were to debian/rules file (did not include "generic" on pdo-iodbc line)
   - same error as the one just above. so need to learn more about that error; possibly connected with warnings regarding missing .so files.
   - maybe need to get the current debian/control and rules files and see what happens with them.
+
+  - result: packages built, but debuild ended with the following exceptions:
+
+Now running lintian...
+warning: the authors of lintian do not recommend running it with root privileges!
+W: php5 source: out-of-date-standards-version 3.9.4 (current is 3.9.5)
+W: libphp5-embed: package-name-doesnt-match-sonames libphp5
+W: libphp5-embed: shlib-without-versioned-soname usr/lib/libphp5.so libphp5.so
+E: libphp5-embed: postinst-must-call-ldconfig usr/lib/libphp5.so
+W: libapache2-mod-php5: non-standard-apache2-module-package-name libapache2-mod-php5 != libapache2-libphp5
+E: libapache2-mod-php5: apache2-module-does-not-ship-load-file libphp5
+W: libapache2-mod-php5filter: non-standard-apache2-module-package-name libapache2-mod-php5filter != libapache2-libphp5filter
+E: libapache2-mod-php5filter: apache2-module-does-not-ship-load-file libphp5filter
+W: php5-dev: binary-without-manpage usr/bin/dh_php5
+W: php5-common: binary-without-manpage usr/sbin/php5dismod
+W: php5-common: binary-without-manpage usr/sbin/php5enmod
+W: php5-common: binary-without-manpage usr/sbin/php5query
+W: php5-common: script-not-executable usr/share/php5/php5-helper
+W: php-pear: binary-without-manpage usr/bin/pear
+W: php-pear: binary-without-manpage usr/bin/peardev
+W: php-pear: binary-without-manpage usr/bin/pecl
+W: php5-cgi: apache2-deprecated-auth-config Order
+W: php5-cgi: apache2-deprecated-auth-config Deny
+W: php5-cgi: apache2-deprecated-auth-config Order
+W: php5-cgi: apache2-deprecated-auth-config Deny
+E: php5-fpm: postrm-does-not-call-updaterc.d-for-init.d-script etc/init.d/php5-fpm
+N: 24 tags overridden (9 errors, 3 warnings, 12 info)
+Finished running lintian.
+Now signing changes and any dsc files...
+ signfile php5_5.5.9+dfsg-1ubuntu4.3.dsc Marc Deslauriers <marc.deslauriers@ubuntu.com>
+gpg: directory `/root/.gnupg' created
+gpg: new configuration file `/root/.gnupg/gpg.conf' created
+gpg: WARNING: options in `/root/.gnupg/gpg.conf' are not yet active during this run
+gpg: keyring `/root/.gnupg/secring.gpg' created
+gpg: keyring `/root/.gnupg/pubring.gpg' created
+gpg: skipped "Marc Deslauriers <marc.deslauriers@ubuntu.com>": secret key not available
+gpg: /tmp/debsign.HqUmO4EP/php5_5.5.9+dfsg-1ubuntu4.3.dsc: clearsign failed: secret key not available
+debsign: gpg error occurred!  Aborting....
+debuild: fatal error at line 1283:
+running debsign failed
+
