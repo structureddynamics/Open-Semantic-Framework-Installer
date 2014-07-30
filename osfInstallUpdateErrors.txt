@@ -66,3 +66,7 @@ A non-recoverable error happened. Check the log to see what was the error: /tmp/
 Do you want to continue the execution. If yes, then try to fix this error by hands before continuing, otherwise errors may occurs later in the process? (yes/no)
 : [USER-INPUT]: no
 
+2014-07-30: run1
+  - only changes were to debian/rules file (did not include "generic" on pdo-iodbc line)
+  - same error as the one just above. so need to learn more about that error; possibly connected with warnings regarding missing .so files.
+  - maybe need to get the current debian/control and rules files and see what happens with them.
