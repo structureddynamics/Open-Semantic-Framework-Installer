@@ -111,3 +111,26 @@ debsign: gpg error occurred!  Aborting....
 debuild: fatal error at line 1283:
 running debsign failed
 
+2014-07-31:
+ - attempting to build php5 from source w/ iodbc again.
+ - here is the dependency error that needs to be tracked down:
+
+band@xenon:/tmp/php5-install/update/build/php5-5.5.9+dfsg$ sudo debuild
+ dpkg-buildpackage -rfakeroot -D -us -uc
+dpkg-buildpackage: warning: using a gain-root-command while being root
+dpkg-buildpackage: source package php5
+dpkg-buildpackage: source version 5.5.9+dfsg-1ubuntu4.3
+dpkg-buildpackage: source distribution trusty-security
+dpkg-buildpackage: source changed by Marc Deslauriers <marc.deslauriers@ubuntu.com>
+ dpkg-source --before-build php5-5.5.9+dfsg
+dpkg-buildpackage: host architecture amd64
+dpkg-checkbuilddeps: Unmet build dependencies: unixodbc-dev
+dpkg-buildpackage: warning: build dependencies/conflicts unsatisfied; aborting
+dpkg-buildpackage: warning: (Use -d flag to override.)
+debuild: fatal error at line 1364:
+dpkg-buildpackage -rfakeroot -D -us -uc failed
+
+SOLUTION: found dependency on unixodbc in debian/control file.
+ - appears that it can be deleted
+ - there are a number of diffs between the current control file and the OSF version
+
