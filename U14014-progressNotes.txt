@@ -53,3 +53,23 @@ dpkg-source: warning: failed to verify signature on ./php5_5.5.9+dfsg-1ubuntu4.3
       need to decide on how to handle these exceptions.
 
    5. NOTE: did not run debuild with the latest Ubuntu 14.04.1 updates!
+
+2014-07-31:
+ - built php5 from source w/ iodbc by hand
+ - succeeded again with same caveats as those listed for 2014-07-30.
+ - did discover the remaining unixodbc dependency
+ - updated a standalone build shell script
+
+2014-08-01:
+ - built php5 again from source w/ iodbc by hand
+ - removed unixodbc dependency from debian/control file
+ - updated a standalone php5 build script
+ - NOTE: did not "tee" output into a log file (will repeat that next)
+
+ - next steps:
+   1. rebuild php5 & packages from source & capture output
+   2. replace OSFInstaller/resources/php5 directory contents with build packages
+      and attempt to run osf-install via OSFInstaller php scripts.
+
+   3. look at debuild warnings and errors related to GPG signing *and*
+      decide what to do about it.

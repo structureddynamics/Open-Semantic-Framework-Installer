@@ -34,3 +34,7 @@ DONE 20140726 (5) In inc/OSFInstaller.php, at line #99, change "$this->installPh
 
 (7) Once all this works, the resulting deb files should be used in the php5 folder
 
+2014-08-01:
+ - packages building; see progressNotes file for details.
+ [Note: messy that results information spread across several files.]
+
