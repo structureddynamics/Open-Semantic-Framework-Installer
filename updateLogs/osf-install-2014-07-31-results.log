@@ -1,0 +1,40 @@
+band@xenon:/tmp/php5-install/update/build/php5-5.5.9+dfsg$ ls -l ..
+total 78860
+-rw-r--r--  1 root root  2204582 Jul 31 17:48 libapache2-mod-php5_5.5.9+dfsg-1ubuntu4.3_amd64.deb
+-rw-r--r--  1 root root  2207674 Jul 31 17:48 libapache2-mod-php5filter_5.5.9+dfsg-1ubuntu4.3_amd64.deb
+-rw-r--r--  1 root root  2203456 Jul 31 17:49 libphp5-embed_5.5.9+dfsg-1ubuntu4.3_amd64.deb
+drwxr-xr-x 26 root root     4096 Jul 31 17:47 php5-5.5.9+dfsg
+-rw-r--r--  1 root root     1302 Jul 31 17:50 php5_5.5.9+dfsg-1ubuntu4.3_all.deb
+-rw-r--r--  1 root root 21429281 Jul 31 17:52 php5_5.5.9+dfsg-1ubuntu4.3_amd64.build
+-rw-r--r--  1 root root    14184 Jul 31 17:50 php5_5.5.9+dfsg-1ubuntu4.3_amd64.changes
+-rw-r--r--  1 root root   157134 Jul 31 16:34 php5_5.5.9+dfsg-1ubuntu4.3.debian.tar.gz
+-rw-r--r--  1 root root     3538 Jul 31 16:34 php5_5.5.9+dfsg-1ubuntu4.3.dsc
+-rw-r--r--  1 root root 10833076 Feb 17 16:44 php5_5.5.9+dfsg.orig.tar.xz
+-rw-r--r--  1 root root  4280912 Jul 31 17:49 php5-cgi_5.5.9+dfsg-1ubuntu4.3_amd64.deb
+-rw-r--r--  1 root root  2163014 Jul 31 17:49 php5-cli_5.5.9+dfsg-1ubuntu4.3_amd64.deb
+-rw-r--r--  1 root root   652848 Jul 31 17:48 php5-common_5.5.9+dfsg-1ubuntu4.3_amd64.deb
+-rw-r--r--  1 root root    27124 Jul 31 17:50 php5-curl_5.5.9+dfsg-1ubuntu4.3_amd64.deb
+-rw-r--r--  1 root root 31070700 Jul 31 17:50 php5-dbg_5.5.9+dfsg-1ubuntu4.3_amd64.deb
+-rw-r--r--  1 root root   357172 Jul 31 17:49 php5-dev_5.5.9+dfsg-1ubuntu4.3_amd64.deb
+-rw-r--r--  1 root root     9186 Jul 31 17:50 php5-enchant_5.5.9+dfsg-1ubuntu4.3_amd64.deb
+-rw-r--r--  1 root root  2191728 Jul 31 17:49 php5-fpm_5.5.9+dfsg-1ubuntu4.3_amd64.deb
+-rw-r--r--  1 root root    27922 Jul 31 17:50 php5-gd_5.5.9+dfsg-1ubuntu4.3_amd64.deb
+-rw-r--r--  1 root root    14820 Jul 31 17:50 php5-gmp_5.5.9+dfsg-1ubuntu4.3_amd64.deb
+-rw-r--r--  1 root root   108626 Jul 31 17:50 php5-intl_5.5.9+dfsg-1ubuntu4.3_amd64.deb
+-rw-r--r--  1 root root    19032 Jul 31 17:50 php5-ldap_5.5.9+dfsg-1ubuntu4.3_amd64.deb
+-rw-r--r--  1 root root    62992 Jul 31 17:50 php5-mysql_5.5.9+dfsg-1ubuntu4.3_amd64.deb
+-rw-r--r--  1 root root   134848 Jul 31 17:50 php5-mysqlnd_5.5.9+dfsg-1ubuntu4.3_amd64.deb
+-rw-r--r--  1 root root    30432 Jul 31 17:50 php5-odbc_5.5.9+dfsg-1ubuntu4.3_amd64.deb
+-rw-r--r--  1 root root    51786 Jul 31 17:50 php5-pgsql_5.5.9+dfsg-1ubuntu4.3_amd64.deb
+-rw-r--r--  1 root root     8056 Jul 31 17:50 php5-pspell_5.5.9+dfsg-1ubuntu4.3_amd64.deb
+-rw-r--r--  1 root root    12068 Jul 31 17:50 php5-readline_5.5.9+dfsg-1ubuntu4.3_amd64.deb
+-rw-r--r--  1 root root     5424 Jul 31 17:50 php5-recode_5.5.9+dfsg-1ubuntu4.3_amd64.deb
+-rw-r--r--  1 root root    19144 Jul 31 17:50 php5-snmp_5.5.9+dfsg-1ubuntu4.3_amd64.deb
+-rw-r--r--  1 root root    24324 Jul 31 17:50 php5-sqlite_5.5.9+dfsg-1ubuntu4.3_amd64.deb
+-rw-r--r--  1 root root    23936 Jul 31 17:50 php5-sybase_5.5.9+dfsg-1ubuntu4.3_amd64.deb
+-rw-r--r--  1 root root    16198 Jul 31 17:50 php5-tidy_5.5.9+dfsg-1ubuntu4.3_amd64.deb
+-rw-r--r--  1 root root    34380 Jul 31 17:50 php5-xmlrpc_5.5.9+dfsg-1ubuntu4.3_amd64.deb
+-rw-r--r--  1 root root    13790 Jul 31 17:50 php5-xsl_5.5.9+dfsg-1ubuntu4.3_amd64.deb
+-rw-r--r--  1 root root   266712 Jul 31 17:50 php-pear_5.5.9+dfsg-1ubuntu4.3_all.deb
+band@xenon:/tmp/php5-install/update/build/php5-5.5.9+dfsg$ 
+
