@@ -73,3 +73,12 @@ dpkg-source: warning: failed to verify signature on ./php5_5.5.9+dfsg-1ubuntu4.3
 
    3. look at debuild warnings and errors related to GPG signing *and*
       decide what to do about it.
+
+2104-08-02:
+ - built php5 from source w/ iodbc using bash script and collecting output log
+
+ - next steps:
+   1. replace resources/php5 in the OSF-Installer tree
+   2. replace control and rules files in resources/php5
+   3. attempt install using built packages
+
