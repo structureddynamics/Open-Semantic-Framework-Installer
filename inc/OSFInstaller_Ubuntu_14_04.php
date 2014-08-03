@@ -29,16 +29,16 @@
       $this->exec("apt-get -y remove php5");     
       $this->exec("apt-get -y install iodbc libiodbc2 libiodbc2-dev");     
       
-      $this->exec('dpkg -i php5-common_5.4.6-1ubuntu1.1_amd64.deb');
-      $this->exec('dpkg -i php5-cgi_5.4.6-1ubuntu1.1_amd64.deb');
-      $this->exec('dpkg -i php5-cli_5.4.6-1ubuntu1.1_amd64.deb');
-      $this->exec('dpkg -i php5-curl_5.4.6-1ubuntu1.1_amd64.deb');
-      $this->exec('dpkg -i libapache2-mod-php5_5.4.6-1ubuntu1.1_amd64.deb');
-      $this->exec('dpkg -i php5-mysql_5.4.6-1ubuntu1.1_amd64.deb');
-      $this->exec('dpkg -i php5-mysql_5.4.6-1ubuntu1.1_amd64.deb');
-      $this->exec('dpkg -i php5_5.4.6-1ubuntu1.1_all.deb');
-      $this->exec('dpkg -i php5-gd_5.4.6-1ubuntu1.1_amd64.deb');
-      passthru('dpkg -i php5-odbc_5.4.6-1ubuntu1.1_amd64.deb');
+      $this->exec('dpkg -i php5-common_5.5.9+dfsg-1ubuntu4.3_amd64.deb');
+      $this->exec('dpkg -i php5-cgi_5.5.9+dfsg-1ubuntu4.3_amd64.deb');
+      $this->exec('dpkg -i php5-cli_5.5.9+dfsg-1ubuntu4.3_amd64.deb');
+      $this->exec('dpkg -i php5-curl_5.5.9+dfsg-1ubuntu4.3_amd64.deb');
+      $this->exec('dpkg -i libapache2-mod-php5_5.5.9+dfsg-1ubuntu4.3_amd64.deb');
+      $this->exec('dpkg -i php5-mysql_5.5.9+dfsg-1ubuntu4.3_amd64.deb');
+      $this->exec('dpkg -i php5-mysql_5.5.9+dfsg-1ubuntu4.3_amd64.deb');
+      $this->exec('dpkg -i php5_5.5.9+dfsg-1ubuntu4.3_all.deb');
+      $this->exec('dpkg -i php5-gd_5.5.9+dfsg-1ubuntu4.3_amd64.deb');
+      passthru('dpkg -i php5-odbc_5.5.9+dfsg-1ubuntu4.3_amd64.deb');
       
       // Place aptitude/apt-get hold on the custom packages
       $this->exec('apt-mark hold php5-common');
@@ -55,8 +55,8 @@
       // dependant on libiodbc2. Otherwise it will always complains 
       // and we will have to resolve it in order to install anything else
       $status = file_get_contents('/var/lib/dpkg/status');
-      $status = str_replace('Depends: libc6 (>= 2.14), libiodbc2 (>= 3.52.7), phpapi-20100525, php5-common (= 5.4.6-1ubuntu1.1), ucf',
-                            'Depends: libc6 (>= 2.14), phpapi-20100525, php5-common (= 5.4.6-1ubuntu1.1), ucf',
+      $status = str_replace('Depends: libc6 (>= 2.14), libiodbc2 (>= 3.52.7), phpapi-20100525, php5-common (= 5.5.9+dfsg-1ubuntu4.3), ucf',
+                            'Depends: libc6 (>= 2.14), phpapi-20100525, php5-common (= 5.5.9+dfsg-1ubuntu4.3), ucf',
                             $status);
       file_put_contents('/var/lib/dpkg/status', $status);
       
@@ -146,8 +146,8 @@
       // dependant on libiodbc2. Otherwise it will always complains 
       // and we will have to resolve it in order to install anything else
       $status = file_get_contents('/var/lib/dpkg/status');
-      $status = str_replace('Depends: libc6 (>= 2.14), libiodbc2 (>= 3.52.7), phpapi-20100525, php5-common (= 5.4.6-1ubuntu1.1), ucf',
-                            'Depends: libc6 (>= 2.14), phpapi-20100525, php5-common (= 5.4.6-1ubuntu1.1), ucf',
+      $status = str_replace('Depends: libc6 (>= 2.14), libiodbc2 (>= 3.52.7), phpapi-20100525, php5-common (= 5.5.9+dfsg-1ubuntu4.3), ucf',
+                            'Depends: libc6 (>= 2.14), phpapi-20100525, php5-common (= 5.5.9+dfsg-1ubuntu4.3), ucf',
                             $status);
       file_put_contents('/var/lib/dpkg/status', $status);
 
@@ -181,11 +181,11 @@
       
       $this->exec('apt-mark unhold php5-odbc');
       
-      $this->exec('dpkg -i --ignore-depends=libiodbc2 resources/php5/php5-odbc_5.4.6-1ubuntu1.1_amd64.deb');      
+      $this->exec('dpkg -i --ignore-depends=libiodbc2 resources/php5/php5-odbc_5.5.9+dfsg-1ubuntu4.3_amd64.deb');      
 
       $status = file_get_contents('/var/lib/dpkg/status');
-      $status = str_replace('Depends: libc6 (>= 2.14), libiodbc2 (>= 3.52.7), phpapi-20100525, php5-common (= 5.4.6-1ubuntu1.1), ucf',
-                            'Depends: libc6 (>= 2.14), phpapi-20100525, php5-common (= 5.4.6-1ubuntu1.1), ucf',
+      $status = str_replace('Depends: libc6 (>= 2.14), libiodbc2 (>= 3.52.7), phpapi-20100525, php5-common (= 5.5.9+dfsg-1ubuntu4.3), ucf',
+                            'Depends: libc6 (>= 2.14), phpapi-20100525, php5-common (= 5.5.9+dfsg-1ubuntu4.3), ucf',
                             $status);
       file_put_contents('/var/lib/dpkg/status', $status);
       

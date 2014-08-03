@@ -96,8 +96,7 @@
 
       $this->installMySQL();    
 
-//      $this->installPhp5();
-	$this->installPhp5FromSource();
+      $this->installPhp5();
      
       $this->installApache2();  
 
