@@ -51,9 +51,9 @@
       $this->exec('apt-mark hold php5-gd');
       $this->exec('apt-mark hold php5');
       
-      // Modify /var/lib/dpkg/status such that php5-odbc is not market as
-      // dependant on libiodbc2. Otherwise it will always complains 
-      // and we will have to resolve it in order to install anything else
+      // Modify /var/lib/dpkg/status such that php5-odbc is not marked as
+      // dependent on libiodbc2. Otherwise it will always complain
+      // and we will have to be resolved in order to install anything else.
       $status = file_get_contents('/var/lib/dpkg/status');
       $status = str_replace('Depends: libc6 (>= 2.14), libiodbc2 (>= 3.52.7), phpapi-20100525, php5-common (= 5.5.9+dfsg-1ubuntu4.3), ucf',
                             'Depends: libc6 (>= 2.14), phpapi-20100525, php5-common (= 5.5.9+dfsg-1ubuntu4.3), ucf',
@@ -86,7 +86,7 @@
       $this->cecho("Installing required packages for installing PHP5...\n", 'WHITE');
       
       $this->exec('apt-get -y install devscripts');
-      $this->exec('apt-get -y install gcc debhelper fakeroot');
+      $this->exec('apt-get -y install debhelper');
 
       $this->cecho("Repackaging PHP5 to use iODBC instead of unixODBC...\n", 'WHITE');
 
@@ -111,7 +111,7 @@
       
       $this->exec("apt-get -y install iodbc libiodbc2-dev");     
       
-      $this->exec("debuild");     
+      $this->exec("debuild");
       
       $this->chdir('/tmp/php5-install/update/build/');
           
@@ -142,9 +142,9 @@
       $this->exec('apt-mark hold php5-gd');
       $this->exec('apt-mark hold php5');
       
-      // Modify /var/lib/dpkg/status such that php5-odbc is not market as
-      // dependant on libiodbc2. Otherwise it will always complains 
-      // and we will have to resolve it in order to install anything else
+      // Modify /var/lib/dpkg/status such that php5-odbc is not marked as
+      // dependent on libiodbc2. Otherwise it will always complain
+      // and will have to be resolved in order to install anything else.
       $status = file_get_contents('/var/lib/dpkg/status');
       $status = str_replace('Depends: libc6 (>= 2.14), libiodbc2 (>= 3.52.7), phpapi-20100525, php5-common (= 5.5.9+dfsg-1ubuntu4.3), ucf',
                             'Depends: libc6 (>= 2.14), phpapi-20100525, php5-common (= 5.5.9+dfsg-1ubuntu4.3), ucf',
