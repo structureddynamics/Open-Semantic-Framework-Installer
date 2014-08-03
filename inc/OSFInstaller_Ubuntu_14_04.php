@@ -55,8 +55,8 @@
       // dependent on libiodbc2. Otherwise it will always complain
       // and we will have to be resolved in order to install anything else.
       $status = file_get_contents('/var/lib/dpkg/status');
-      $status = str_replace('Depends: libc6 (>= 2.14), libiodbc2 (>= 3.52.7), phpapi-20100525, php5-common (= 5.5.9+dfsg-1ubuntu4.3), ucf',
-                            'Depends: libc6 (>= 2.14), phpapi-20100525, php5-common (= 5.5.9+dfsg-1ubuntu4.3), ucf',
+      $status = str_replace('Depends: libc6 (>= 2.14), libiodbc2 (>= 3.52.7), phpapi-20121212, php5-common (= 5.5.9+dfsg-1ubuntu4.3), ucf',
+                            'Depends: libc6 (>= 2.14), phpapi-20121212, php5-common (= 5.5.9+dfsg-1ubuntu4.3), ucf',
                             $status);
       file_put_contents('/var/lib/dpkg/status', $status);
       
