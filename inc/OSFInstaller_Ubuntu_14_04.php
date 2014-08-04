@@ -191,7 +191,7 @@
       
       $this->exec('apt-mark hold php5-odbc');
       
-      // Then we have to install the libiodbc2 by hand
+      // Then install libiodbc2 to support iodbctest
       
       $this->exec('mkdir -p /tmp/libodbc2-install/');
       
@@ -199,36 +199,13 @@
       
       $this->exec('apt-get download libiodbc2');
       $this->exec('ar vx *odbc*.deb');
-      $this->exec('tar -xzvf data.tar.gz');
+      $this->exec('unxz data.tar.xz');
+      $this->exec('tar -xvf data.tar');
       $this->exec('cp usr/lib/* /usr/lib/');
       
       $this->chdir($this->currentWorkingDirectory);
       
       $this->exec('rm -rf /tmp/libodbc2-install/');
-      
-      // Then we have to install the iodbc by hand
-      // This is required to have the possibility
-      // to test the connection with iodbctest
-      
-      $this->exec('mkdir -p /tmp/iodbc-install/');
-      
-      $this->chdir('/tmp/iodbc-install/');
-      
-      $this->exec('apt-get download iodbc');
-      $this->exec('ar vx *odbc*.deb');
-      $this->exec('tar -xzvf data.tar.gz');
-      $this->exec('cp usr/lib/* /usr/lib/');
-      $this->exec('cp usr/bin/* /usr/bin/');
-      
-      $this->chdir($this->currentWorkingDirectory);
-      
-      $this->exec('rm -rf /tmp/iodbc-install/');
-      
-      // apt-get download libiodbc2
-      // ar vx *odbc*.deb
-      // tar -xzvf data.tar.gz
-      // cp usr/lib/* /usr/lib/
-      // clean the files...
       // test that iodbc is used by php5
 
       $this->exec('mv /etc/init.d/virtuoso-opensource-6.1 /etc/init.d/virtuoso');
