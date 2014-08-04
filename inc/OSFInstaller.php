@@ -899,12 +899,12 @@
 
       $this->cecho("Configure Apache2 for the OSF Web Services...\n", 'WHITE');
       
-      $this->exec('cp resources/osf-web-services/osf-web-services /etc/apache2/sites-available/');
+      $this->exec('cp resources/osf-web-services/osf-web-services /etc/apache2/sites-available/osf-web-services.conf');
 
-      $this->exec('sudo ln -s /etc/apache2/sites-available/osf-web-services /etc/apache2/sites-enabled/osf-web-services');
+      $this->exec('sudo ln -s /etc/apache2/sites-available/osf-web-services.conf /etc/apache2/sites-enabled/osf-web-services.conf');
       
       // Fix the OSF Web Services path in the apache config file
-      $this->exec('sudo sed -i "s>/usr/share/osf>'.$this->osf_web_services_folder.$this->osf_web_services_ns.'>" "/etc/apache2/sites-available/osf-web-services"');
+      $this->exec('sudo sed -i "s>/usr/share/osf>'.$this->osf_web_services_folder.$this->osf_web_services_ns.'>" "/etc/apache2/sites-available/osf-web-services.conf"');
       
       $this->cecho("Restarting Apache2...\n", 'WHITE');
       

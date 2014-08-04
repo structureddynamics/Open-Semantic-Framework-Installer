@@ -521,9 +521,9 @@
       
       $this->chdir($this->currentWorkingDirectory);
       
-      $this->exec('cp resources/memcached/memcached /etc/apache2/sites-available/');
+      $this->exec('cp resources/memcached/memcached /etc/apache2/sites-available/memcached.conf');
 
-      $this->exec('sudo ln -s /etc/apache2/sites-available/memcached /etc/apache2/sites-enabled/memcached');      
+      $this->exec('sudo ln -s /etc/apache2/sites-available/memcached.conf /etc/apache2/sites-enabled/memcached.conf');      
       
       $this->cecho("Restarting Apache2...\n", 'WHITE');
       
