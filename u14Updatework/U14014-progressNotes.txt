@@ -91,3 +91,8 @@ dpkg-source: warning: failed to verify signature on ./php5_5.5.9+dfsg-1ubuntu4.3
  - OSF/Virtuoso error is with apt-get download libiodbc2:
    downloads a "data.tar.xz" file, but OSF script is looking for "data.tar.gz"
    [ not sure how to proceed ]
+
+2014-08-04:
+ - Fred's hint on specifying version "3.0" in place of default "3.0.0" enables install to proceed up to downloading core OSF ontologies files.
+ - log file saved
+
