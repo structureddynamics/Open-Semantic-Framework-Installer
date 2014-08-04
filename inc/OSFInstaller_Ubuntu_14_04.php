@@ -171,10 +171,9 @@
       $this->cecho("---------------------\n", 'WHITE');
       $this->cecho("\n\n", 'WHITE');   
       
-      // Need to use passthru because the installer promp the user with some screens
-      // where they have to answer questions
-      
-      // This cannot be logged into the log
+      // Need to use passthru because the installer prompts the user
+      // with screens requiring input.
+      // This command cannot be captured in the log.
       passthru('apt-get -y install virtuoso-opensource');   
       
       // Re-install php-odbc
@@ -227,7 +226,7 @@
       
       if(strpos($isVirtuosoRunning, '/usr/bin/virtuoso') === FALSE)
       {
-        $this->cecho('Virtuoso is not running. Check the logs, something did go bad.', 'RED');
+        $this->cecho('Virtuoso is not running. Check the logs, something went wrong.', 'RED');
       }
       else
       {
@@ -245,7 +244,7 @@
         
         if($errors == 'errors')
         {
-          $this->cecho("\n\nThe EXST() procedure couldn't be created. Try to create it after this installation process...\n", 'YELLOW');
+          $this->cecho("\n\nThe EXST() procedure could not be created. Try to create it after this installation process...\n", 'YELLOW');
         }        
       }
       
@@ -261,8 +260,7 @@
       sleep(20);
       
       $this->exec('/etc/init.d/virtuoso start');      
-      
-      
+            
       $this->cecho("You can start Virtuoso using this command: /etc/default/virtuoso start\n", 'LIGHT_BLUE');
     }
     
@@ -431,10 +429,9 @@
 
       $this->cecho("Installing MySQL...\n", 'WHITE');
       
-      // Need to use passthru because the installer promp the user with some screens
-      // where they have to answer questions
-      
-      // This cannot be logged into the log
+      // Need to use passthru because the installer prompts the user
+      // with screens requiring input.
+      // This command cannot be captured in the log.
       passthru('apt-get -y install mysql-server');
       
       $this->cecho("Updating php.ini to enable mysql...\n", 'WHITE');
@@ -465,10 +462,9 @@
 
       $this->cecho("Installing PhpMyAdmin...\n", 'WHITE');
       
-      // Need to use passthru because the installer promp the user with some screens
-      // where they have to answer questions
-      
-      // This cannot be logged into the log
+      // Need to use passthru because the installer prompts the user
+      // with screens requiring input.
+      // This command cannot be captured in the log.
       passthru('apt-get -y install phpmyadmin');
     }       
     
