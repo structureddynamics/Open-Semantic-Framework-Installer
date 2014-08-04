@@ -485,8 +485,8 @@
 
       $this->cecho("Installing Memcached...\n", 'WHITE');
       
-      $this->exec('apt-get install memcached');      
-      $this->exec('apt-get install php5-memcache');      
+      $this->exec('apt-get -y install memcached');      
+      $this->exec('apt-get -y install php5-memcache');      
       
       $this->cecho("Restarting Apache2...\n", 'WHITE');
       
