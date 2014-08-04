@@ -1,3 +1,6 @@
+[NOTE: this is a listing of the previous (Ubuntu 12.04) php5 w/iodbc
+packages. It is here just for reference.]
+
 band@xenon:~/local/Open-Semantic-Framework-Installer/resources/php5$ ls -l
 total 36612
 -rw-rw-r-- 1 band band    22434 Aug  2 17:10 control
