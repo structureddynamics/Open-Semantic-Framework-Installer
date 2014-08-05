@@ -96,3 +96,122 @@ dpkg-source: warning: failed to verify signature on ./php5_5.5.9+dfsg-1ubuntu4.3
  - Fred's hint on specifying version "3.0" in place of default "3.0.0" enables install to proceed up to downloading core OSF ontologies files.
  - log file saved
 
+2014-08-04:
+ - successful install, but some errors and failures in php testing:
+
+PHPUnit 4.0.17 by Sebastian Bergmann.
+
+You have installed PHPUnit via PEAR. This installation method is no longer
+supported and http://pear.phpunit.de/ will be shut down no later than
+December, 31 2014.
+
+Please read http://phpunit.de/manual/current/en/installation.html and
+learn how to use PHPUnit from a PHAR or install it via Composer.
+
+Configuration read from /usr/share/osf/StructuredDynamics/osf/tests/phpunit.xml
+
+...............................................................  63 / 746 (  8%)
+............................................................... 126 / 746 ( 16%)
+............................................................... 189 / 746 ( 25%)
+............................................................... 252 / 746 ( 33%)
+............................................................... 315 / 746 ( 42%)
+............................................................... 378 / 746 ( 50%)
+............................................................... 441 / 746 ( 59%)
+............................................................... 504 / 746 ( 67%)
+............................................................... 567 / 746 ( 76%)
+.................................F................F............ 630 / 746 ( 84%)
+............................................................... 693 / 746 ( 92%)
+.............EEEEEEEEEEE.............................
+
+Time: 4.49 minutes, Memory: 33.50Mb
+
+There were 11 errors:
+
+1) StructuredDynamics\osf\tests\ws\search\SearchTest::testSearch_Extended_Filters_Missing_Ending_Parenthesis_Resultset
+Undefined property: StructuredDynamics\osf\php\api\ws\search\ExtendedFiltersBuilder::$extendedAttributes
+
+/usr/share/osf/StructuredDynamics/osf/php/api/ws/search/ExtendedFiltersBuilder.php:179
+/usr/share/osf/StructuredDynamics/osf/tests/ws/search/SearchTest.php:2473
+
+2) StructuredDynamics\osf\tests\ws\search\SearchTest::testSearch_Extended_Filters_Missing_Starting_Parenthesis_Resultset
+Undefined property: StructuredDynamics\osf\php\api\ws\search\ExtendedFiltersBuilder::$extendedAttributes
+
+/usr/share/osf/StructuredDynamics/osf/php/api/ws/search/ExtendedFiltersBuilder.php:137
+/usr/share/osf/StructuredDynamics/osf/tests/ws/search/SearchTest.php:2501
+
+3) StructuredDynamics\osf\tests\ws\search\SearchTest::testSearch_Extended_Filters_No_Grouping_Resultset
+Undefined property: StructuredDynamics\osf\php\api\ws\search\ExtendedFiltersBuilder::$extendedAttributes
+
+/usr/share/osf/StructuredDynamics/osf/php/api/ws/search/ExtendedFiltersBuilder.php:137
+/usr/share/osf/StructuredDynamics/osf/tests/ws/search/SearchTest.php:2529
+
+4) StructuredDynamics\osf\tests\ws\search\SearchTest::testSearch_Extended_Filters_Unexisting_Datatype_Attribute_Resultset
+Undefined property: StructuredDynamics\osf\php\api\ws\search\ExtendedFiltersBuilder::$extendedAttributes
+
+/usr/share/osf/StructuredDynamics/osf/php/api/ws/search/ExtendedFiltersBuilder.php:137
+/usr/share/osf/StructuredDynamics/osf/tests/ws/search/SearchTest.php:2558
+
+5) StructuredDynamics\osf\tests\ws\search\SearchTest::testSearch_Extended_Filters_Unexisting_Object_Attribute_Resultset
+Undefined property: StructuredDynamics\osf\php\api\ws\search\ExtendedFiltersBuilder::$extendedAttributes
+
+/usr/share/osf/StructuredDynamics/osf/php/api/ws/search/ExtendedFiltersBuilder.php:137
+/usr/share/osf/StructuredDynamics/osf/tests/ws/search/SearchTest.php:2585
+
+6) StructuredDynamics\osf\tests\ws\search\SearchTest::testSearch_Extended_Filters_Datatype_Attribute_Filter_Resultset
+Undefined property: StructuredDynamics\osf\php\api\ws\search\ExtendedFiltersBuilder::$extendedAttributes
+
+/usr/share/osf/StructuredDynamics/osf/php/api/ws/search/ExtendedFiltersBuilder.php:137
+/usr/share/osf/StructuredDynamics/osf/tests/ws/search/SearchTest.php:2612
+
+7) StructuredDynamics\osf\tests\ws\search\SearchTest::testSearch_Extended_Filters_Object_Attribute_Filter_Resultset
+Undefined property: StructuredDynamics\osf\php\api\ws\search\ExtendedFiltersBuilder::$extendedAttributes
+
+/usr/share/osf/StructuredDynamics/osf/php/api/ws/search/ExtendedFiltersBuilder.php:137
+/usr/share/osf/StructuredDynamics/osf/tests/ws/search/SearchTest.php:2646
+
+8) StructuredDynamics\osf\tests\ws\search\SearchTest::testSearch_Extended_Filters_Dataset_Filter_No_Inference_Resultset
+Undefined property: StructuredDynamics\osf\php\api\ws\search\ExtendedFiltersBuilder::$extendedAttributes
+
+/usr/share/osf/StructuredDynamics/osf/php/api/ws/search/ExtendedFiltersBuilder.php:82
+/usr/share/osf/StructuredDynamics/osf/tests/ws/search/SearchTest.php:2680
+
+9) StructuredDynamics\osf\tests\ws\search\SearchTest::testSearch_Extended_Filters_Dataset_Filter_With_Inference_Resultset
+Undefined property: StructuredDynamics\osf\php\api\ws\search\ExtendedFiltersBuilder::$extendedAttributes
+
+/usr/share/osf/StructuredDynamics/osf/php/api/ws/search/ExtendedFiltersBuilder.php:82
+/usr/share/osf/StructuredDynamics/osf/tests/ws/search/SearchTest.php:2710
+
+10) StructuredDynamics\osf\tests\ws\search\SearchTest::testSearch_Extended_Filters_Dataset_And_Operator_Resultset
+Undefined property: StructuredDynamics\osf\php\api\ws\search\ExtendedFiltersBuilder::$extendedAttributes
+
+/usr/share/osf/StructuredDynamics/osf/php/api/ws/search/ExtendedFiltersBuilder.php:82
+/usr/share/osf/StructuredDynamics/osf/tests/ws/search/SearchTest.php:2740
+
+11) StructuredDynamics\osf\tests\ws\search\SearchTest::testSearch_Extended_Filters_Dataset_Not_Operator_Resultset
+Undefined property: StructuredDynamics\osf\php\api\ws\search\ExtendedFiltersBuilder::$extendedAttributes
+
+/usr/share/osf/StructuredDynamics/osf/php/api/ws/search/ExtendedFiltersBuilder.php:179
+/usr/share/osf/StructuredDynamics/osf/tests/ws/search/SearchTest.php:2772
+
+--
+
+There were 2 failures:
+
+1) StructuredDynamics\osf\tests\ws\revision\lister\RevisionListerTest::testShortMode_Resultset
+Number of child nodes of "rdf:RDF" differs
+Failed asserting that 1 matches expected 2.
+
+/usr/share/osf/StructuredDynamics/osf/tests/ws/revision/lister/RevisionListerTest.php:438
+
+2) StructuredDynamics\osf\tests\ws\diff\lister\RevisionDiffTest::testDiff_RDFN3
+Number of child nodes of "rdf:RDF" differs
+Failed asserting that 1 matches expected 7.
+
+/usr/share/osf/StructuredDynamics/osf/tests/ws/revision/diff/RevisionDiffTest.php:422
+                                                      
+FAILURES!                                             
+Tests: 746, Assertions: 3929, Failures: 2, Errors: 11.
+Now that the OSF instance is installed, you can install OSF for Drupal on the same server using this command:
+
+    ./osf-installer --install-osf-drupal
+
