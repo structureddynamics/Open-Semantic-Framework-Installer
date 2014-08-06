@@ -572,7 +572,7 @@
           // Validate version
           $version = (float) shell_exec('lsb_release -rs');
           
-          if($version >= 12.10)
+          if($version == 12.10)
           {
             return(TRUE);
           }
