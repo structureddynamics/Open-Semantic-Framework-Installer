@@ -555,7 +555,7 @@
           // Validate version
           $version = (float) shell_exec('lsb_release -rs');
           
-          if($version == 14.04)
+          if($version >= 14.04 && $version < 14.05)
           {
             return(TRUE);
           }
