@@ -1,12 +1,12 @@
-The Open Semantic Framework Installer script is used to install and deploy a OSF stack. It can also be used to install, upgrade and configure parts of the stack, or related external tools such as the OSF Datasets Management Tool, the OSFOntologies Management Tool, the OSF WS PHP API, etc.
+The Open Semantic Framework Installer script is used to install and deploy an OSF stack. It can also be used to install, upgrade, and configure parts of the stack, or related external tools such as the OSF Datasets Management Tool, the OSFOntologies Management Tool, the OSF WS PHP API, etc.
 
 If you prefer, you can create a new OSF instance using a pre-packaged Amazon EC2 instance. Read the [Creating and Configuring an Amazon EC2 AMI OSF Instance](http://wiki.opensemanticframework.org/index.php/Creating_and_Configuring_an_Amazon_EC2_AMI_OSF_Instance) page to know how to create a OSF instance using this other method.
 
 Requirements
 ------------
-* Ubuntu 12.10
+* Ubuntu 14.04
 * PHP 5.3 or higher
-* 64 Bits Operating System
+* 64 Bit Operating System
 * Access to internet from your server
 * 5 GB of disk space on the partition where you are installing OSF
 

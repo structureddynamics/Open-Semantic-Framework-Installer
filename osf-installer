@@ -4,26 +4,30 @@
   
   if(PHP_SAPI != 'cli')
   {
-    die('This is a shell application, so make sure to run this application in your terminal.');
+    die('This is a shell application, so make sure to run this application in a terminal window.');
   }
   
   ini_set('memory_limit', '500M');
   
-  // Set the working directory of this script to its home directory. That way, if it is ran from elsewhere,
-  // the relative paths will follow.
+  // Set the working directory of this script to its home directory.
+  // That way, if it is run from elsewhere, the relative paths will follow.
   chdir(dirname(realpath($argv[0])));  
 
   include_once('inc/OSFInstaller_Ubuntu_12_10.php');
+  include_once('inc/OSFInstaller_Ubuntu_14_04.php');
   
   $installer;
   
-  // Detects what is the version of the current linux distribution.
+  // Detects the version of the current linux distribution.
   // Let's use the installer for the good distribution and the good version.
   // If the distribution/version is not supported, the generic installer
-  // will be used which means that some features may be disabled.
-  if(OSFInstaller_Ubuntu_12_10::isWorkingInstaller())
+  // is used; this means that some features may be disabled.
+  if(OSFInstaller_Ubuntu_14_04::isWorkingInstaller())
+  {    
+    $installer = new OSFInstaller_Ubuntu_14_04(getcwd().'/installer.ini');  
+  }
+  elseif(OSFInstaller_Ubuntu_12_10::isWorkingInstaller())
   {
-    
     $installer = new OSFInstaller_Ubuntu_12_10(getcwd().'/installer.ini');  
   }
   else
@@ -31,10 +35,8 @@
     include_once('inc/OSFInstallerGeneric.php');
     
     $installer = new OSFInstallerGeneric(getcwd().'/installer.ini');
-  }
-  
-  
-  
+  }    
+    
   // Get commandline options
   $arguments = getopt('h::v::c::', array('help::',
                                          'verbose::',

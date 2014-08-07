@@ -21,6 +21,16 @@
         return;
       }
       
+      $this->cecho("Downloading required packages for installing PHP5...\n", 'WHITE');
+
+      $this->chdir($this->currentWorkingDirectory);
+      
+      $this->wget('https://github.com/structureddynamics/OSF-Installer-Ext/raw/master/ubuntu-12.10/ubuntu-12.10.zip');
+      
+      $this->exec("unzip ubuntu-12.10.zip");
+      
+      $this->exec("rm ubuntu-12.10.zip");      
+      
       $this->cecho("Installing required packages for installing PHP5...\n", 'WHITE');
       
       $this->chdir('resources/php5/');
@@ -572,7 +582,7 @@
           // Validate version
           $version = (float) shell_exec('lsb_release -rs');
           
-          if($version >= 12.10)
+          if($version == 12.10)
           {
             return(TRUE);
           }

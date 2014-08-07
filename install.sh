@@ -19,7 +19,7 @@ cecho () # Color-echo.
                              # Argument $2 = color
 {
   local default_msg="No message passed."
-                             # Doesn't really need to be a local variable.
+                             # Does not need to be a local variable.
 
   message=${1:-$default_msg} # Defaults to default message.
   color=${2:-$white} # Defaults to white, if not specified.
@@ -40,13 +40,13 @@ echo -e "\n\n"
 
 cecho "\n\nInstalling requirements...\n"
 
-# Make sure that apt-get exists for this linux distribution
+# Make sure that apt-get exists for this Linux distribution
 if which apt-get >/dev/null; then
   apt-get -y update
   apt-get -y --no-upgrade install php5
-  apt-get -y install unzip
+  apt-get -y install unzip wget
 else
-  cecho "\nMake sure that PHP 5, unzip and the wget softwares are installed on your server\n" yellow
+  cecho "\nMake sure that PHP5, unzip, and wget packages are installed on the server.\n" yellow
 fi
 
 cecho "\n\nDownload the latest version of the OSF Installer tool...\n"
@@ -67,6 +67,6 @@ rm -f 3.0.zip
 chmod 755 osf-installer
 chmod 755 upgrade.sh
 
-cecho "\n\nRun the 'osf-installer' script to install OSF or any of its component.\n"
+cecho "\n\nRun the 'osf-installer' script to install OSF or any of its components.\n"
 
 
