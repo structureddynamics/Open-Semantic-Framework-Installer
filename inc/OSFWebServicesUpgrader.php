@@ -32,11 +32,11 @@
         switch($this->currentInstalledVersion)
         {
           case '3.0.0':
-            $this->latestVersion();
-            //$this->upgradeTo_3_0_1();
+            $this->upgradeTo_3_0_1();
           break;
           
           case '3.0.1':
+            $this->latestVersion();
             //$this->upgradeTo_3_0_2();
           break;
           
@@ -133,9 +133,14 @@
     
     private function upgradeTo_3_0_1()
     {                    
-      /*
       $this->upgradeCodebase('3.0.1');
-      */
+      
+      $this->currentInstalledVersion = '3.0.1';
+    }
+        
+    private function upgradeTo_3_0_2()
+    {                    
+      // $this->upgradeCodebase('3.0.2');
       
       //
       // These are the steps that needs to be performed for each upgrade.
@@ -152,9 +157,9 @@
       // 7) If new software or libraries are needed for this upgrade, then simply install and configure them.      
       
       /*
-      $this->currentInstalledVersion = '3.0.1';
+      $this->currentInstalledVersion = '3.0.2';
       */
-    }
+    }    
   }
   
 ?>
