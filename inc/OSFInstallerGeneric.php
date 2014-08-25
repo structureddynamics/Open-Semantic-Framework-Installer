@@ -73,5 +73,13 @@
     {
       $this->cecho("Option not supported for this Linux distribution and version.\n", 'RED');
     }    
+    
+    /**
+    * Install OSF for Drupal
+    */
+    public function installOSFDrupal()
+    {
+      $this->cecho("Option not supported for this Linux distribution and version.\n", 'RED');
+    }    
   }
 ?>
