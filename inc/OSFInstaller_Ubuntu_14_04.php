@@ -45,7 +45,6 @@
       $this->exec('dpkg -i php5-curl_5.5.9+dfsg-1ubuntu4.3_amd64.deb');
       $this->exec('dpkg -i libapache2-mod-php5_5.5.9+dfsg-1ubuntu4.3_amd64.deb');
       $this->exec('dpkg -i php5-mysql_5.5.9+dfsg-1ubuntu4.3_amd64.deb');
-      $this->exec('dpkg -i php5-mysql_5.5.9+dfsg-1ubuntu4.3_amd64.deb');
       $this->exec('dpkg -i php5_5.5.9+dfsg-1ubuntu4.3_all.deb');
       $this->exec('dpkg -i php5-gd_5.5.9+dfsg-1ubuntu4.3_amd64.deb');
       passthru('dpkg -i php5-odbc_5.5.9+dfsg-1ubuntu4.3_amd64.deb');
