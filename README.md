@@ -36,7 +36,7 @@ Usage: osf-install [OPTIONS]
 
 General Options:
 -h, --help                              Show this help section
--v, --verbose                           Make this insaller verbose
+-v, --verbose                           Make this installer verbose
 -c, --configure-installer               Configure the options used by this installer
 --list-configurations                   List the current configuration used by the installer tool
 
