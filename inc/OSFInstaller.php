@@ -208,6 +208,8 @@
         $this->exec('mkdir -p '.$this->osf_web_services_folder.'/');      
       }
       
+      $this->exec('rm -f /tmp/osfwsphpapi/OSF-Web-Services-PHP-API-'.$version.'/StructuredDynamics/osf/framework/namespaces.csv');
+      
       $this->exec('cp -af /tmp/osfwsphpapi/OSF-Web-Services-PHP-API-'.$version.'/StructuredDynamics '.$this->osf_web_services_folder.'/');
 
       $this->cecho("Cleaning upgrade folder...\n", 'WHITE');
