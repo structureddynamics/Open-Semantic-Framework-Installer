@@ -7,7 +7,7 @@
     /* Parsed intaller.ini configuration file */
     protected $config;
     
-    // Configufation options
+    // Configuration options
 
     /* Determine if the installer is configured */
     public $installer_osf_configured = FALSE;
