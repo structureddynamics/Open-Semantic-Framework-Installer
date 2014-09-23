@@ -14,7 +14,7 @@
       
       if(strpos(shell_exec('uname -m'), 'x86_64') === FALSE)
       {
-        $this->cecho("You are trying to install PHP5 on a non-64-bits processor. Switching to compile PHP5 from the source instead of using the 64-bits deb packages...\n", 'WHITE');
+        $this->cecho("You are trying to install PHP5 on a non-64-bit processor. Switching to compile PHP5 from the source instead of using the 64-bits deb packages...\n", 'WHITE');
 
         $this->installPhp5FromSource();
         
@@ -25,8 +25,8 @@
 
       $this->chdir($this->currentWorkingDirectory);
       
-      $this->wget('https://github.com/structureddynamics/OSF-Installer-Ext/raw/master/ubuntu-14.04/ubuntu-14.04.zip');
-      
+//      $this->wget('https://github.com/structureddynamics/OSF-Installer-Ext/raw/master/ubuntu-14.04/ubuntu-14.04.zip');
+      $this->exec("cp /vagrant/ubuntu-14.04.zip .");    
       $this->exec("unzip ubuntu-14.04.zip");
       
       $this->exec("rm ubuntu-14.04.zip");
@@ -39,17 +39,17 @@
       $this->exec("apt-get -y remove php5");     
       $this->exec("apt-get -y install iodbc libiodbc2 libiodbc2-dev");     
       
-      $this->exec('dpkg -i php5-common_5.5.9+dfsg-1ubuntu4.3_amd64.deb');
-      $this->exec('dpkg -i php5-cgi_5.5.9+dfsg-1ubuntu4.3_amd64.deb');
-      $this->exec('dpkg -i php5-cli_5.5.9+dfsg-1ubuntu4.3_amd64.deb');
-      $this->exec('dpkg -i php5-readline_5.5.9+dfsg-1ubuntu4.3_amd64.deb');
-      $this->exec('dpkg -i php5-curl_5.5.9+dfsg-1ubuntu4.3_amd64.deb');
-      $this->exec('dpkg -i libapache2-mod-php5_5.5.9+dfsg-1ubuntu4.3_amd64.deb');
-      $this->exec('dpkg -i php5-mysql_5.5.9+dfsg-1ubuntu4.3_amd64.deb');
-      $this->exec('dpkg -i php5_5.5.9+dfsg-1ubuntu4.3_all.deb');
-      $this->exec('dpkg -i php-pear_5.5.9+dfsg-1ubuntu4.3_all.deb');
-      $this->exec('dpkg -i php5-gd_5.5.9+dfsg-1ubuntu4.3_amd64.deb');
-      passthru('dpkg -i php5-odbc_5.5.9+dfsg-1ubuntu4.3_amd64.deb');
+      $this->exec('dpkg -i php5-common_5.5.9+dfsg-1ubuntu4.4_amd64.deb');
+      $this->exec('dpkg -i php5-cgi_5.5.9+dfsg-1ubuntu4.4_amd64.deb');
+      $this->exec('dpkg -i php5-cli_5.5.9+dfsg-1ubuntu4.4_amd64.deb');
+      $this->exec('dpkg -i php5-readline_5.5.9+dfsg-1ubuntu4.4_amd64.deb');
+      $this->exec('dpkg -i php5-curl_5.5.9+dfsg-1ubuntu4.4_amd64.deb');
+      $this->exec('dpkg -i libapache2-mod-php5_5.5.9+dfsg-1ubuntu4.4_amd64.deb');
+      $this->exec('dpkg -i php5-mysql_5.5.9+dfsg-1ubuntu4.4_amd64.deb');
+      $this->exec('dpkg -i php5_5.5.9+dfsg-1ubuntu4.4_all.deb');
+      $this->exec('dpkg -i php-pear_5.5.9+dfsg-1ubuntu4.4_all.deb');
+      $this->exec('dpkg -i php5-gd_5.5.9+dfsg-1ubuntu4.4_amd64.deb');
+      passthru('dpkg -i php5-odbc_5.5.9+dfsg-1ubuntu4.4_amd64.deb');
       
       // Place aptitude/apt-get hold on the custom packages
       $this->exec('apt-mark hold php5-common');
@@ -68,8 +68,8 @@
       // dependent on libiodbc2. Otherwise it will always complain
       // and will have to be resolved in order to install anything else.
       $status = file_get_contents('/var/lib/dpkg/status');
-      $status = str_replace('Depends: libc6 (>= 2.14), libiodbc2 (>= 3.52.7), phpapi-20121212, php5-common (= 5.5.9+dfsg-1ubuntu4.3), ucf',
-                            'Depends: libc6 (>= 2.14), phpapi-20121212, php5-common (= 5.5.9+dfsg-1ubuntu4.3), ucf',
+      $status = str_replace('Depends: libc6 (>= 2.14), libiodbc2 (>= 3.52.7), phpapi-20121212, php5-common (= 5.5.9+dfsg-1ubuntu4.4), ucf',
+                            'Depends: libc6 (>= 2.14), phpapi-20121212, php5-common (= 5.5.9+dfsg-1ubuntu4.4), ucf',
                             $status);
       file_put_contents('/var/lib/dpkg/status', $status);
       
@@ -88,6 +88,7 @@
     {
       // Need to be implemented for 14.04
       // Reference: http://wiki.opensemanticframework.org/index.php/Recompile_PHP_with_iodbc
+        $this->cecho("installPhp5FromSource function not implemented for 14.04. See  http://wiki.opensemanticframework.org/index.php/Recompile_PHP_with_iodbc ....\n", 'WHITE');
     }
     
     /**
@@ -110,11 +111,11 @@
       
       $this->exec('apt-mark unhold php5-odbc');
       
-      $this->exec('dpkg -i --ignore-depends=libiodbc2 resources/php5/php5-odbc_5.5.9+dfsg-1ubuntu4.3_amd64.deb');      
+      $this->exec('dpkg -i --ignore-depends=libiodbc2 resources/php5/php5-odbc_5.5.9+dfsg-1ubuntu4.4_amd64.deb');      
 
       $status = file_get_contents('/var/lib/dpkg/status');
-      $status = str_replace('Depends: libc6 (>= 2.14), libiodbc2 (>= 3.52.7), phpapi-20121212, php5-common (= 5.5.9+dfsg-1ubuntu4.3), ucf',
-                            'Depends: libc6 (>= 2.14), phpapi-20121212, php5-common (= 5.5.9+dfsg-1ubuntu4.3), ucf',
+      $status = str_replace('Depends: libc6 (>= 2.14), libiodbc2 (>= 3.52.7), phpapi-20121212, php5-common (= 5.5.9+dfsg-1ubuntu4.4), ucf',
+                            'Depends: libc6 (>= 2.14), phpapi-20121212, php5-common (= 5.5.9+dfsg-1ubuntu4.4), ucf',
                             $status);
       file_put_contents('/var/lib/dpkg/status', $status);
       
