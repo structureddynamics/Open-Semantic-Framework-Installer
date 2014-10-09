@@ -96,12 +96,13 @@
     */
     public function installVirtuoso()
     {
+/**      
       $this->cecho("\n\n", 'WHITE');
       $this->cecho("---------------------\n", 'WHITE');
       $this->cecho(" Installing Virtuoso \n", 'WHITE');
       $this->cecho("---------------------\n", 'WHITE');
       $this->cecho("\n\n", 'WHITE');   
-      
+
       // Need to use passthru because the installer prompts the user
       // with screens requiring input.
       // This command cannot be captured in the log.
@@ -120,7 +121,23 @@
       file_put_contents('/var/lib/dpkg/status', $status);
       
       $this->exec('apt-mark hold php5-odbc');
-      
+*/
+
+      $this->cecho("\n\n", 'WHITE');
+      $this->cecho("---------------------\n", 'WHITE');
+      $this->cecho(" Installing Virtuoso7: building from source code. \n", 'WHITE');
+      $this->cecho("---------------------\n", 'WHITE');
+      $this->cecho("\n\n", 'WHITE');   
+
+      $this->exec('mkdir -p /tmp/virtuoso-install/');
+      $this->chdir('/tmp/virtuoso-install/');
+      $this->exec('apt-get install -y gcc autoconf automake libtool flex bison gperf gawk m4 make libssl-dev');
+      $this->exec('apt-get install -y git');
+      $this->exec('git clone git://github.com/openlink/virtuoso-opensource.git');
+      $this->chdir('/tmp/virtuoso-install/virtuoso-opensource');
+      $this->exec('CFLAGS=\"-O2 -m64\" bash -c ./autogen.sh && ./configure');
+
+
       // Then install libiodbc2 to support iodbctest
       
       $this->exec('mkdir -p /tmp/libodbc2-install/');
