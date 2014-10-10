@@ -107,7 +107,17 @@
       // with screens requiring input.
       // This command cannot be captured in the log.
       passthru('apt-get -y install virtuoso-opensource');   
-      
+*/
+
+      $this->cecho("\n\n", 'WHITE');
+      $this->cecho("---------------------\n", 'WHITE');
+      $this->cecho(" Installing Virtuoso7 from .deb file. \n", 'WHITE');
+      $this->cecho("---------------------\n", 'WHITE');
+      $this->cecho("\n\n", 'WHITE');   
+
+      $this->wget('https://github.com/band/OSF-Installer-Ext/raw/master/virtuoso-opensource/virtuoso-opensource_7.1_amd64.deb');
+      $this->exec('dpkg -i virtuoso-opensource_7.1_amd64.deb');
+
       // Re-install php-odbc
       
       $this->exec('apt-mark unhold php5-odbc');
@@ -121,24 +131,6 @@
       file_put_contents('/var/lib/dpkg/status', $status);
       
       $this->exec('apt-mark hold php5-odbc');
-*/
-
-      $this->cecho("\n\n", 'WHITE');
-      $this->cecho("---------------------\n", 'WHITE');
-      $this->cecho(" Installing Virtuoso7: building from source code. \n", 'WHITE');
-      $this->cecho("---------------------\n", 'WHITE');
-      $this->cecho("\n\n", 'WHITE');   
-
-      $this->exec('mkdir -p /tmp/virtuoso-install/');
-      $this->chdir('/tmp/virtuoso-install/');
-      $this->exec('apt-get install -y gcc autoconf automake libtool flex bison gperf gawk m4 make libssl-dev');
-      $this->exec('apt-get install -y git');
-      $this->exec('git clone git://github.com/openlink/virtuoso-opensource.git');
-      $this->chdir('/tmp/virtuoso-install/virtuoso-opensource');
-      shell_exec("CFLAGS=\"-O2 -m64\" bash -c './autogen.sh && ./configure'");
-      shell_exec("CFLAGS=\"-O2 -m64\" bash -c 'make'");
-      $this->exec('make install');
-
 
       // Then install libiodbc2 to support iodbctest
       
@@ -157,7 +149,7 @@
       $this->exec('rm -rf /tmp/libodbc2-install/');
       // test that iodbc is used by php5
 
-      $this->exec('mv /etc/init.d/virtuoso-opensource-6.1 /etc/init.d/virtuoso');
+      $this->exec('mv /etc/init.d/virtuoso-opensource /etc/init.d/virtuoso');
 
       $this->cecho("Installing odbc.ini and odbcinst.ini files...\n", 'WHITE');
       
@@ -201,7 +193,7 @@
       // Configuring Virtuoso to be able to access the files from the DMT tool
       $this->cecho("Configuring virtuoso.ini...\n", 'WHITE');
       
-      $this->exec('sed -i \'s>DirsAllowed                     = ., /usr/share/virtuoso-opensource-6.1/vad>DirsAllowed                     = ., /usr/share/virtuoso-opensource-6.1/vad, /usr/share/datasets-management-tool/data>\' "/etc/virtuoso-opensource-6.1/virtuoso.ini"');
+      $this->exec('sed -i \'s>DirsAllowed                     = ., /usr/share/virtuoso-opensource/vad>DirsAllowed                     = ., /usr/share/virtuoso-opensource/vad, /usr/share/datasets-management-tool/data>\' "/etc/virtuoso-opensource/virtuoso.ini"');
       
       $this->cecho("Restarting Virtuoso...\n", 'WHITE');
       
