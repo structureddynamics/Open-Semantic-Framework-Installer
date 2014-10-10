@@ -26,7 +26,7 @@
       $this->chdir($this->currentWorkingDirectory);
       
 //      $this->wget('https://github.com/structureddynamics/OSF-Installer-Ext/raw/master/ubuntu-14.04/ubuntu-14.04.zip');
-      $this->exec("cp /vagrant/ubuntu-14.04.zip .");    
+      $this->wget('https://github.com/band/OSF-Installer-Ext/raw/master/ubuntu-14.04/ubuntu-14.04.zip');
       $this->exec("unzip ubuntu-14.04.zip");
       
       $this->exec("rm ubuntu-14.04.zip");
@@ -135,7 +135,9 @@
       $this->exec('apt-get install -y git');
       $this->exec('git clone git://github.com/openlink/virtuoso-opensource.git');
       $this->chdir('/tmp/virtuoso-install/virtuoso-opensource');
-      $this->exec('CFLAGS=\"-O2 -m64\" bash -c ./autogen.sh && ./configure');
+      shell_exec("CFLAGS=\"-O2 -m64\" bash -c './autogen.sh && ./configure'");
+      shell_exec("CFLAGS=\"-O2 -m64\" bash -c 'make'");
+      $this->exec('make install');
 
 
       // Then install libiodbc2 to support iodbctest
