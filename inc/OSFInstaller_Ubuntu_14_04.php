@@ -111,7 +111,7 @@
 
       $this->cecho("\n\n", 'WHITE');
       $this->cecho("---------------------\n", 'WHITE');
-      $this->cecho(" Installing Virtuoso7 from .deb file. \n", 'WHITE');
+      $this->cecho(" Installing Virtuoso7 from .deb file.... \n", 'WHITE');
       $this->cecho("---------------------\n", 'WHITE');
       $this->cecho("\n\n", 'WHITE');   
 

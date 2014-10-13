@@ -830,7 +830,7 @@
         $version = $this->osf_tests_suites_version;
       }
             
-      $this->cecho("Installing PHPUNIT\n", 'WHITE');
+      $this->cecho("Installing PHPUnit\n", 'WHITE');
 
       $this->chdir('/tmp');
       
