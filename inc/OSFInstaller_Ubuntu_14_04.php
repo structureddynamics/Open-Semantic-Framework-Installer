@@ -193,7 +193,7 @@
       // Configuring Virtuoso to be able to access the files from the DMT tool
       $this->cecho("Configuring virtuoso.ini...\n", 'WHITE');
       
-      $this->exec('sed -i \'s>DirsAllowed                     = ., /usr/share/virtuoso-opensource/vad>DirsAllowed                     = ., /usr/share/virtuoso-opensource/vad, /usr/share/datasets-management-tool/data>\' "/etc/virtuoso-opensource/virtuoso.ini"');
+      $this->exec('sed -i \'s>DirsAllowed.*= ., /usr/share/virtuoso/vad>DirsAllowed = ., /usr/share/virtuoso/vad, /usr/share/datasets-management-tool/data>\' "/var/lib/virtuoso/db/virtuoso.ini"');
       
       $this->cecho("Restarting Virtuoso...\n", 'WHITE');
       
