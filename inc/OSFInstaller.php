@@ -834,18 +834,10 @@
 
       $this->chdir('/tmp');
       
-/**
-      $this->wget('http://pear.php.net/go-pear.phar');
-      passthru('php go-pear.phar');
-      $this->exec('pear channel-discover pear.phpunit.de', 'warning');
-      $this->exec('pear channel-discover pear.symfony-project.com', 'warning');
-      $this->exec('pear upgrade-all', 'warning');
-      $this->exec('pear config-set auto_discover 1');
-      $this->exec('pear install pear.phpunit.de/PHPUnit');      
-*/
-
       $this->wget('https://phar.phpunit.de/phpunit.phar');
+
       $this->exec('chmod +x phpunit.phar');
+
       $this->exec('mv phpunit.phar /usr/local/bin/phpunit');
       
       $this->cecho("PHPUnit Installed!\n", 'WHITE');      

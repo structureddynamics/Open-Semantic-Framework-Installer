@@ -47,7 +47,7 @@
       $this->exec('dpkg -i libapache2-mod-php5_5.5.9+dfsg-1ubuntu4.4_amd64.deb');
       $this->exec('dpkg -i php5-mysql_5.5.9+dfsg-1ubuntu4.4_amd64.deb');
       $this->exec('dpkg -i php5_5.5.9+dfsg-1ubuntu4.4_all.deb');
-      $this->exec('dpkg -i php-pear_5.5.9+dfsg-1ubuntu4.4_all.deb');
+//      $this->exec('dpkg -i php-pear_5.5.9+dfsg-1ubuntu4.4_all.deb');
       $this->exec('dpkg -i php5-gd_5.5.9+dfsg-1ubuntu4.4_amd64.deb');
       passthru('dpkg -i php5-odbc_5.5.9+dfsg-1ubuntu4.4_amd64.deb');
       
@@ -61,7 +61,7 @@
       $this->exec('apt-mark hold php5-mysql');
       $this->exec('apt-mark hold php5-odbc');
       $this->exec('apt-mark hold php5-gd');
-      $this->exec('apt-mark hold php-pear');
+//      $this->exec('apt-mark hold php-pear');
       $this->exec('apt-mark hold php5');
       
       // Modify /var/lib/dpkg/status such that php5-odbc is not marked as
@@ -96,22 +96,10 @@
     */
     public function installVirtuoso()
     {
-/**      
-      $this->cecho("\n\n", 'WHITE');
-      $this->cecho("---------------------\n", 'WHITE');
-      $this->cecho(" Installing Virtuoso \n", 'WHITE');
-      $this->cecho("---------------------\n", 'WHITE');
-      $this->cecho("\n\n", 'WHITE');   
-
-      // Need to use passthru because the installer prompts the user
-      // with screens requiring input.
-      // This command cannot be captured in the log.
-      passthru('apt-get -y install virtuoso-opensource');   
-*/
 
       $this->cecho("\n\n", 'WHITE');
       $this->cecho("---------------------\n", 'WHITE');
-      $this->cecho(" Installing Virtuoso7 from .deb file.... \n", 'WHITE');
+      $this->cecho(" Installing Virtuoso 7 from .deb file.... \n", 'WHITE');
       $this->cecho("---------------------\n", 'WHITE');
       $this->cecho("\n\n", 'WHITE');   
 
@@ -142,6 +130,7 @@
       $this->exec('ar vx *odbc*.deb');
       $this->exec('unxz data.tar.xz');
       $this->exec('tar -xvf data.tar');
+//      $this->exec('tar -Jxvf data.tar.xz');
       $this->exec('cp usr/lib/* /usr/lib/');
       
       $this->chdir($this->currentWorkingDirectory);
