@@ -136,6 +136,10 @@
       {
         $version = $this->osf_ws_php_api_version;
       }
+      elseif($version == 'dev')
+      {
+        $version = 'master';
+      }      
                     
       $this->cecho("\n\n", 'WHITE');
       $this->cecho("---------------------------\n", 'WHITE');
@@ -179,6 +183,10 @@
       {
         $version = $this->osf_ws_php_api_version;
       }
+      elseif($version == 'dev')
+      {
+        $version = 'master';
+      }      
             
       $this->cecho("\n\n", 'WHITE');
       $this->cecho("-----------------------------\n", 'WHITE');
@@ -225,6 +233,10 @@
       {
         $version = $this->datasets_management_tool_version;
       }
+      elseif($version == 'dev')
+      {
+        $version = 'master';
+      }      
             
       $this->cecho("\n\n", 'WHITE');
       $this->cecho("------------------------------------\n", 'WHITE');
@@ -279,6 +291,10 @@
       {
         $version = $this->permissions_management_tool_version;
       }
+      elseif($version == 'dev')
+      {
+        $version = 'master';
+      }
             
       $this->cecho("\n\n", 'WHITE');
       $this->cecho("----------------------------------------\n", 'WHITE');
@@ -331,6 +347,10 @@
       {
         $version = $this->data_validator_tool_version;
       }
+      elseif($version == 'dev')
+      {
+        $version = 'master';
+      }      
             
       $this->cecho("\n\n", 'WHITE');
       $this->cecho("--------------------------------\n", 'WHITE');
@@ -380,7 +400,11 @@
       if($version == '')
       {
         $version = $this->datasets_management_tool_version;
-      }      
+      }    
+      elseif($version == 'dev')
+      {
+        $version = 'master';
+      }        
       
       $this->cecho("\n\n", 'WHITE');
       $this->cecho("----------------------------------------\n", 'WHITE');
@@ -428,7 +452,11 @@
       if($version == '')
       {
         $version = $this->permissions_management_tool_version;
-      }      
+      }  
+      elseif($version == 'dev')
+      {
+        $version = 'master';
+      }
       
       $this->cecho("\n\n", 'WHITE');
       $this->cecho("-------------------------------------------\n", 'WHITE');
@@ -474,6 +502,10 @@
       {
         $version = $this->data_validator_tool_version;
       }      
+      elseif($version == 'dev')
+      {
+        $version = 'master';
+      }
       
       $this->cecho("\n\n", 'WHITE');
       $this->cecho("-----------------------------------\n", 'WHITE');
@@ -517,6 +549,10 @@
       if($version == '')
       {
         $version = $this->osf_web_services_version;
+      }
+      elseif($version == 'dev')
+      {
+        $version = 'master';
       }
       
       $this->cecho("\n\n", 'WHITE');
@@ -831,6 +867,10 @@
       {
         $version = $this->osf_tests_suites_version;
       }
+      elseif($version == 'dev')
+      {
+        $version = 'master';
+      }     
             
       $this->cecho("Installing PHPUNIT\n", 'WHITE');
 
@@ -899,6 +939,10 @@
       {
         $version = $this->ontologies_management_tool_version;
       }
+      elseif($version == 'dev')
+      {
+        $version = 'master';
+      }
             
       $this->cecho("\n\n", 'WHITE');
       $this->cecho("---------------------------------------\n", 'WHITE');
@@ -949,6 +993,10 @@
       if($version == '')
       {
         $version = $this->ontologies_management_tool_version;
+      }
+      elseif($version == 'dev')
+      {
+        $version = 'master';
       }
             
       $this->cecho("\n\n", 'WHITE');
