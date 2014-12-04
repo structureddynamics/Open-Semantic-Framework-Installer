@@ -160,17 +160,19 @@
       else
       {
         $this->cecho("Register Virtuoso to automatically start at the system's startup...\n", 'WHITE');
-        
         $this->exec('sudo update-rc.d virtuoso defaults');
+
+        $adminPassword = $this->getInput("Enter a password to use with the Virtuoso administrator DBA user: ");
+	$errors = shell_exec('php resources/virtuoso/change_passwords.php $adminPassword');
+        if($errors == 'errors')
+        {
+          $this->cecho("\n\nThe Virtuoso admin password was not changed. Use the default and change it after this installation process...\n", 'YELLOW');
+        }        
         
         $this->cecho("Installing the exst() procedure...\n", 'WHITE');
-        
         $dbaPassword = $this->getInput("What is the password of the DBA user in Virtuoso? ");
-        
         $this->exec('sed -i \'s>"dba", "dba">"dba", "'.$dbaPassword.'">\' "resources/virtuoso/install_exst.php"');
-        
         $errors = shell_exec('php resources/virtuoso/install_exst.php');
-        
         if($errors == 'errors')
         {
           $this->cecho("\n\nThe EXST() procedure could not be created. Try to create it after this installation process...\n", 'YELLOW');
