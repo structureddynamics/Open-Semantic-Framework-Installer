@@ -190,7 +190,7 @@
       
       $this->exec('/etc/init.d/virtuoso start');      
             
-      $this->cecho("You can start Virtuoso using this command: /etc/default/virtuoso start\n", 'LIGHT_BLUE');
+      $this->cecho("You can start Virtuoso using this command: /etc/init.d/virtuoso start\n", 'LIGHT_BLUE');
     }
     
     /**

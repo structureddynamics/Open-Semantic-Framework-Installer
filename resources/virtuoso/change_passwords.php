@@ -1,12 +1,24 @@
+#!/usr/bin/php
+
 <?php
 
-  $dbaPassword = $argv[1];
-  $davPassword = $argv[2];
+  function __getInput($msg)
+  {
+    fwrite(STDOUT, $msg);
+    return trim(fgets(STDIN));
+  }
 
-  $db_link = odbc_connect("structwsf-triples-store", "dba", "dba", SQL_CUR_USE_ODBC);
+  exec('/etc/init.d/virtuoso stop');
+  sleep(10);
+  exec('/etc/init.d/virtuoso start');
+  sleep(20);
+//  $dbaPassword = $argv[1];
+  $adminPassword = __getInput("Enter a password to use with the Virtuoso administrator 'dba' user: ");
 
-  $changeDavPassword = "user_change_password('dav', 'dav', '$davPassword')";
-  $changeDbaPassword = "user_change_password('dba', 'dba', '$dbaPassword')";
+  $db_link = odbc_connect("osf-triples-store", "dba", "dba", SQL_CUR_USE_ODBC);
+
+  $changeDavPassword = "user_change_password('dav', 'dav', '$adminPassword')";
+  $changeDbaPassword = "user_change_password('dba', 'dba', '$adminPassword')";
   
   $errors = FALSE;
   
@@ -14,7 +26,6 @@
   {
     $errors = TRUE;
   }
-  
   
   if(odbc_exec($db_link, $changeDbaPassword) === FALSE)
   {
