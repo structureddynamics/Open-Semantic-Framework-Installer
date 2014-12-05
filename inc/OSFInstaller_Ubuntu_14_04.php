@@ -163,24 +163,8 @@
         $this->exec('sudo update-rc.d virtuoso defaults');
 
         $adminPassword = $this->getInput("Enter a password to use with the Virtuoso administrator DBA & DAV users: ");
+	$errors = shell_exec('php resources/virtuoso/change_passwords.php "'.$adminPassword.'"');
 	
-        $db_link = odbc_connect("osf-triples-store", "dba", "dba", SQL_CUR_USE_ODBC);
-        $updatedDavPassword = "user_change_password('dav', 'dav', '$adminPassword')";
-        $updatedDbaPassword = "user_change_password('dba', 'dba', '$adminPassword')";
-        $errors = FALSE;
-        
-        if(odbc_exec($db_link, $updatedDavPassword) === FALSE)
-        {
-          $errors = TRUE;
-        }
-
-	if(odbc_exec($db_link, $updatedDbaPassword) === FALSE)
-        {
-          $errors = TRUE;
-        }
-
-	odbc_close($db_link);
-  
         if($errors)
         {
           $dbaPassword = 'dba';
@@ -188,7 +172,7 @@
         }        
         else
         {
-          $dbaPassword = $updatedDbaPassword;
+          $dbaPassword = $adminPassword;
         }
         
         $this->cecho("Installing the exst() procedure...\n", 'WHITE');
