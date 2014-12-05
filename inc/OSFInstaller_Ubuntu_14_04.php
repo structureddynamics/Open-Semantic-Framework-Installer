@@ -162,18 +162,14 @@
         $this->cecho("Register Virtuoso to automatically start at the system's startup...\n", 'WHITE');
         $this->exec('sudo update-rc.d virtuoso defaults');
 
-        $adminPassword = $this->getInput("Enter a password to use with the Virtuoso administrator DBA & DAV users: ");
-	$errors = shell_exec('php resources/virtuoso/change_passwords.php "'.$adminPassword.'"');
+        $dbaPassword = $this->getInput("Enter a password to use with the Virtuoso administrator DBA & DAV users: ");
+	$errors = shell_exec('php resources/virtuoso/change_passwords.php "'.$dbaPassword.'"');
 	
-        if($errors)
+        if($errors == 'errors')
         {
           $dbaPassword = 'dba';
           $this->cecho("\n\nThe Virtuoso admin password was not changed. Use the default and change it after this installation process...\n", 'YELLOW');
         }        
-        else
-        {
-          $dbaPassword = $adminPassword;
-        }
         
         $this->cecho("Installing the exst() procedure...\n", 'WHITE');
         $this->exec('sed -i \'s>"dba", "dba">"dba", "'.$dbaPassword.'">\' "resources/virtuoso/install_exst.php"');
