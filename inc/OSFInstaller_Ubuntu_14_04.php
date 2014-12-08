@@ -25,8 +25,7 @@
 
       $this->chdir($this->currentWorkingDirectory);
       
-//      $this->wget('https://github.com/structureddynamics/OSF-Installer-Ext/raw/master/ubuntu-14.04/ubuntu-14.04.zip');
-      $this->wget('https://github.com/band/OSF-Installer-Ext/raw/master/ubuntu-14.04/ubuntu-14.04.zip');
+      $this->wget('https://github.com/structureddynamics/OSF-Installer-Ext/raw/master/ubuntu-14.04/ubuntu-14.04.zip');
       $this->exec("unzip ubuntu-14.04.zip");
       
       $this->exec("rm ubuntu-14.04.zip");
@@ -88,7 +87,7 @@
     {
       // Need to be implemented for 14.04
       // Reference: http://wiki.opensemanticframework.org/index.php/Recompile_PHP_with_iodbc
-        $this->cecho("installPhp5FromSource function not implemented for 14.04. See  http://wiki.opensemanticframework.org/index.php/Recompile_PHP_with_iodbc ....\n", 'WHITE');
+      $this->cecho("installPhp5FromSource function not implemented for 14.04. See  http://wiki.opensemanticframework.org/index.php/Recompile_PHP_with_iodbc ....\n", 'WHITE');
     }
     
     /**
@@ -103,7 +102,7 @@
       $this->cecho("---------------------\n", 'WHITE');
       $this->cecho("\n\n", 'WHITE');   
 
-      $this->wget('https://github.com/band/OSF-Installer-Ext/raw/master/virtuoso-opensource/virtuoso-opensource_7.1_amd64.deb');
+      $this->wget('https://github.com/structureddynamics/OSF-Installer-Ext/raw/master/virtuoso-opensource/virtuoso-opensource_7.1_amd64.deb');
       $this->exec('dpkg -i virtuoso-opensource_7.1_amd64.deb');
 
       // Re-install php-odbc
@@ -163,7 +162,7 @@
         $this->exec('sudo update-rc.d virtuoso defaults');
 
         $dbaPassword = $this->getInput("Enter a password to use with the Virtuoso administrator DBA & DAV users: ");
-	$errors = shell_exec('php resources/virtuoso/change_passwords.php "'.$dbaPassword.'"');
+	      $errors = shell_exec('php resources/virtuoso/change_passwords.php "'.$dbaPassword.'"');
 	
         if($errors == 'errors')
         {
@@ -259,65 +258,6 @@
       $this->exec('sudo update-rc.d solr defaults');
       
       $this->cecho("You can start Solr using this command: /etc/init.d/solr start\n", 'LIGHT_BLUE');      
-/*      
-      $this->cecho("\n\n", 'WHITE');
-      $this->cecho("-----------------\n", 'WHITE');
-      $this->cecho(" Installing Solr \n", 'WHITE');
-      $this->cecho("-----------------\n", 'WHITE');
-      $this->cecho("\n\n", 'WHITE');   
-      
-      $this->cecho("Installing prerequirements...\n", 'WHITE');
-      
-      $this->exec('apt-get -y install openjdk-7-jdk');
-      
-      $this->cecho("Preparing installation...\n", 'WHITE');
-
-      $this->exec('mkdir -p /tmp/solr-install/');
-      
-      $this->chdir('/tmp/solr-install/');
-      
-      $this->cecho("Downloading Solr...\n", 'WHITE');
-      
-      $this->wget('http://archive.apache.org/dist/lucene/solr/4.3.1/solr-4.3.1.tgz');
-      
-      $this->cecho("Installing Solr...\n", 'WHITE');
-
-      $this->exec('tar -xzvf solr-4.3.1.tgz');
-
-      $this->exec('mkdir -p /usr/share/solr');
-      
-      $this->exec('cp -af /tmp/solr-install/solr-4.3.1/* /usr/share/solr/');
-      
-      $this->cecho("Configuring Solr...\n", 'WHITE');
-      
-      $this->chdir($this->currentWorkingDirectory);
-
-      $this->exec('cp -f resources/solr/solr /etc/init.d/');
-      
-      $this->exec('chmod 755 /etc/init.d/solr');
-      
-      $this->exec('mv /usr/share/solr/example/ /usr/share/solr/osf-web-services/');      
-      
-//      $this->cecho("Installing SOLR-2155...\n", 'WHITE');
-      
-//      $this->chdir('/usr/share/solr/dist/');
-      
-//      $this->wget('https://github.com/downloads/dsmiley/SOLR-2155/Solr2155-1.0.5.jar');
-      
-//      $this->chdir($this->currentWorkingDirectory);
-      
-//      $this->exec('cp -af resources/solr/solrconfig.xml /usr/share/solr/osf-web-services/solr/collection1/conf/');
-
-      $this->cecho("Starting Solr...\n", 'WHITE');
-
-      $this->exec('/etc/init.d/solr start');
-      
-      $this->cecho('Register Solr to automatically start at the system\'s startup...', 'WHITE');
-      
-      $this->exec('sudo update-rc.d solr defaults');      
-      
-      $this->cecho("You can start Solr using this command: /etc/init.d/solr start\n", 'LIGHT_BLUE');
-*/      
     }    
 
     /**
@@ -676,63 +616,6 @@
       passthru("drush en osf -y");
       passthru("drush en osf_configure -y");
       
-      /*
-      // Registering the default endpoint
-      $this->cecho("Registering the default OSF Web Services endpoint...\n", 'WHITE');
-      
-      $return = $this->getInput("What is the name of the OSF Web Services network to register (default: Local OSF Instance)");
-
-      $registeredName = "Local OSF Instance";
-      
-      if($return != '')
-      {
-        $registeredName = $return;
-      }       
-      
-      $return = $this->getInput("What is the base URL of the OSF Web Services endpoints you want to register (default: http://localhost/ws/)");
-
-      $osfWebServicesEndpoint = "http://localhost/ws/";
-      
-      if($return != '')
-      {
-        $osfWebServicesEndpoint = $return;
-      }   
-           
-      $ch = curl_init();
-      curl_setopt($ch, CURLOPT_URL, $osfWebServicesEndpoint);
-      curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-      $sid = curl_exec($ch);
-      curl_close($ch);     
-      
-      if(!empty($sid))
-      {
-        $return = $this->getInput("What is the APP ID of the OSF Web Services network you want to use for this Drupal instance (default: administer)");
-
-        $appID = 'administer';
-        
-        if($return != '')
-        {
-          $appID = $return;
-        }  
-        
-        $return = $this->getInput("What is the APP KEY of the OSF Web Services network you want to use for this Drupal instance (default: some-key)");
-
-        $appKey = 'some-key';
-        
-        if($return != '')
-        {
-          $appKey = $return;
-        }                
-
-        // Register the default network        
-        passthru('drush sqlq \'INSERT INTO `drupal7`.`osf_configure_endpoints` (`sceid`, `label`, `machine_name`, `uri`, `sid`, `color`, `app_id`, `api_key`, `is_default`) VALUES (NULL, "'.$registeredName.'", "local_osf_webservices_instance", "'.$osfWebServicesEndpoint.'", "'.$sid.'", "A9C5EB", "'.$appID.'", "'.$appKey.'", "1");\'');
-      }
-      else
-      {
-        $this->cecho("The OSF Web Services base URL is not a valid endpoint. You will have to use Drupal's user interface to register one by hands...\n", 'YELLOW');
-      }      
-      */
-      
       $this->cecho("You can safely ignore the following 4 errors related to 'illegal choice detected'...\n", 'YELLOW');
       passthru("drush en osf_searchapi -y");
       passthru("drush en osf_entities -y");
@@ -795,20 +678,7 @@
       passthru('drush vset osf_OntologySettings_ontologies_ironxml_cache_folder "'.$this->drupal_folder.'/schemas/"');
       
       // Configure: "Ontologies ironJSON Schema Cache Path folder"
-      passthru('drush vset osf_OntologySettings_ontologies_ironjson_cache_folder "'.$this->drupal_folder.'/schemas/"');
-      /*
-      $this->cecho("Generating all the ontologies structures in Drupal (may take a few minutes)...\n", 'WHITE');
-      
-      $ch = curl_init();
-      curl_setopt($ch, CURLOPT_URL, $osfWebServicesEndpoint);
-      curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-      curl_setopt($ch, CURLOPT_POST, true);
-      curl_setopt($ch, CURLOPT_POST, true);
-      curl_setopt($ch, CURLOPT_POSTFIELDS, 'network='.urlencode($osfWebServicesEndpoint).'&updateCachesInput=');
-      curl_exec($ch);
-      curl_close($ch); 
-      */
-      
+      passthru('drush vset osf_OntologySettings_ontologies_ironjson_cache_folder "'.$this->drupal_folder.'/schemas/"');     
       
       $this->chdir($this->currentWorkingDirectory);
       

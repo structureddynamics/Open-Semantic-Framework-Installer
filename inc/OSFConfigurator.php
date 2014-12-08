@@ -13,9 +13,6 @@
     public $installer_osf_configured = FALSE;
     public $installer_osf_drupal_configured = FALSE;
     
-    /* version of virtuoso to install */
-    //    protected $virtuoso_version = "6.1.6";
-    
     /* Version of drupal to install */
     protected $drupal_version = "7.23";
 
@@ -107,11 +104,6 @@
           {
             $this->installer_osf_drupal_configured = TRUE;
           }
-        }
-        
-        if(isset($this->config['data']['virtuoso-version']))
-        {
-          $this->virtuoso_version = $this->config['data']['virtuoso-version'];
         }
         
         if(isset($this->config['osf-drupal']['drupal-version']))
@@ -368,14 +360,7 @@
       {
         $this->data_folder = $return;
       }       
-/***      
-      $return = $this->getInput("What is the Virtuoso version you want to install? (default: ".$this->virtuoso_version.")");
-      
-      if($return != '')
-      {
-        $this->virtuoso_version = $return;
-      }          
-**/            
+
       $this->cecho("\n\nLogging related configuration settings:\n", 'CYAN');
       
       $return = $this->getInput("Where is located the folder where to save the log files? (default: ".$this->logging_folder.")");
@@ -443,7 +428,6 @@ ontologies-management-tool-folder = \"".$this->ontologies_management_tool_folder
 ontologies-management-tool-version = \"".$this->ontologies_management_tool_version."\"
 
 [data]
-virtuoso-version = \"".$this->virtuoso_version."\"
 data-folder = \"".$this->data_folder."\"
 
 [logging]
@@ -481,7 +465,6 @@ logging-folder = \"".$this->logging_folder."\"
       $this->cecho("\n\nData related configuration settings:\n", 'CYAN');
 
       $this->cecho("data-folder: ".$this->data_folder."\n", 'WHITE');
-      $this->cecho("virtuoso-version: ".$this->virtuoso_version."\n", 'WHITE');
 
       $this->cecho("\n\nLogging related configuration settings:\n", 'CYAN');
 
