@@ -7,14 +7,14 @@
     /* Parsed intaller.ini configuration file */
     protected $config;
     
-    // Configufation options
+    // Configuration options
 
     /* Determine if the installer is configured */
     public $installer_osf_configured = FALSE;
     public $installer_osf_drupal_configured = FALSE;
     
     /* version of virtuoso to install */
-    protected $virtuoso_version = "6.1.6";
+    //    protected $virtuoso_version = "6.1.6";
     
     /* Version of drupal to install */
     protected $drupal_version = "7.23";
@@ -368,14 +368,14 @@
       {
         $this->data_folder = $return;
       }       
-      
+/***      
       $return = $this->getInput("What is the Virtuoso version you want to install? (default: ".$this->virtuoso_version.")");
       
       if($return != '')
       {
         $this->virtuoso_version = $return;
       }          
-            
+**/            
       $this->cecho("\n\nLogging related configuration settings:\n", 'CYAN');
       
       $return = $this->getInput("Where is located the folder where to save the log files? (default: ".$this->logging_folder.")");

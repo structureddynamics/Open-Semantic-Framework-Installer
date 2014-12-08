@@ -14,7 +14,7 @@
       
       if(strpos(shell_exec('uname -m'), 'x86_64') === FALSE)
       {
-        $this->cecho("You are trying to install PHP5 on a non-64-bits processor. Switching to compile PHP5 from the source instead of using the 64-bits deb packages...\n", 'WHITE');
+        $this->cecho("You are trying to install PHP5 on a non-64-bit processor. Switching to compile PHP5 from the source instead of using the 64-bits deb packages...\n", 'WHITE');
 
         $this->installPhp5FromSource();
         
@@ -25,8 +25,8 @@
 
       $this->chdir($this->currentWorkingDirectory);
       
-      $this->wget('https://github.com/structureddynamics/OSF-Installer-Ext/raw/master/ubuntu-14.04/ubuntu-14.04.zip');
-      
+//      $this->wget('https://github.com/structureddynamics/OSF-Installer-Ext/raw/master/ubuntu-14.04/ubuntu-14.04.zip');
+      $this->wget('https://github.com/band/OSF-Installer-Ext/raw/master/ubuntu-14.04/ubuntu-14.04.zip');
       $this->exec("unzip ubuntu-14.04.zip");
       
       $this->exec("rm ubuntu-14.04.zip");
@@ -39,17 +39,17 @@
       $this->exec("apt-get -y remove php5");     
       $this->exec("apt-get -y install iodbc libiodbc2 libiodbc2-dev");     
       
-      $this->exec('dpkg -i php5-common_5.5.9+dfsg-1ubuntu4.3_amd64.deb');
-      $this->exec('dpkg -i php5-cgi_5.5.9+dfsg-1ubuntu4.3_amd64.deb');
-      $this->exec('dpkg -i php5-cli_5.5.9+dfsg-1ubuntu4.3_amd64.deb');
-      $this->exec('dpkg -i php5-readline_5.5.9+dfsg-1ubuntu4.3_amd64.deb');
-      $this->exec('dpkg -i php5-curl_5.5.9+dfsg-1ubuntu4.3_amd64.deb');
-      $this->exec('dpkg -i libapache2-mod-php5_5.5.9+dfsg-1ubuntu4.3_amd64.deb');
-      $this->exec('dpkg -i php5-mysql_5.5.9+dfsg-1ubuntu4.3_amd64.deb');
-      $this->exec('dpkg -i php5_5.5.9+dfsg-1ubuntu4.3_all.deb');
-      $this->exec('dpkg -i php-pear_5.5.9+dfsg-1ubuntu4.3_all.deb');
-      $this->exec('dpkg -i php5-gd_5.5.9+dfsg-1ubuntu4.3_amd64.deb');
-      passthru('dpkg -i php5-odbc_5.5.9+dfsg-1ubuntu4.3_amd64.deb');
+      $this->exec('dpkg -i php5-common_5.5.9+dfsg-1ubuntu4.4_amd64.deb');
+      $this->exec('dpkg -i php5-cgi_5.5.9+dfsg-1ubuntu4.4_amd64.deb');
+      $this->exec('dpkg -i php5-cli_5.5.9+dfsg-1ubuntu4.4_amd64.deb');
+      $this->exec('dpkg -i php5-readline_5.5.9+dfsg-1ubuntu4.4_amd64.deb');
+      $this->exec('dpkg -i php5-curl_5.5.9+dfsg-1ubuntu4.4_amd64.deb');
+      $this->exec('dpkg -i libapache2-mod-php5_5.5.9+dfsg-1ubuntu4.4_amd64.deb');
+      $this->exec('dpkg -i php5-mysql_5.5.9+dfsg-1ubuntu4.4_amd64.deb');
+      $this->exec('dpkg -i php5_5.5.9+dfsg-1ubuntu4.4_all.deb');
+      $this->exec('dpkg -i php-pear_5.5.9+dfsg-1ubuntu4.4_all.deb');
+      $this->exec('dpkg -i php5-gd_5.5.9+dfsg-1ubuntu4.4_amd64.deb');
+      passthru('dpkg -i php5-odbc_5.5.9+dfsg-1ubuntu4.4_amd64.deb');
       
       // Place aptitude/apt-get hold on the custom packages
       $this->exec('apt-mark hold php5-common');
@@ -68,8 +68,8 @@
       // dependent on libiodbc2. Otherwise it will always complain
       // and will have to be resolved in order to install anything else.
       $status = file_get_contents('/var/lib/dpkg/status');
-      $status = str_replace('Depends: libc6 (>= 2.14), libiodbc2 (>= 3.52.7), phpapi-20121212, php5-common (= 5.5.9+dfsg-1ubuntu4.3), ucf',
-                            'Depends: libc6 (>= 2.14), phpapi-20121212, php5-common (= 5.5.9+dfsg-1ubuntu4.3), ucf',
+      $status = str_replace('Depends: libc6 (>= 2.14), libiodbc2 (>= 3.52.7), phpapi-20121212, php5-common (= 5.5.9+dfsg-1ubuntu4.4), ucf',
+                            'Depends: libc6 (>= 2.14), phpapi-20121212, php5-common (= 5.5.9+dfsg-1ubuntu4.4), ucf',
                             $status);
       file_put_contents('/var/lib/dpkg/status', $status);
       
@@ -88,6 +88,7 @@
     {
       // Need to be implemented for 14.04
       // Reference: http://wiki.opensemanticframework.org/index.php/Recompile_PHP_with_iodbc
+        $this->cecho("installPhp5FromSource function not implemented for 14.04. See  http://wiki.opensemanticframework.org/index.php/Recompile_PHP_with_iodbc ....\n", 'WHITE');
     }
     
     /**
@@ -95,31 +96,30 @@
     */
     public function installVirtuoso()
     {
+
       $this->cecho("\n\n", 'WHITE');
       $this->cecho("---------------------\n", 'WHITE');
-      $this->cecho(" Installing Virtuoso \n", 'WHITE');
+      $this->cecho(" Installing Virtuoso 7 from .deb file.... \n", 'WHITE');
       $this->cecho("---------------------\n", 'WHITE');
       $this->cecho("\n\n", 'WHITE');   
-      
-      // Need to use passthru because the installer prompts the user
-      // with screens requiring input.
-      // This command cannot be captured in the log.
-      passthru('apt-get -y install virtuoso-opensource');   
-      
+
+      $this->wget('https://github.com/band/OSF-Installer-Ext/raw/master/virtuoso-opensource/virtuoso-opensource_7.1_amd64.deb');
+      $this->exec('dpkg -i virtuoso-opensource_7.1_amd64.deb');
+
       // Re-install php-odbc
       
       $this->exec('apt-mark unhold php5-odbc');
       
-      $this->exec('dpkg -i --ignore-depends=libiodbc2 resources/php5/php5-odbc_5.5.9+dfsg-1ubuntu4.3_amd64.deb');      
+      $this->exec('dpkg -i --ignore-depends=libiodbc2 resources/php5/php5-odbc_5.5.9+dfsg-1ubuntu4.4_amd64.deb');      
 
       $status = file_get_contents('/var/lib/dpkg/status');
-      $status = str_replace('Depends: libc6 (>= 2.14), libiodbc2 (>= 3.52.7), phpapi-20121212, php5-common (= 5.5.9+dfsg-1ubuntu4.3), ucf',
-                            'Depends: libc6 (>= 2.14), phpapi-20121212, php5-common (= 5.5.9+dfsg-1ubuntu4.3), ucf',
+      $status = str_replace('Depends: libc6 (>= 2.14), libiodbc2 (>= 3.52.7), phpapi-20121212, php5-common (= 5.5.9+dfsg-1ubuntu4.4), ucf',
+                            'Depends: libc6 (>= 2.14), phpapi-20121212, php5-common (= 5.5.9+dfsg-1ubuntu4.4), ucf',
                             $status);
       file_put_contents('/var/lib/dpkg/status', $status);
       
       $this->exec('apt-mark hold php5-odbc');
-      
+
       // Then install libiodbc2 to support iodbctest
       
       $this->exec('mkdir -p /tmp/libodbc2-install/');
@@ -128,8 +128,7 @@
       
       $this->exec('apt-get download libiodbc2');
       $this->exec('ar vx *odbc*.deb');
-      $this->exec('unxz data.tar.xz');
-      $this->exec('tar -xvf data.tar');
+      $this->exec('tar -Jxvf data.tar.xz');
       $this->exec('cp usr/lib/* /usr/lib/');
       
       $this->chdir($this->currentWorkingDirectory);
@@ -137,7 +136,7 @@
       $this->exec('rm -rf /tmp/libodbc2-install/');
       // test that iodbc is used by php5
 
-      $this->exec('mv /etc/init.d/virtuoso-opensource-6.1 /etc/init.d/virtuoso');
+      $this->exec('mv /etc/init.d/virtuoso-opensource /etc/init.d/virtuoso');
 
       $this->cecho("Installing odbc.ini and odbcinst.ini files...\n", 'WHITE');
       
@@ -161,15 +160,19 @@
       else
       {
         $this->cecho("Register Virtuoso to automatically start at the system's startup...\n", 'WHITE');
-        
         $this->exec('sudo update-rc.d virtuoso defaults');
+
+        $dbaPassword = $this->getInput("Enter a password to use with the Virtuoso administrator DBA & DAV users: ");
+	$errors = shell_exec('php resources/virtuoso/change_passwords.php "'.$dbaPassword.'"');
+	
+        if($errors == 'errors')
+        {
+          $dbaPassword = 'dba';
+          $this->cecho("\n\nThe Virtuoso admin password was not changed. Use the default and change it after this installation process...\n", 'YELLOW');
+        }        
         
         $this->cecho("Installing the exst() procedure...\n", 'WHITE');
-        
-        $dbaPassword = $this->getInput("What is the password of the DBA user in Virtuoso? ");
-        
         $this->exec('sed -i \'s>"dba", "dba">"dba", "'.$dbaPassword.'">\' "resources/virtuoso/install_exst.php"');
-        
         $errors = shell_exec('php resources/virtuoso/install_exst.php');
         
         if($errors == 'errors')
@@ -181,7 +184,7 @@
       // Configuring Virtuoso to be able to access the files from the DMT tool
       $this->cecho("Configuring virtuoso.ini...\n", 'WHITE');
       
-      $this->exec('sed -i \'s>DirsAllowed                     = ., /usr/share/virtuoso-opensource-6.1/vad>DirsAllowed                     = ., /usr/share/virtuoso-opensource-6.1/vad, /usr/share/datasets-management-tool/data>\' "/etc/virtuoso-opensource-6.1/virtuoso.ini"');
+      $this->exec('sed -i \'s>DirsAllowed.*= ., /usr/share/virtuoso/vad>DirsAllowed = ., /usr/share/virtuoso/vad, /usr/share/datasets-management-tool/data>\' "/var/lib/virtuoso/db/virtuoso.ini"');
       
       $this->cecho("Restarting Virtuoso...\n", 'WHITE');
       
@@ -191,7 +194,7 @@
       
       $this->exec('/etc/init.d/virtuoso start');      
             
-      $this->cecho("You can start Virtuoso using this command: /etc/default/virtuoso start\n", 'LIGHT_BLUE');
+      $this->cecho("You can start Virtuoso using this command: /etc/init.d/virtuoso start\n", 'LIGHT_BLUE');
     }
     
     /**
