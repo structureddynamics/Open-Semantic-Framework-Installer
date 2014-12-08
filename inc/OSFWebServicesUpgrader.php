@@ -2,7 +2,7 @@
   
   class OSFWebServicesUpgrader extends OSFConfigurator
   {
-    private $latestVersion = '3.0.0';
+    private $latestVersion = '3.1.0';
     
     private $currentInstalledVersion = '';
     
@@ -18,9 +18,9 @@
       {
         $this->backupInstalledVersion();
         
-        $this->upgradeCodebase('3.0');
+        $this->upgradeCodebase('3.1');
         
-        $this->upgradeOSFTestsSuites('3.0');
+        $this->upgradeOSFTestsSuites('3.1');
         
         $this->runOSFTestsSuites();
       }
@@ -36,8 +36,12 @@
           break;
           
           case '3.0.1':
+            $this->upgradeTo_3_1_0();
+          break;
+
+          case '3.1.0':
             $this->latestVersion();
-            //$this->upgradeTo_3_0_2();
+            //$this->upgradeTo_3_1_1();
           break;
           
           default:
@@ -123,7 +127,7 @@
         exit(1);
       }      
 
-      $this->upgradeCodebase('3.0');
+      $this->upgradeCodebase('3.1');
     }    
     
     private function latestVersion()
@@ -138,9 +142,40 @@
       $this->currentInstalledVersion = '3.0.1';
     }
         
-    private function upgradeTo_3_0_2()
+    private function upgradeTo_3_1_0()
     {                    
-      // $this->upgradeCodebase('3.0.2');
+      $this->upgradeCodebase('3.1.0');
+      
+      $this->chdir($this->osf_web_services_folder.'/StructuredDynamics/osf/ws/framework/');
+      
+      $wsFile = file_get_contents('WebService.php');
+      
+      // Save previous WebService.php settings
+      preg_match('/osf_ini = "(.*)"/', $wsFile, $matches);
+      $osf_ini = $matches[1];
+
+      preg_match('/keys_ini = "(.*)"/', $wsFile, $matches);
+      $keys_ini = $matches[1];
+      
+      // Replace the WebService.php file with the latest version in 3.1.0
+      $this->exec('rm -f WebService.php');
+      
+      $this->wget('https://raw.githubusercontent.com/structureddynamics/OSF-Web-Services/3.1/StructuredDynamics/osf/ws/framework/WebService.php');
+      
+      // Reconfigure the default WebService.php file
+      $wsFile = file_get_contents('WebService.php');
+      
+      $wsFile = str_replace('osf_ini = "/usr/share/osf/StructuredDynamics/osf/ws/"', 'osf_ini = "'.$osf_ini.'"');
+      $wsFile = str_replace('keys_ini = "/usr/share/osf/StructuredDynamics/osf/ws/"', 'keys_ini = "'.$keys_ini.'"');
+      
+      file_put_contents('WebService.php', $wsFile);
+      
+      $this->currentInstalledVersion = '3.1.0';
+    }    
+        
+    private function upgradeTo_3_1_1()
+    {                    
+      // $this->upgradeCodebase('3.1.1');
       
       //
       // These are the steps that needs to be performed for each upgrade.
@@ -150,14 +185,13 @@
 
       // 1) Delete files in the previous version of the OSF Web Services that are not needed anymore
       // 2) If the WebService.php file got modified, do re-create it using the same $data_ini and $network_ini settings
-      // 3) If new data.ini settings got added, add them to the end of the current data.ini file
-      // 4) If new network.ini settings got added, add them to the end of the current network.ini file
-      // 5) If changes have been made to the Triple Store, do perform these changes
-      // 6) If the Solr schema changed, update the schema, restart Solr, and re-load data into Solr using the Dataset Management Tool
-      // 7) If new software or libraries are needed for this upgrade, then simply install and configure them.      
+      // 3) If new osf.ini settings got added, add them to the end of the current osf.ini file
+      // 4) If changes have been made to the Triple Store, do perform these changes
+      // 5) If the Solr schema changed, update the schema, restart Solr, and re-load data into Solr using the Dataset Management Tool
+      // 6) If new software or libraries are needed for this upgrade, then simply install and configure them.      
       
       /*
-      $this->currentInstalledVersion = '3.0.2';
+      $this->currentInstalledVersion = '3.1.1';
       */
     }    
   }

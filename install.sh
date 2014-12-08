@@ -51,9 +51,9 @@ fi
 
 cecho "\n\nDownload the latest version of the OSF Installer tool...\n"
 
-wget https://github.com/structureddynamics/Open-Semantic-Framework-Installer/archive/3.0.zip
+wget https://github.com/structureddynamics/Open-Semantic-Framework-Installer/archive/3.1.zip
 
-unzip 3.0.zip
+unzip 3.1.zip
 
 cd Open-Semantic-Framework-Installer*
 
@@ -62,7 +62,7 @@ mv -f * ../
 cd ..
 
 rm -rf Open-Semantic-Framework-Installer*
-rm -f 3.0.zip
+rm -f 3.1.zip
 
 chmod 755 osf-installer
 chmod 755 upgrade.sh
