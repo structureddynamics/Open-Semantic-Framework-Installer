@@ -14,6 +14,8 @@
 
       passthru('apt-get -y install php5');      
       
+      passthru('apt-get -y install php5-curl');      
+      
       $this->cecho("Restarting Apache2...\n", 'WHITE');
       $this->exec('/etc/init.d/apache2 restart');      
 
