@@ -37,6 +37,8 @@
       $this->wget('https://github.com/structureddynamics/OSF-Installer-Ext/raw/3.2/virtuoso-opensource/virtuoso-opensource_7.1_amd64.deb');
       $this->exec('dpkg -i virtuoso-opensource_7.1_amd64.deb');     
       
+      $this->exec('mv /etc/init.d/virtuoso-opensource /etc/init.d/virtuoso');
+      
       $isVirtuosoRunning = shell_exec('ps aux | grep virtuoso');
       
       if(strpos($isVirtuosoRunning, '/usr/bin/virtuoso') === FALSE)
