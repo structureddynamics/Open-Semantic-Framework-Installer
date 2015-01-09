@@ -5,10 +5,11 @@ If you prefer, you can create a new OSF instance using a pre-packaged Amazon EC2
 Requirements
 ------------
 * Ubuntu 14.04
-* PHP 5.3 or higher
+* PHP 5.5 or higher
 * 64 Bit Operating System
 * Access to internet from your server
 * 5 GB of disk space on the partition where you are installing OSF
+* 2 GB of RAM
 
 Installing the Open Semantic Framework
 --------------------------------------
@@ -19,7 +20,7 @@ mkdir -p /usr/share/osf-installer/
 
 cd /usr/share/osf-installer/
 
-wget https://raw.github.com/structureddynamics/Open-Semantic-Framework-Installer/3.1/install.sh
+wget https://raw.github.com/structureddynamics/Open-Semantic-Framework-Installer/3.2/install.sh
 
 chmod 755 install.sh
 

@@ -1,7 +1,5 @@
 <?php
 
-  $db_link = odbc_connect("osf-triples-store", "dba", "dba", SQL_CUR_USE_ODBC);
-
   $server_address = "";
   
   $appID = "administer";
@@ -388,22 +386,8 @@
           
   $errors = FALSE;          
           
-  $query = "DB.DBA.TTLP_MT('" . preg_replace("/\\\*'/", "\\\'", $rdf). "', '$server_address/wsf/', '$server_address/wsf/')";
-          
-  if(odbc_exec($db_link, $query) === FALSE)
-  {
-    $errors = TRUE;
-  }
-
-  odbc_close($db_link);
-
-  if($errors)
-  {
-    echo "errors";
-  }
-  else
-  {
-    echo "ok";
-  }
-
+  $query = "DB.DBA.TTLP_MT('" . preg_replace("/\\\*'/", "\\\'", $rdf). "', '$server_address/wsf/', '$server_address/wsf/');";
+  
+  file_put_contents('/tmp/init_osf.sql');
+  
 ?>

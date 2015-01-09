@@ -2,7 +2,7 @@
   
   class OSFWebServicesUpgrader extends OSFConfigurator
   {
-    private $latestVersion = '3.1.0';
+    private $latestVersion = '3.2.0';
     
     private $currentInstalledVersion = '';
     
@@ -18,9 +18,9 @@
       {
         $this->backupInstalledVersion();
         
-        $this->upgradeCodebase('3.1');
+        $this->upgradeCodebase('3.2');
         
-        $this->upgradeOSFTestsSuites('3.1');
+        $this->upgradeOSFTestsSuites('3.2');
         
         $this->runOSFTestsSuites();
       }
@@ -40,8 +40,12 @@
           break;
 
           case '3.1.0':
+            $this->upgradeTo_3_2_0();
+          break;
+
+          case '3.2.0':
             $this->latestVersion();
-            //$this->upgradeTo_3_1_1();
+            //$this->upgradeTo_3_2_1();
           break;
           
           default:
@@ -173,9 +177,14 @@
       $this->currentInstalledVersion = '3.1.0';
     }    
         
-    private function upgradeTo_3_1_1()
+    private function upgradeTo_3_2_0()
+    {           
+      $this->cecho("Can't upgrade the OSF codebase version 3.1.0 to 3.2.0 automatically...\n", 'YELLOW');        
+    }    
+        
+    private function upgradeTo_3_2_1()
     {                    
-      // $this->upgradeCodebase('3.1.1');
+      // $this->upgradeCodebase('3.2.1');
       
       //
       // These are the steps that needs to be performed for each upgrade.

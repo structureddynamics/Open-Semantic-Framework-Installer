@@ -17,13 +17,6 @@
     abstract public function installPhp5();
     
     /**
-    * Install PHP5 with the modifications required by OSF, from source code.
-    * 
-    * Use this only if the packaged version of PHP5 is not working for you.
-    */
-    abstract public function installPhp5FromSource();
-    
-    /**
     * Install Virtuoso as required by OSF
     */
     abstract public function installVirtuoso();
@@ -780,24 +773,19 @@
       
       $dbaPassword = $this->getInput("What is the password of the DBA user in Virtuoso? ");
       
-      $this->exec('sed -i \'s>"dba", "dba">"dba", "'.$dbaPassword.'">\' "resources/virtuoso/initialize_osf_web_services_network.php"');
       $this->exec('sed -i \'s>server_address = "">server_address = "http://'.$this->osf_web_services_domain.'">\' "resources/virtuoso/initialize_osf_web_services_network.php"');
       $this->exec('sed -i \'s>appID = "administer">appID = "'.$this->application_id.'">\' "resources/virtuoso/initialize_osf_web_services_network.php"');
       
       $errors = shell_exec('php resources/virtuoso/initialize_osf_web_services_network.php');
       
-      if($errors == 'errors')
+      if(!$this->init_osf($dbaPassword))
       {
         $this->cecho("\n\nThe OSF Web Services Network couldn't be created. Major Error.\n", 'RED');
       }        
       
       $this->cecho("Commit transactions to Virtuoso...\n", 'WHITE');      
-      
-      $this->exec('sed -i \'s>"dba", "dba">"dba", "'.$dbaPassword.'">\' "resources/virtuoso/commit.php"');
-      
-      $return = shell_exec('php resources/virtuoso/commit.php');
-      
-      if($return == 'errors')
+
+      if(!$this->commit($dbaPassword))
       {
         $this->cecho("Couldn't commit triples to the Virtuoso triples store...\n", 'YELLOW');
       }
@@ -1024,6 +1012,57 @@
       
       $this->cecho("Cleaning installation folder...\n", 'WHITE');
       $this->exec('rm -rf /tmp/omt/');      
+    }
+    
+    protected function commit($password)
+    {
+      exec('/usr/bin/isql-v 1111 dba '.$password.' "EXEC=exec(\'checkpoint\')"', $output, $return);
+      
+      $this->log($output);      
+      
+      if($return > 0)
+      {
+        return(FALSE);
+      }
+      
+      return(TRUE);
+    }
+    
+    protected function change_password($password)
+    {
+      exec('/usr/bin/isql-v 1111 dba dba "EXEC=user_change_password(\'dav\', \'dav\', \''.$password.'\')"', $output, $return);
+      
+      $this->log($output);      
+      
+      if($return > 0)
+      {
+        return(FALSE);
+      }
+
+      exec('/usr/bin/isql-v 1111 dba dba "EXEC=user_change_password(\'dba\', \'dba\', \''.$password.'\')"', $output, $return);
+
+      if($return > 0)
+      {
+        return(FALSE);
+      }
+      
+      return(TRUE);      
+    }
+    
+    protected function init_osf($password)
+    {
+      exec('/usr/bin/isql-v 1111 dba '.$password.' /tmp/init_osf.sql', $output, $return);
+      
+      $this->log($output);      
+
+      unlink('/tmp/init_osf.sql');
+      
+      if($return > 0)
+      {
+        return(FALSE);
+      }
+      
+      return(TRUE);
     }
   }
 ?>

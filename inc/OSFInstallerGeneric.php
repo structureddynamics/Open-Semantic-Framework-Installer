@@ -17,16 +17,6 @@
     }
     
     /**
-    * Install PHP5 with the modifications required by OSF, from source code.
-    * 
-    * Use this only if the packaged version of PHP5 is not working for you.
-    */
-    public function installPhp5FromSource()
-    {
-      $this->cecho("Option not supported for this Linux distribution and version.\n", 'RED');
-    }
-    
-    /**
     * Install Virtuoso as required by OSF
     */
     public function installVirtuoso()
