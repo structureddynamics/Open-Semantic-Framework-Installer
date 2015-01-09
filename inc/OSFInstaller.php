@@ -633,8 +633,6 @@
       // fix wsf_base_path
       $this->exec('sudo sed -i "s>wsf_base_path = \"/usr/share/osf/StructuredDynamics/osf/ws/\">wsf_base_path = \"'.$this->osf_web_services_folder.$this->osf_web_services_ns.'/\">" "'.$this->osf_web_services_folder.$this->osf_web_services_ns.'/osf.ini"');
 
-      $this->exec('sudo sed -i "s>enable_lrl = \"FALSE\">enable_lrl = \"TRUE\">" "'.$this->osf_web_services_folder.$this->osf_web_services_ns.'/osf.ini"');
-
       $this->cecho("Create the OSF Web Services tmp folder...\n", 'WHITE');
       
       $this->exec('mkdir -p '.$this->data_folder.'/osf-web-services/tmp/');
