@@ -388,6 +388,6 @@
           
   $query = "DB.DBA.TTLP_MT('" . preg_replace("/\\\*'/", "\\\'", $rdf). "', '$server_address/wsf/', '$server_address/wsf/');";
   
-  file_put_contents('/tmp/init_osf.sql');
+  file_put_contents('/tmp/init_osf.sql', $query);
   
 ?>
