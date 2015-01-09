@@ -57,6 +57,13 @@
           $dbaPassword = 'dba';
           $this->cecho("\n\nThe Virtuoso admin password was not changed. Use the default and change it after this installation process...\n", 'YELLOW');
         }        
+        
+        $this->cecho("Grant the SPARQL_UPDATE role to the SPARQL user...\n", 'WHITE');
+
+        if(!$this->update_sparql_roles($dbaPassword))
+        {
+          $this->cecho("\n\nCouldn't grant the SPARQL_UPDATE role to the SPARQL user automcatilly. Log into Conductor to add that role to that user otherwise the OSF instance won't be operational...\n", 'RED');
+        }                
       }
       
       // Configuring Virtuoso to be able to access the files from the DMT tool

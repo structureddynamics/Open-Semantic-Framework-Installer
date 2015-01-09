@@ -1056,5 +1056,19 @@
       
       return(TRUE);
     }
+    
+    protected function update_sparql_roles($password)
+    {
+      exec('/usr/bin/isql-v 1111 dba '.$password.' "EXEC=user_grant_role(\'SPARQL\', \'SPARQL_UPDATE\', 0)"', $output, $return);
+      
+      $this->log($output);      
+
+      if($return > 0)
+      {
+        return(FALSE);
+      }
+      
+      return(TRUE);
+    }    
   }
 ?>
