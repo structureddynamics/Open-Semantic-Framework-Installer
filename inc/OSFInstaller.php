@@ -87,14 +87,10 @@
       // PHP5 depends on MySQL
       // Virtuoso depends on PHP5
 
-      $this->installMySQL();    
-
       $this->installPhp5();
      
       $this->installApache2();  
 
-      $this->installPhpMyAdmin();
-      
       $this->installVirtuoso();
       
       $this->installSolr();
@@ -110,8 +106,6 @@
       
       $this->cecho("Now that the OSF instance is installed, you can install OSF for Drupal on the same server using this command:\n\n", 'CYAN');
       $this->cecho("    ./osf-installer --install-osf-drupal\n\n", 'CYAN');
-      
-      
     }
     
     /**

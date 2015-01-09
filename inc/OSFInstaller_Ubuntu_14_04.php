@@ -46,7 +46,7 @@
         $this->cecho("Register Virtuoso to automatically start at the system's startup...\n", 'WHITE');
         $this->exec('sudo update-rc.d virtuoso defaults');
 
-        $dbaPassword = $this->getInput("Enter a password to use with the Virtuoso administrator DBA & DAV users: ");
+        $dbaPassword = $this->getInput("Enter a password to use with the Virtuoso administrator DBA & DAV users");
 	
         if(!$this->change_password($dbaPassword))
         {
@@ -280,6 +280,12 @@
     
     public function installOSFDrupal()
     {
+      // Install MySQL & PHPMyAdmin requirements
+      
+      $this->installMySQL();
+      
+      $this->installPhpMyAdmin();
+      
       // Install Pear
 
       // First check if Pear is installed
