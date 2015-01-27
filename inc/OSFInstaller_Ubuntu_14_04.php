@@ -12,9 +12,7 @@
       $this->cecho("-----------------\n", 'WHITE');
       $this->cecho("\n\n", 'WHITE');
 
-      passthru('apt-get -y install php5');      
-      
-      passthru('apt-get -y install php5-curl');      
+      passthru('apt-get -y install php5 php5-curl unixodbc php5-odbc');      
       
       $this->cecho("Restarting Apache2...\n", 'WHITE');
       $this->exec('/etc/init.d/apache2 restart');      
@@ -34,10 +32,23 @@
       $this->cecho("---------------------\n", 'WHITE');
       $this->cecho("\n\n", 'WHITE');   
 
-      $this->wget('https://github.com/structureddynamics/OSF-Installer-Ext/raw/3.2/virtuoso-opensource/virtuoso-opensource_7.1_amd64.deb');
+      $this->wget('https://github.com/structureddynamics/OSF-Installer-Ext/raw/3.3/virtuoso-opensource/virtuoso-opensource_7.1_amd64.deb');
       $this->exec('dpkg -i virtuoso-opensource_7.1_amd64.deb');     
       
       $this->exec('mv /etc/init.d/virtuoso-opensource /etc/init.d/virtuoso');
+
+      $this->cecho("Installing odbc.ini and odbcinst.ini files...\n", 'WHITE');
+      
+      $this->exec('cp -f resources/virtuoso/odbc.ini /etc/odbc.ini');
+      $this->exec('cp -f resources/virtuoso/odbcinst.ini /etc/odbcinst.ini');
+
+      $this->cecho("Test Virtuoso startup...\n", 'WHITE');
+      
+      $this->exec('/etc/init.d/virtuoso stop');
+      
+      sleep(20);
+      
+      $this->exec('/etc/init.d/virtuoso start');
       
       $isVirtuosoRunning = shell_exec('ps aux | grep virtuoso');
       
