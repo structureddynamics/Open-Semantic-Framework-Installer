@@ -6,6 +6,8 @@
 
   abstract class OSFInstaller extends OSFConfigurator
   {
+    protected $dbaPassword = '';
+    
     function __construct($configFile)
     {
       parent::__construct($configFile);
@@ -589,15 +591,6 @@
       
       $this->cecho("Configure the osf.ini configuration file...\n", 'WHITE');
 
-      $dbaPassword = 'dba';     
-      
-      $return = $this->getInput("What is the password of the DBA user in Virtuoso (default: dba)");
-
-      if($return != '')
-      {
-        $dbaPassword = $return;
-      }     
-
       $this->cecho("Make sure the OSF Web Services are aware of themselves by changing the hosts file...\n", 'WHITE');
       
       if(stripos(file_get_contents('/etc/hosts'), 'OSF-Installer') == FALSE)
@@ -613,12 +606,7 @@
         $channel = $this->getInput("What SPARQL communication channel do you want to use: 'odbc' or 'http':");        
       }
       
-      $this->exec('sed -i "s>channel = \"odbc\">channel = \"'.$channel.'\">" "'.$this->osf_web_services_folder.$this->osf_web_services_ns.'/osf.ini"');
-      
-      if($return != '')
-      {
-        $dbaPassword = $return;
-      }     
+      $this->exec('sed -i "s>channel = \"odbc\">channel = \"'.$channel.'\">" "'.$this->osf_web_services_folder.$this->osf_web_services_ns.'/osf.ini"'); 
             
       // fix wsf_graph
       $this->exec('sed -i "s>wsf_graph = \"http://localhost/wsf/\">wsf_graph = \"http://'.$this->osf_web_services_domain.'/wsf/\">" "'.$this->osf_web_services_folder.$this->osf_web_services_ns.'/osf.ini"');
@@ -633,7 +621,7 @@
       $this->exec('sudo sed -i "s>ontological_structure_folder = \"/data/ontologies/structure/\">ontological_structure_folder = \"'.$this->data_folder.'/ontologies/structure/\">" "'.$this->osf_web_services_folder.$this->osf_web_services_ns.'/osf.ini"');
 
       // fix password
-      $this->exec('sudo sed -i "s>password = \"dba\">password = \"'.$dbaPassword.'\">" "'.$this->osf_web_services_folder.$this->osf_web_services_ns.'/osf.ini"');
+      $this->exec('sudo sed -i "s>password = \"dba\">password = \"'.$this->dbaPassword.'\">" "'.$this->osf_web_services_folder.$this->osf_web_services_ns.'/osf.ini"');
 
       // fix host
       $this->exec('sudo sed -i "s>host = \"localhost\">host = \"'.$this->osf_web_services_domain.'\">" "'.$this->osf_web_services_folder.$this->osf_web_services_ns.'/osf.ini"');
@@ -778,21 +766,19 @@
       
       $this->chdir($this->currentWorkingDirectory);
       
-      $dbaPassword = $this->getInput("What is the password of the DBA user in Virtuoso? ");
-      
       $this->exec('sed -i \'s>server_address = "">server_address = "http://'.$this->osf_web_services_domain.'">\' "resources/virtuoso/initialize_osf_web_services_network.php"');
       $this->exec('sed -i \'s>appID = "administer">appID = "'.$this->application_id.'">\' "resources/virtuoso/initialize_osf_web_services_network.php"');
       
       $errors = shell_exec('php resources/virtuoso/initialize_osf_web_services_network.php');
       
-      if(!$this->init_osf($dbaPassword))
+      if(!$this->init_osf($this->dbaPassword))
       {
         $this->cecho("\n\nThe OSF Web Services Network couldn't be created. Major Error.\n", 'RED');
       }        
       
       $this->cecho("Commit transactions to Virtuoso...\n", 'WHITE');      
 
-      if(!$this->commit($dbaPassword))
+      if(!$this->commit($this->dbaPassword))
       {
         $this->cecho("Couldn't commit triples to the Virtuoso triples store...\n", 'YELLOW');
       }

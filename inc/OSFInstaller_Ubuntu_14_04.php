@@ -61,17 +61,17 @@
         $this->cecho("Register Virtuoso to automatically start at the system's startup...\n", 'WHITE');
         $this->exec('sudo update-rc.d virtuoso defaults');
 
-        $dbaPassword = $this->getInput("Enter a password to use with the Virtuoso administrator DBA & DAV users");
+        $this->dbaPassword = $this->getInput("Enter a password to use with the Virtuoso administrator DBA & DAV users");
 	
-        if(!$this->change_password($dbaPassword))
+        if(!$this->change_password($this->dbaPassword))
         {
-          $dbaPassword = 'dba';
+          $this->dbaPassword = 'dba';
           $this->cecho("\n\nThe Virtuoso admin password was not changed. Use the default and change it after this installation process...\n", 'YELLOW');
         }        
         
         $this->cecho("Grant the SPARQL_UPDATE role to the SPARQL user...\n", 'WHITE');
 
-        if(!$this->update_sparql_roles($dbaPassword))
+        if(!$this->update_sparql_roles($this->dbaPassword))
         {
           $this->cecho("\n\nCouldn't grant the SPARQL_UPDATE role to the SPARQL user automcatilly. Log into Conductor to add that role to that user otherwise the OSF instance won't be operational...\n", 'RED');
         }                
