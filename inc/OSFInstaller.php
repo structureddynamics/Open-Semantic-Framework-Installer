@@ -603,8 +603,23 @@
       if(stripos(file_get_contents('/etc/hosts'), 'OSF-Installer') == FALSE)
       {
         file_put_contents('/etc/hosts', "\n\n# Added by the OSF-Installer to make the OSF Web Services are aware of themselves\n127.0.0.1 ".$this->osf_web_services_domain, FILE_APPEND);
-      } 
+      }       
       
+      $channel = '';     
+      
+      while($channel != 'odbc' ||
+            $channel != 'http')
+      {
+        $channel = $this->getInput("What SPARQL communication channel do you want to use: 'odbc' or 'http':");        
+      }
+      
+      $this->exec('sed -i "s>channel = \"odbc\">channel = \"'.$channel.'\">" "'.$this->osf_web_services_folder.$this->osf_web_services_ns.'/osf.ini"');
+      
+      if($return != '')
+      {
+        $dbaPassword = $return;
+      }     
+            
       // fix wsf_graph
       $this->exec('sed -i "s>wsf_graph = \"http://localhost/wsf/\">wsf_graph = \"http://'.$this->osf_web_services_domain.'/wsf/\">" "'.$this->osf_web_services_folder.$this->osf_web_services_ns.'/osf.ini"');
 
