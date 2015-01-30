@@ -600,10 +600,10 @@
       
       $channel = '';     
       
-      while($channel != 'odbc' ||
+      while($channel != 'odbc' &&
             $channel != 'http')
       {
-        $channel = $this->getInput("What SPARQL communication channel do you want to use: 'odbc' or 'http':");        
+        $channel = $this->getInput("What SPARQL communication channel do you want to use: 'odbc' or 'http'");        
       }
       
       $this->exec('sed -i "s>channel = \"odbc\">channel = \"'.$channel.'\">" "'.$this->osf_web_services_folder.$this->osf_web_services_ns.'/osf.ini"'); 
