@@ -600,12 +600,26 @@
 
       foreach($output as $line)
       {
-        if(strpos($line, 'ubuntu') != -1)
+        if(strpos($line, 'ubuntu') !== FALSE)
         {
           // Validate version
           $version = (float) shell_exec('lsb_release -rs');
           
           if($version >= 14.04 && $version < 14.05)
+          {
+            return(TRUE);
+          }
+          else
+          {
+            return(FALSE);
+          }
+        }
+        elseif(strpos($line, 'Linux Mint') !== FALSE)
+        {
+          // Validate version
+          $version = (float) shell_exec('lsb_release -rs');
+
+          if($version >= 17 && $version < 18)
           {
             return(TRUE);
           }
