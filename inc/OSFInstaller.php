@@ -57,7 +57,7 @@
       $this->cecho("You are about to install the Open Semantic Framework.\n", 'WHITE');
       $this->cecho("This installation process installs all the software components that are part of the OSF stack. It will take 10 minutes of your time, but the process will go on for a few hours because of the many pieces of software that get compiled.\n\n", 'WHITE');
       $this->cecho("The log of this installation is available here: ".$this->log_file."\n", 'WHITE');
-      $this->cecho("\n\nCopyright 2008-14. Structured Dynamics LLC. All rights reserved.\n\n", 'WHITE');
+      $this->cecho("\n\nCopyright 2008-15. Structured Dynamics LLC. All rights reserved.\n\n", 'WHITE');
       
       $this->cecho("\n\n");
       $this->cecho("---------------------------------\n", 'WHITE');
