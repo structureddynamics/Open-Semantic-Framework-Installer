@@ -18,59 +18,59 @@ projects[osf][download][branch] = 7.x-3.x
 ; Standard contributions
 
 projects[ctools][subdir] = contrib
-projects[ctools][version] = 1.3
+projects[ctools][version] = 1.7
 
 projects[devel][subdir] = contrib
-projects[devel][version] = 1.3
+projects[devel][version] = 1.5
 
 projects[entity][subdir] = contrib
-projects[entity][version] = 1.2
+projects[entity][version] = 1.6
 
 projects[entitycache][subdir] = contrib
-projects[entitycache][version] = 1.1
+projects[entitycache][version] = 1.2
 
 projects[features][subdir] = facetapi
-projects[features][version] = 1.3
+projects[features][version] = 1.5
 
 projects[features][subdir] = contrib
-projects[features][version] = 2.0
+projects[features][version] = 2.5
 
 projects[libraries][type] = module
 projects[libraries][subdir] = contrib
-projects[libraries][version] = 2.1
+projects[libraries][version] = 2.2
 
 projects[jquery_colorpicker][type] = module
 projects[jquery_colorpicker][subdir] = contrib
-projects[jquery_colorpicker][version] = 1.0-rc2
+projects[jquery_colorpicker][version] = 1.1
 
 projects[search_api][type] = module
 projects[search_api][subdir] = contrib
-projects[search_api][version] = 1.7
+projects[search_api][version] = 1.14
 
 projects[search_api_page][type] = module
 projects[search_api_page][subdir] = contrib
-projects[search_api_page][version] = 1.0
+projects[search_api_page][version] = 1.1
 
 projects[views][subdir] = contrib
-projects[views][version] = 3.5
+projects[views][version] = 3.11
 
 projects[diff][subdir] = contrib
 projects[diff][version] = 3.2
 
 projects[revisioning][subdir] = contrib
-projects[revisioning][version] = 1.5
+projects[revisioning][version] = 1.9
 
 projects[entityreference][subdir] = contrib
 projects[entityreference][version] = 1.1
 
 projects[context][subdir] = contrib
-projects[context][version] = 3.1
+projects[context][version] = 3.6
 
 projects[boxes][subdir] = contrib
-projects[boxes][version] = 1.1
+projects[boxes][version] = 1.2
 
 projects[xautoload][subdir] = contrib
-projects[xautoload][version] = 2.7
+projects[xautoload][version] = 5.1
 
 ; OSF-WS-PHP-API
 
