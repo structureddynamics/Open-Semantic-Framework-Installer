@@ -12,7 +12,7 @@
       $this->cecho("-----------------\n", 'WHITE');
       $this->cecho("\n\n", 'WHITE');
 
-      passthru('apt-get -y install php5 php5-curl unixodbc php5-odbc');      
+      passthru('apt-get -y install php5 php5-curl unixodbc php5-odbc php5-cgi');      
       
       $this->cecho("Restarting Apache2...\n", 'WHITE');
       $this->exec('/etc/init.d/apache2 restart');      
