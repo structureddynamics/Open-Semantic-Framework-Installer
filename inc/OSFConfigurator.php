@@ -414,8 +414,8 @@ osfDrupalConfigured = \"".($this->installer_osf_drupal_configured ? 'true' : 'fa
 osf-web-services-version = \"".$this->osf_web_services_version."\"
 osf-web-services-folder = \"".$this->osf_web_services_folder."\"
 osf-web-services-domain = \"".$this->osf_web_services_domain."\"
-osf-ws-php-api-version = \"".$this->osf_web_services_version."\"
-osf-tests-suites-version = \"".$this->osf_web_services_version."\"
+osf-ws-php-api-version = \"".$this->osf_ws_php_api_version."\"
+osf-tests-suites-version = \"".$this->osf_tests_suites_version."\"
 
 [osf-drupal]
 drupal-version = \"".$this->drupal_version."\"
