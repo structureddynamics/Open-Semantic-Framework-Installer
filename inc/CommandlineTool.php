@@ -247,41 +247,144 @@
       
       return($answer);
     }    
-    
+
+    public function sed($find, $replace, $file)
+    {
+      $output = array();
+
+      $this->log(array($find, $replace, $file), TRUE);
+
+      exec("sed -i \"s>{$find}>{$replace}>\" \"{$file}\"", $output, $return);
+
+      $this->log($output);
+
+      return(TRUE);
+    }
+
+    public function mkdir($path)
+    {
+      $output = array();
+
+      $this->log(array($path), TRUE);
+
+      exec("mkdir -p \"{$path}\"", $output, $return);
+
+      $this->log($output);
+
+      return(TRUE);
+    }
+
+    public function rm($path, $recursive = FALSE)
+    {
+      $output = array();
+
+      $this->log(array($path, $mod), TRUE);
+
+      if($recursive == TRUE)
+      {
+        exec("rm -Rf \"{$path}\"", $output, $return);
+      }
+      else
+        exec("rm -f \"{$path}\"", $output, $return);
+      }
+
+      $this->log($output);
+
+      return(TRUE);
+    }
+
+    public function chmod($path, $mod, $recursive = FALSE)
+    {
+      $output = array();
+
+      $this->log(array($path, $mod), TRUE);
+
+      if($recursive == TRUE)
+      {
+        exec("chmod -R {$mod} \"{$path}\"", $output, $return);
+      }
+      else
+        exec("chmod {$mod} \"{$path}\"", $output, $return);
+      }
+
+      $this->log($output);
+
+      return(TRUE);
+    }
+
+    public function ln($file, $link)
+    {
+      $output = array();
+
+      $this->log(array($file, $link), TRUE);
+
+      exec("ln -sf \"{$file}\" \"{$link}\"", $output, $return);
+
+      $this->log($output);
+
+      return(TRUE);
+    }
+
+    public function cp($src, $dest)
+    {
+      $output = array();
+
+      $this->log(array($src, $dest), TRUE);
+
+      exec("cp -Raf \"{$src}\" \"{$dest}\"", $output, $return);
+
+      $this->log($output);
+
+      return(TRUE);
+    }
+
+    public function unzip($file, $path)
+    {
+      $output = array();
+
+      $this->log(array($file, $path), TRUE);
+
+      exec("unzip -o \"{$file}\" -d \"{$path}\"", $output, $return);
+
+      $this->log($output);
+
+      return(TRUE);
+    }
+
     public function wget($url, $save_folder = '')
     {
       $output = array();
-      
-      $this->log(array($url), TRUE);   
-      
+
+      $this->log(array($url), TRUE);
+
       if(!empty($save_folder))
-      {   
-        exec('wget -q -P '.$save_folder.' '.$url, $output, $return);
+      {
+        exec("wget -qN \"{$url}\" -P \"{$save_folder}\"", $output, $return);
       }
       else
       {
-        exec('wget -q '.$url, $output, $return);
+        exec("wget -qN \"{$url}\"", $output, $return);
       }
-      
-      $this->log($output);      
-      
+
+      $this->log($output);
+
       if($return > 0)
       {
         // get the file that was being download from the URL
         $pos = strrpos($url, '/');
-        
+
         $filename = substr($url, $pos + 1);
-        
+
         // Remove the file it tries to install
-        exec('rm '.$filename);        
-        
+        exec('rm '.$filename);
+
         $this->cecho("Connection error while downloading the file $filename: retrying...\n", 'YELLOW');
-        
+
         $this->wget($url);
       }
 
       return(TRUE);
-    }  
+    }
     
     public function curl($command, $download_file = '')
     {
