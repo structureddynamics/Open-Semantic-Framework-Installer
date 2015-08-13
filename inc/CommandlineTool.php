@@ -167,7 +167,32 @@
         echo chr(27)."$out$text".chr(27).chr(27)."[0m";
       }
     }
-    
+
+    /**
+    * Outputs a header #1
+    * 
+    * @param string  $msg       Message to output
+    */
+    public function h1($msg)
+    {
+      $msglen = strlen($msg) + 2;
+      $this->cecho("\n\n", 'WHITE');
+      $this->cecho(str_repeat('-', $msglen) . "\n", 'WHITE');
+      $this->cecho(" {$msg} \n", 'WHITE');
+      $this->cecho(str_repeat('-', $msglen) . "\n", 'WHITE');
+      $this->cecho("\n", 'WHITE');
+    }
+
+    /**
+    * Outputs a header #2
+    * 
+    * @param string  $msg       Message to output
+    */
+    public function h2($msg)
+    {
+      $this->cecho("{$msg}\n", 'WHITE');
+    }
+
     /**
     * Log information into the logging file
     * 
@@ -220,7 +245,7 @@
       
       return $varin;
     }       
-    
+
     /**
     * Check if the answer of an input is equivalent to "yes". The strings that are equivalent to "yes" are:    
     * "1", "true", "on", "y" and "yes". Returns FALSE otherwise. 
@@ -246,133 +271,314 @@
       }
       
       return($answer);
-    }    
+    }
 
+    /**
+    * Finds and replaces content in a file
+    * 
+    * @param string  $find       String to find
+    * @param string  $replace    String to replace
+    * @param string  $file       File to update
+    */
     public function sed($find, $replace, $file)
     {
       $output = array();
-
       $this->log(array($find, $replace, $file), TRUE);
 
-      exec("sed -i \"s>{$find}>{$replace}>\" \"{$file}\"", $output, $return);
+      // Build command
+      $command = "sed -i \"s>{$find}>{$replace}>\" \"{$file}\"";
 
+      exec($command, $output, $return);
       $this->log($output);
+
+      if ($return > 0) {
+        $this->cecho("Failed updating file: $file...\n", 'RED');
+      }
 
       return(TRUE);
     }
 
+    /**
+    * Creates a directory
+    * 
+    * @param string  $path       Path to create
+    */
     public function mkdir($path)
     {
       $output = array();
-
       $this->log(array($path), TRUE);
 
-      exec("mkdir -p \"{$path}\"", $output, $return);
+      // Build command
+      $command = "mkdir -p \"{$path}\"";
 
+      exec($command, $output, $return);
       $this->log($output);
+
+      if ($return > 0) {
+        $this->cecho("Failed creating directory: $path...\n", 'RED');
+      }
 
       return(TRUE);
     }
 
-    public function rm($path, $recursive = FALSE)
+    /**
+    * Remove path from filesystem
+    * 
+    * @param string  $path       Path to remove
+    * @param boolean $recursion  Enable or disable recursion (optional)
+    */
+    public function rm($path, $recursion = FALSE)
     {
       $output = array();
+      $this->log(array($path), TRUE);
 
-      $this->log(array($path, $mod), TRUE);
-
-      if($recursive == TRUE)
-      {
-        exec("rm -Rf \"{$path}\"", $output, $return);
+      // Build command
+      $command = "rm -f";
+      // Check for recursion
+      if ($recursion == TRUE) {
+        $command .= " -R";
       }
-      else
-        exec("rm -f \"{$path}\"", $output, $return);
-      }
+      // Build command
+      $command .= " \"{$path}\"";
 
+      exec($command, $output, $return);
       $this->log($output);
+
+      if ($return > 0) {
+        $this->cecho("Failed removing file or directory: $path...\n", 'RED');
+      }
 
       return(TRUE);
     }
 
-    public function chmod($path, $mod, $recursive = FALSE)
+    /**
+    * Changes owner for a path
+    * 
+    * @param string  $path       Path to target
+    * @param string  $own        Owner to apply
+    * @param boolean $recursion  Enable or disable recursion (optional)
+    */
+    public function chown($path, $own, $recursion = FALSE)
     {
       $output = array();
+      $this->log(array($path, $own, $recursion), TRUE);
 
-      $this->log(array($path, $mod), TRUE);
-
-      if($recursive == TRUE)
-      {
-        exec("chmod -R {$mod} \"{$path}\"", $output, $return);
+      // Build command
+      $command = "chown";
+      // Check for recursion
+      if ($recursion == TRUE) {
+        $command .= " -R";
       }
-      else
-        exec("chmod {$mod} \"{$path}\"", $output, $return);
-      }
+      // Build command
+      $command .= " \"{$own}\" \"{$path}\"";
 
+      exec($command, $output, $return);
       $this->log($output);
+
+      if ($return > 0) {
+        $this->cecho("Failed changing permissions for the path: $path...\n", 'RED');
+      }
 
       return(TRUE);
     }
 
-    public function ln($file, $link)
+    /**
+    * Changes group for a path
+    * 
+    * @param string  $path       Path to target
+    * @param string  $grp        Group to apply
+    * @param boolean $recursion  Enable or disable recursion (optional)
+    */
+    public function chgrp($path, $grp, $recursion = FALSE)
     {
       $output = array();
+      $this->log(array($path, $grp, $recursion), TRUE);
 
-      $this->log(array($file, $link), TRUE);
+      // Build command
+      $command = "chgrp";
+      // Check for recursion
+      if ($recursion == TRUE) {
+        $command .= " -R";
+      }
+      // Build command
+      $command .= " \"{$grp}\" \"{$path}\"";
 
-      exec("ln -sf \"{$file}\" \"{$link}\"", $output, $return);
-
+      exec($command, $output, $return);
       $this->log($output);
+
+      if ($return > 0) {
+        $this->cecho("Failed changing group for the path: $path...\n", 'RED');
+      }
 
       return(TRUE);
     }
 
-    public function cp($src, $dest)
+    /**
+    * Changes permissions for a path
+    * 
+    * @param string  $path       Path to target
+    * @param string  $mod        Permissions modifier in octal or symbolic notion
+    * @param boolean $recursion  Enable or disable recursion (optional)
+    */
+    public function chmod($path, $mod, $recursion = FALSE)
     {
       $output = array();
+      $this->log(array($path, $mod, $recursion), TRUE);
 
+      // Build command
+      $command = "chmod";
+      // Check for recursion
+      if ($recursion == TRUE) {
+        $command .= " -R";
+      }
+      // Build command
+      $command .= " \"{$mod}\" \"{$path}\"";
+
+      exec($command, $output, $return);
+      $this->log($output);
+
+      if ($return > 0) {
+        $this->cecho("Failed changing permissions for the path: $path...\n", 'RED');
+      }
+
+      return(TRUE);
+    }
+
+    /**
+    * Soft links a source file or directory
+    * 
+    * @param string  $src        Source file or directory
+    * @param string  $dest       Destination file or directory (optional)
+    */
+    public function ln($src, $dest = '')
+    {
+      $output = array();
       $this->log(array($src, $dest), TRUE);
 
-      exec("cp -Raf \"{$src}\" \"{$dest}\"", $output, $return);
+      // Build command
+      $command = "ln -sf \"{$src}\"";
+      // Check for destination
+      if (!empty($dest)) {
+        $command .= " \"{$dest}\"";
+      }
 
+      exec($command, $output, $return);
       $this->log($output);
+
+      if ($return > 0) {
+        $this->cecho("Failed unzipping the archive: $arch to destination: $dest...\n", 'RED');
+      }
 
       return(TRUE);
     }
 
-    public function unzip($file, $path)
+    /**
+    * Copies source files or directories to destination
+    * 
+    * @param string  $src        Source file or directory
+    * @param string  $dest       Destination file or directory
+    * @param boolean $recursion  Enable or disable recursion (optional)
+    */
+    public function cp($src, $dest, $recursion = FALSE)
     {
       $output = array();
+      $this->log(array($src, $dest, $recursion), TRUE);
 
-      $this->log(array($file, $path), TRUE);
+      // Build command
+      $command = "cp -af";
+      // Check for recursion
+      if ($recursion == TRUE) {
+        $command .= " -R";
+      }
+      // Build command
+      $command .= " \"{$src}\" \"{$dest}\"";
 
-      exec("unzip -o \"{$file}\" -d \"{$path}\"", $output, $return);
-
+      exec($command, $output, $return);
       $this->log($output);
+
+      if ($return > 0) {
+        $this->cecho("Failed copying the source: $src to destination: $dest...\n", 'RED');
+      }
 
       return(TRUE);
     }
 
-    public function wget($url, $save_folder = '')
+    /**
+    * Moves source files or directories to destination
+    * 
+    * @param string  $src        Source file or directory
+    * @param string  $dest       Destination file or directory
+    */
+    public function mv($src, $dest)
     {
       $output = array();
+      $this->log(array($src, $dest), TRUE);
 
-      $this->log(array($url), TRUE);
+      // Build command
+      $command = "mv -f \"{$src}\" \"{$dest}\"";
 
-      if(!empty($save_folder))
-      {
-        exec("wget -qN \"{$url}\" -P \"{$save_folder}\"", $output, $return);
-      }
-      else
-      {
-        exec("wget -qN \"{$url}\"", $output, $return);
-      }
-
+      exec($command, $output, $return);
       $this->log($output);
 
-      if($return > 0)
-      {
+      if ($return > 0) {
+        $this->cecho("Failed moving the source: $src to destination: $dest...\n", 'RED');
+      }
+
+      return(TRUE);
+    }
+
+    /**
+    * Unzips an archive in the ZIP format, using unzip command
+    * 
+    * @param string  $arch       Archive file
+    * @param string  $dest       Destination directory (optional)
+    */
+    public function unzip($arch, $dest = '')
+    {
+      $output = array();
+      $this->log(array($arch, $dest), TRUE);
+
+      // Build command
+      $command = "unzip -o \"{$arch}\"";
+      // Check for destination
+      if (!empty($dest)) {
+        $command .= " -d \"{$dest}\"";
+      }
+
+      exec($command, $output, $return);
+      $this->log($output);
+
+      if ($return > 0) {
+        $this->cecho("Failed unzipping the archive: $arch to destination: $dest...\n", 'RED');
+      }
+
+      return(TRUE);
+    }
+
+    /**
+    * Downloads an URL to local system, using wget command
+    * 
+    * @param string  $url        Source URL
+    * @param string  $dest       Destination directory (optional)
+    */
+    public function wget($url, $dest = '')
+    {
+      $output = array();
+      $this->log(array($url, $dest), TRUE);
+
+      // Build command
+      $command = "wget -qN \"{$url}\"";
+      // Check for destination
+      if (!empty($dest)) {
+        $command .= " -P \"{$dest}\"";
+      }
+
+      exec($command, $output, $return);
+      $this->log($output);
+
+      if ($return > 0) {
         // get the file that was being download from the URL
         $pos = strrpos($url, '/');
-
         $filename = substr($url, $pos + 1);
 
         // Remove the file it tries to install
@@ -385,36 +591,32 @@
 
       return(TRUE);
     }
-    
-    public function curl($command, $download_file = '')
+
+    public function curl($url, $download_file = '')
     {
       $output = array();
-      
-      $this->log(array($command), TRUE);   
-         
-      exec('curl '.$command, $output, $return);
-      
-      $this->log($output);      
-      
-      if($return > 0)
-      {
-        if(!empty($download_file))
-        {
+      $this->log(array($url, $download_file), TRUE);
+
+      exec("curl {$url}", $output, $return);
+      $this->log($output);
+
+      if ($return > 0) {
+        if (!empty($download_file)) {
           // Remove the file it tries to install
-          exec('rm '.$download_file);        
-          
+          exec("rm {$download_file}");
+
           $this->cecho("Connection error downloading file $download_file; retrying...\n", 'YELLOW');
         }
-        else
-        {
-          $this->cecho("Connection error using Curl; retrying...\n", 'YELLOW');          
+        else {
+          $this->cecho("Connection error using Curl; retrying...\n", 'YELLOW');
         }
-        
-        $this->curl($command, $download_file);
+
+        $this->curl($url, $download_file);
       }
 
       return(TRUE);
-    }          
+    }
+
   }
-  
+
 ?>

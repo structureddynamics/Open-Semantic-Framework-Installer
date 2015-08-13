@@ -422,6 +422,8 @@ drupal-version = \"".$this->drupal_version."\"
 osf-drupal-version = \"".$this->osf_drupal_version."\"
 
 [tools]
+permissions-management-tool-folder = \"".$this->permissions_management_tool_folder."\"
+permissions-management-tool-version = \"".$this->permissions_management_tool_version."\"
 datasets-management-tool-folder = \"".$this->datasets_management_tool_folder."\"
 datasets-management-tool-version = \"".$this->datasets_management_tool_version."\"
 ontologies-management-tool-folder = \"".$this->ontologies_management_tool_folder."\"
@@ -457,6 +459,8 @@ logging-folder = \"".$this->logging_folder."\"
       
       $this->cecho("\n\nOther tools related configuration settings:\n", 'CYAN');
 
+      $this->cecho("permissions-management-tool-version: ".($this->permissions_management_tool_version == 'master' ? 'dev' : $this->permissions_management_tool_version)."\n", 'WHITE');
+      $this->cecho("permissions-management-tool-folder: ".$this->permissions_management_tool_folder."\n", 'WHITE');
       $this->cecho("datasets-management-tool-version: ".($this->datasets_management_tool_version == 'master' ? 'dev' : $this->datasets_management_tool_version)."\n", 'WHITE');
       $this->cecho("datasets-management-tool-folder: ".$this->datasets_management_tool_folder."\n", 'WHITE');
       $this->cecho("ontologies-management-tool-version: ".($this->ontologies_management_tool_version == 'master' ? 'dev' : $this->ontologies_management_tool_version)."\n", 'WHITE');
