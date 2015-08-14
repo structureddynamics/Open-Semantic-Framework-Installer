@@ -102,7 +102,7 @@
       $this->installOSFWSPHPAPI();
       $this->installPermissionsManagementTool();
       $this->installDatasetsManagementTool();
-      $this->installOntologiesManagementTool();
+      $this->switchOntologiesManagementTool('install');
 
       $this->installOSFWebServices();      
       
@@ -890,11 +890,11 @@
     }
 
     /**
-    * Install the Ontologies Management Tool
+    * Switch for Ontologies Management Tool
     */
-    public function installOntologiesManagementTool($pkgVersion = '')
+    public function switchOntologiesManagementTool($op = 'install', $pkgVersion = '')
     {
-      // Get name, version and paths
+      // Get package info
       $pkgName = "Ontologies Management Tool";
       switch ($pkgVersion) {
         case 'dev':
@@ -905,14 +905,59 @@
           break;
       }
       $installPath = $this->ontologies_management_tool_folder;
-      $tmpPath = "/tmp/osf/omt";
 
-      $this->h1("Installing {$pkgName} {$pkgVersion}");
-      // Check if is installed
-      if (is_dir("{$installPath}/")) {
-        $this->cecho("The {$pkgName} {$pkgVersion} is already installed. Consider upgrading it with the option: --upgrade-ontologies-management-tool\n", 'YELLOW');
-        return;
+      // Check operation mode
+      switch ($op) {
+        case 'install':
+          $this->h1("Installing {$pkgName} {$pkgVersion}");
+          // Check if is installed
+          if (is_dir("{$installPath}/")) {
+            $this->cecho("The package is already installed. Consider upgrading it with the option: --upgrade-ontologies-management-tool\n", 'YELLOW');
+            return;
+          }
+          $this->installOntologiesManagementTool($pkgVersion);
+          $this->configOntologiesManagementTool();
+          break;
+        case 'upgrade':
+          $this->h1("Upgrading {$pkgName} {$pkgVersion}");
+          // Check if is not installed
+          if (!is_dir("{$installPath}/")) {
+            $this->cecho("The package is not installed. Consider installing it with the option: --install-ontologies-management-tool\n", 'YELLOW');
+            return;
+          }
+          $this->upgradeOntologiesManagementTool($pkgVersion);
+          break;
+        case 'uninstall':
+          $this->h1("Uninstalling {$pkgName} {$pkgVersion}");
+          // Check if is not installed
+          if (!is_dir("{$installPath}/")) {
+            $this->cecho("The package is not installed.\n", 'YELLOW');
+            return;
+          }
+          $this->uninstallOntologiesManagementTool($pkgVersion);
+          break;
+        case 'configure':
+          $this->h1("Configuring {$pkgName} {$pkgVersion}");
+          // Check if is not installed
+          if (!is_dir("{$installPath}/")) {
+            $this->cecho("The package is not installed.\n", 'YELLOW');
+            return;
+          }
+          $this->configOntologiesManagementTool($pkgVersion);
+          break;
+        default:
+          break;
       }
+    }
+
+    /**
+    * Install Ontologies Management Tool
+    */
+    private function installOntologiesManagementTool($pkgVersion = '')
+    {
+      // Get package info
+      $installPath = $this->ontologies_management_tool_folder;
+      $tmpPath = "/tmp/osf/omt";
 
       // Download
       $this->h2("Downloading...");
@@ -927,64 +972,64 @@
       $this->chmod("{$installPath}/omt", 755);
       $this->ln("{$installPath}/omt", "/usr/bin/omt");
 
-      // Configure
-      $this->h2("Configuring...");
-      $this->sed("osfWebServicesFolder = \".*\"", "osfWebServicesFolder = \"{$this->osf_web_services_folder}/\"", "{$installPath}/dmt.ini");
-
       // Cleanup
       $this->h2("Cleaning...");
       $this->rm("{$tmpPath}/", TRUE);
     }
 
     /**
-    * Update an Ontologies Management Tool installation
+    * Upgrade Ontologies Management Tool
     */
-    public function upgradeOntologiesManagementTool($version = '')
+    private function upgradeOntologiesManagementTool($pkgVersion = '')
     {
-      if($version == '')
-      {
-        $version = $this->ontologies_management_tool_version;
-      }
-      elseif($version == 'dev')
-      {
-        $version = 'master';
-      }
-            
-      $this->cecho("\n\n", 'WHITE');
-      $this->cecho("------------------------------------------\n", 'WHITE');
-      $this->cecho(" Upgrading the Ontologies Management Tool \n", 'WHITE');
-      $this->cecho("------------------------------------------\n", 'WHITE');
-      $this->cecho("\n\n", 'WHITE');      
-      
-      $backupFolder = '/tmp/omt-'.date('Y-m-d_H-i-s');  
-      
-      $this->cecho("Moving old version into: ".$backupFolder."/ ...\n", 'WHITE');
-      
-      $this->exec('mkdir -p '.$backupFolder);
-      
-      $this->exec('cp -af '.$this->ontologies_management_tool_folder.'/ '.$backupFolder);
-                                              
-      $this->cecho("Preparing upgrade...\n", 'WHITE');
-      $this->exec('mkdir -p /tmp/omt');
+      // Get package info
+      $installPath = $this->ontologies_management_tool_folder;
+      $bckPath = "/tmp/osf/omt-" . date('Y-m-d_H-i-s');
 
-      $this->cecho("Downloading the Ontologies Management Tool...\n", 'WHITE');
-      $this->wget('https://github.com/structureddynamics/OSF-Ontologies-Management-Tool/archive/'.$version.'.zip', '/tmp/omt');
+      // Backup
+      $this->h2("Making backup...");
+      $this->mkdir("{$bckPath}/");
+      $this->mv("{$installPath}/.", "{$bckPath}/.");
 
-      $this->cecho("Upgrading the Ontologies Management Tool...\n", 'WHITE');
-      $this->exec('unzip -o /tmp/omt/'.$version.'.zip -d /tmp/omt/');      
-      
-      // Make sure not to overwrite the data, missing and datasetIndexes folders and the omt.ini file
-      $this->exec('rm -rf /tmp/omt/OSF-Ontologies-Management-Tool-'.$version.'/omt.ini');
-      
-      $this->exec("cp -af /tmp/omt/OSF-Ontologies-Management-Tool-".$version."/* ".$this->ontologies_management_tool_folder."/");
+      // Install
+      $this->installOntologiesManagementTool($pkgVersion);
 
-      // Make "omt" executable
-      $this->exec('chmod 755 '.$this->ontologies_management_tool_folder.'/omt');
-      
-      $this->cecho("Cleaning installation folder...\n", 'WHITE');
-      $this->exec('rm -rf /tmp/omt/');      
+      // Restore
+      $this->h2("Restoring backup...");
+      $this->mv("{$bckPath}/omt.ini", "{$installPath}/");
+
+      // Cleanup
+      $this->h2("Cleaning backup...");
+      $this->rm("{$bckPath}/", TRUE);
     }
-    
+
+    /**
+    * Uninstall Ontologies Management Tool
+    */
+    private function uninstallOntologiesManagementTool()
+    {
+      // Get package info
+      $installPath = $this->ontologies_management_tool_folder;
+
+      // Uninstall
+      $this->h2("Uninstalling...");
+      $this->rm("{$installPath}/", TRUE);
+      $this->rm("/usr/bin/omt");
+    }
+
+    /**
+    * Configure Ontologies Management Tool
+    */
+    private function configOntologiesManagementTool()
+    {
+      // Get package info
+      $installPath = $this->ontologies_management_tool_folder;
+
+      // Configure
+      $this->h2("Configuring...");
+      $this->sed("osfWebServicesFolder = \".*\"", "osfWebServicesFolder = \"{$this->osf_web_services_folder}/\"", "{$installPath}/dmt.ini");
+    }
+
     protected function commit($password)
     {
       exec('/usr/bin/isql-v 1111 dba '.$password.' "EXEC=exec(\'checkpoint\')"', $output, $return);

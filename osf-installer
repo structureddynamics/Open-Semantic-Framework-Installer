@@ -58,7 +58,9 @@
                                          'install-osf-data-validator-tool::',
                                          'upgrade-osf-data-validator-tool::',  
                                          'install-osf-ontologies-management-tool::',
-                                         'upgrade-osf-ontologies-management-tool::'));  
+                                         'upgrade-osf-ontologies-management-tool::',
+                                         'uninstall-osf-ontologies-management-tool::',
+                                         'configure-osf-ontologies-management-tool::'));
   
   // Displaying DSF's help screen if required
   if(isset($arguments['h']) || isset($arguments['help']))
@@ -197,18 +199,30 @@
     $installer->upgradeDataValidatorTool($arguments['upgrade-osf-data-validator-tool']);
   }
 
-  // Install the Ontologies Management Tool library
+  // Install Ontologies Management Tool
   if(isset($arguments['install-osf-ontologies-management-tool']))
   {
-    $installer->installOntologiesManagementTool($arguments['install-osf-ontologies-management-tool']);
+    $installer->switchOntologiesManagementTool('install', $arguments['install-osf-ontologies-management-tool']);
   }
 
-  // Upgrade the Ontologies Management Tool library
+  // Upgrade Ontologies Management Tool
   if(isset($arguments['upgrade-osf-ontologies-management-tool']))
   {
-    $installer->upgradeOntologiesManagementTool($arguments['upgrade-osf-ontologies-management-tool']);
+    $installer->switchOntologiesManagementTool('upgrade', $arguments['upgrade-osf-ontologies-management-tool']);
   }
-  
+
+  // Uninstall Ontologies Management Tool
+  if(isset($arguments['uninstall-osf-ontologies-management-tool']))
+  {
+    $installer->switchOntologiesManagementTool('uninstall', $arguments['uninstall-osf-ontologies-management-tool']);
+  }
+
+  // Configure Ontologies Management Tool
+  if(isset($arguments['configure-osf-ontologies-management-tool']))
+  {
+    $installer->configOntologiesManagementTool('configure', $arguments['configure-osf-ontologies-management-tool']);
+  }
+
   // Install OSF Web Services Tests Suites
   if(isset($arguments['install-osf-tests-suites']))
   {
