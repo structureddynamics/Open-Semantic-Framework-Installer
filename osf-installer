@@ -31,40 +31,56 @@
     
     $installer = new OSFInstallerGeneric(getcwd().'/installer.ini');
   }    
-    
+
   // Get commandline options
-  $arguments = getopt('h::v::c::', array('help::',
-                                         'verbose::',
-                                         'configure-installer::',
-                                         'list-configurations::',
-                                         'install-osf::',
-                                         'install-osf-drupal::',
-                                         'install-apache2::',
-                                         'install-mysql::',
-                                         'install-phpmyadmin::',
-                                         'install-php5::',
-                                         'install-virtuoso::',
-                                         'install-solr::',
-                                         'upgrade-osf-web-services::',
-                                         'upgrade-osf-web-services-code-base::',
-                                         'install-osf-ws-php-api::',
-                                         'upgrade-osf-ws-php-api::',
-                                         'install-osf-tests-suites::',
-                                         'upgrade-osf-tests-suites::',
-                                         'install-osf-datasets-management-tool::',
-                                         'upgrade-osf-datasets-management-tool::',  
-                                         'install-osf-permissions-management-tool::',
-                                         'upgrade-osf-permissions-management-tool::',  
-                                         'install-osf-data-validator-tool::',
-                                         'upgrade-osf-data-validator-tool::',  
-                                         'install-osf-ontologies-management-tool::',
-                                         'upgrade-osf-ontologies-management-tool::',
-                                         'uninstall-osf-ontologies-management-tool::',
-                                         'configure-osf-ontologies-management-tool::'));
-  
+  $arguments = getopt('h::v::c::', array(
+    'help::',
+    'verbose::',
+    'configure-installer::',
+    'list-configurations::',
+    'install-osf::',
+    'install-osf-drupal::',
+    'install-apache2::',
+    'install-mysql::',
+    'install-phpmyadmin::',
+    'install-php5::',
+    'install-virtuoso::',
+    'install-solr::',
+    'upgrade-osf-web-services::',
+    'upgrade-osf-web-services-code-base::',
+    // WS-PHP-API
+    'install-osf-ws-php-api::',
+    'upgrade-osf-ws-php-api::',
+    'uninstall-osf-ws-php-api::',
+    // Tests Suites
+    'install-osf-tests-suites::',
+    'upgrade-osf-tests-suites::',
+    'uninstall-osf-tests-suites::',
+    'configure-osf-tests-suites::',
+    // Permissions Management Tool
+    'install-osf-permissions-management-tool::',
+    'upgrade-osf-permissions-management-tool::',
+    'uninstall-osf-permissions-management-tool::',
+    'configure-osf-permissions-management-tool::',
+    // Datasets Management Tool
+    'install-osf-datasets-management-tool::',
+    'upgrade-osf-datasets-management-tool::',
+    'uninstall-osf-datasets-management-tool::',
+    'configure-osf-datasets-management-tool::',
+    // Ontologies Management Tool
+    'install-osf-ontologies-management-tool::',
+    'upgrade-osf-ontologies-management-tool::',
+    'uninstall-osf-ontologies-management-tool::',
+    'configure-osf-ontologies-management-tool::',
+    // Data Validator Tool
+    'install-osf-data-validator-tool::',
+    'upgrade-osf-data-validator-tool::',
+    'uninstall-osf-data-validator-tool::',
+    'configure-osf-data-validator-tool::',
+  ));
+
   // Displaying DSF's help screen if required
-  if(isset($arguments['h']) || isset($arguments['help']))
-  {
+  if (isset($arguments['h']) || isset($arguments['help'])) {
     $installer->cecho("Usage: osf-install [OPTIONS]\n\n\n", 'WHITE');
     $installer->cecho("General Options:\n", 'WHITE');
     $installer->cecho("-h, --help                              Show this help section\n", 'WHITE');
@@ -82,12 +98,6 @@
     $installer->cecho("--install-virtuoso                      Install Virtuoso \n", 'WHITE');
     $installer->cecho("--install-solr                          Install Solr \n", 'WHITE');
     $installer->cecho("--install-php5                          Install PHP5 \n", 'WHITE');
-    $installer->cecho("--install-osf-ws-php-api=\"[VERSION]\"                    Install the OSF-WS-PHP-API library \n", 'WHITE');
-    $installer->cecho("--install-osf-tests-suites=\"[VERSION]\"                  Install the OSF Tests Suites \n", 'WHITE');
-    $installer->cecho("--install-osf-datasets-management-tool=\"[VERSION]\"      Install the OSF Datasets Management Tool \n", 'WHITE');
-    $installer->cecho("--install-osf-permissions-management-tool=\"[VERSION]\"   Install the OSF Permissions Management Tool \n", 'WHITE');
-    $installer->cecho("--install-osf-data-validator-tool=\"[VERSION]\"           Install the OSF Data Validator Tool \n", 'WHITE');
-    $installer->cecho("--install-osf-ontologies-management-tool=\"[VERSION]\"    Install the OSF Ontologies Management Tool \n", 'WHITE');
     $installer->cecho("\nOSF Drupal Installation Options:\n", 'WHITE');
     $installer->cecho("\n", 'WHITE');
     $installer->cecho("--install-osf-drupal                    Install Drupal with the OSF Drupal modules \n", 'WHITE');
@@ -95,18 +105,45 @@
     $installer->cecho("Note: the [VERSION] parameter is optional.\n", 'WHITE');
     $installer->cecho("      If no version is specified, the latest DEV version will be used\n", 'WHITE');
     $installer->cecho("\n", 'WHITE');
-    $installer->cecho("--upgrade-osf-web-services                             Upgrade the OSF Web Services \n", 'WHITE');
-    $installer->cecho("--upgrade-osf-web-services-code-base                   Upgrade the OSF Web Services to the latest dev code base\n", 'WHITE');
-    $installer->cecho("--upgrade-osf-ws-php-api=\"[VERSION]\"                 Upgrade the OSF-WS-PHP-API library \n", 'WHITE');
-    $installer->cecho("--upgrade-osf-tests-suites=\"[VERSION]\"               Upgrade the OSF Tests Suites \n", 'WHITE');
-    $installer->cecho("--upgrade-osf-datasets-management-tool=\"[VERSION]\"   Upgrade the OSF Datasets Management Tool \n", 'WHITE');
-    $installer->cecho("--upgrade-osf-permissions-management-tool=\"[VERSION]\"   Upgrade the OSF Permissions Management Tool \n", 'WHITE');
-    $installer->cecho("--upgrade-osf-data-validator-tool=\"[VERSION]\"        Upgrade the OSF Data Validator Tool \n", 'WHITE');
-    $installer->cecho("--upgrade-osf-ontologies-management-tool=\"[VERSION]\" Upgrade the OSF Ontologies Management Tool \n", 'WHITE');
+    $installer->cecho("\nOSF Components:\n", 'WHITE');
+    $installer->cecho("Note: the [VERSION] parameter is optional.\n", 'WHITE');
+    $installer->cecho("      If no version is specified, the latest stable version will be used\n", 'WHITE');
+    $installer->cecho("\n", 'WHITE');
+    $installer->cecho("--upgrade-osf-web-services                                Upgrade the OSF Web Services \n", 'WHITE');
+    $installer->cecho("--upgrade-osf-web-services-code-base                      Upgrade the OSF Web Services to the latest dev code base\n", 'WHITE');
+    $installer->cecho("\n", 'WHITE');
+    $installer->cecho("--install-osf-ws-php-api=\"[VERSION]\"                    Install OSF WS-PHP-API\n", 'WHITE');
+    $installer->cecho("--upgrade-osf-ws-php-api=\"[VERSION]\"                    Upgrade OSF WS-PHP-API\n", 'WHITE');
+    $installer->cecho("--uninstall-osf-ws-php-api                              Uninstall OSF WS-PHP-API\n", 'WHITE');
+    $installer->cecho("\n", 'WHITE');
+    $installer->cecho("--install-osf-tests-suites=\"[VERSION]\"                  Install OSF Tests Suites\n", 'WHITE');
+    $installer->cecho("--upgrade-osf-tests-suites=\"[VERSION]\"                  Upgrade OSF Tests Suites\n", 'WHITE');
+    $installer->cecho("--uninstall-osf-tests-suites                            Uninstall OSF Tests Suites\n", 'WHITE');
+    $installer->cecho("--configure-osf-tests-suites                            Configure OSF Tests Suites\n", 'WHITE');
+    $installer->cecho("\n", 'WHITE');
+    $installer->cecho("--install-osf-data-validator-tool=\"[VERSION]\"           Install OSF Data Validator Tool\n", 'WHITE');
+    $installer->cecho("--upgrade-osf-data-validator-tool=\"[VERSION]\"           Upgrade OSF Data Validator Tool\n", 'WHITE');
+    $installer->cecho("--uninstall-osf-data-validator-tool                     Uninstall OSF Data Validator Tool\n", 'WHITE');
+    $installer->cecho("--configure-osf-data-validator-tool                     Configure OSF Data Validator Tool\n", 'WHITE');
+    $installer->cecho("\n", 'WHITE');
+    $installer->cecho("--install-osf-permissions-management-tool=\"[VERSION]\"   Install OSF Permissions Management Tool\n", 'WHITE');
+    $installer->cecho("--upgrade-osf-permissions-management-tool=\"[VERSION]\"   Upgrade OSF Permissions Management Tool\n", 'WHITE');
+    $installer->cecho("--uninstall-osf-permissions-management-tool             Uninstall OSF Permissions Management Tool\n", 'WHITE');
+    $installer->cecho("--configure-osf-permissions-management-tool             Configure OSF Permissions Management Tool\n", 'WHITE');
+    $installer->cecho("\n", 'WHITE');
+    $installer->cecho("--install-osf-datasets-management-tool=\"[VERSION]\"      Install OSF Datasets Management Tool\n", 'WHITE');
+    $installer->cecho("--upgrade-osf-datasets-management-tool=\"[VERSION]\"      Upgrade OSF Datasets Management Tool\n", 'WHITE');
+    $installer->cecho("--uninstall-osf-datasets-management-tool                Uninstall OSF Datasets Management Tool\n", 'WHITE');
+    $installer->cecho("--configure-osf-datasets-management-tool                Configure OSF Datasets Management Tool\n", 'WHITE');
+    $installer->cecho("\n", 'WHITE');
+    $installer->cecho("--install-osf-ontologies-management-tool=\"[VERSION]\"    Install OSF Ontologies Management Tool\n", 'WHITE');
+    $installer->cecho("--upgrade-osf-ontologies-management-tool=\"[VERSION]\"    Upgrade OSF Ontologies Management Tool\n", 'WHITE');
+    $installer->cecho("--uninstall-osf-ontologies-management-tool              Uninstall OSF Ontologies Management Tool\n", 'WHITE');
+    $installer->cecho("--configure-osf-ontologies-management-tool              Configure OSF Ontologies Management Tool\n", 'WHITE');
     $installer->cecho("\n\n", 'WHITE');
     die;
   }
-  
+
   // Configure installer
   
   // Run both configurations if the user specifically want to configure them
@@ -151,90 +188,121 @@
     $installer->installOSFDrupal();
   }
 
-  // Install the OSF-WS-PHP-API library
-  if(isset($arguments['install-osf-ws-php-api']))
+  // Install OSF Web Services on the system
+  if(isset($arguments['install-osf-ws']))
   {
-    $installer->installOSFPHPAPI($arguments['install-osf-ws-php-api']);
+    $installer->installOSFWebServices($arguments['install-osf-ws']);
   }
 
-  // Upgrade the OSF-WS-PHP-API library
-  if(isset($arguments['upgrade-osf-ws-php-api']))
+  // Upgrade the OSF Web Services version on the system
+  if(isset($arguments['upgrade-osf-web-services']))
   {
-    $installer->upgradeOSFPHPAPI($arguments['upgrade-osf-ws-php-api']);
+    include_once('inc/OSFWebServicesUpgrader.php');    
+    
+    $upgrader = new OSFWebServicesUpgrader(getcwd().'/installer.ini');
   }
 
-  // Install the Datasets Management Tool library
-  if(isset($arguments['install-osf-datasets-management-tool']))
+  // Upgrade the OSF Web Services to the latest development code
+  if(isset($arguments['upgrade-osf-web-services-code-base']))
   {
-    $installer->installDatasetsManagementTool($arguments['install-osf-datasets-management-tool']);
+    include_once('inc/OSFWebServicesUpgrader.php');    
+    
+    $upgrader = new OSFWebServicesUpgrader(getcwd().'/installer.ini', TRUE);
+  }  
+
+  /**
+   *  WS-PHP-API
+   */
+  if (isset($arguments['install-osf-ws-php-api'])) {
+    $installer->switchWSPHPAPI('install', $arguments['install-osf-ws-php-api']);
+  }
+  if (isset($arguments['upgrade-osf-ws-php-api'])) {
+    $installer->switchWSPHPAPI('upgrade', $arguments['upgrade-osf-ws-php-api']);
+  }
+  if (isset($arguments['uninstall-osf-ws-php-api'])) {
+    $installer->switchWSPHPAPI('uninstall');
   }
 
-  // Upgrade the Datasets Management Tool library
-  if(isset($arguments['upgrade-osf-datasets-management-tool']))
-  {
-    $installer->upgradeDatasetsManagementTool($arguments['upgrade-osf-datasets-management-tool']);
+  /**
+   *  Tests Suites
+   */
+  if (isset($arguments['install-osf-tests-suites'])) {
+    $installer->switchTestsSuites('install', $arguments['install-osf-tests-suites']);
+  }
+  if (isset($arguments['upgrade-osf-tests-suites'])) {
+    $installer->switchTestsSuites('upgrade', $arguments['upgrade-osf-tests-suites']);
+  }
+  if (isset($arguments['uninstall-osf-tests-suites'])) {
+    $installer->switchTestsSuites('uninstall');
+  }
+  if (isset($arguments['configure-osf-tests-suites'])) {
+    $installer->switchTestsSuites('configure');
   }
 
-  // Install the Datasets Management Tool library
-  if(isset($arguments['install-osf-permissions-management-tool']))
-  {
-    $installer->installPermissionsManagementTool($arguments['install-osf-permissions-management-tool']);
+  /**
+   *  Data Validator Tool
+   */
+  if (isset($arguments['install-osf-data-validator-tool'])) {
+    $installer->switchDataValidatorTool('install', $arguments['install-osf-data-validator-tool']);
+  }
+  if (isset($arguments['upgrade-osf-data-validator-tool'])) {
+    $installer->switchDataValidatorTool('upgrade', $arguments['upgrade-osf-data-validator-tool']);
+  }
+  if (isset($arguments['uninstall-osf-data-validator-tool'])) {
+    $installer->switchDataValidatorTool('uninstall');
+  }
+  if (isset($arguments['configure-osf-data-validator-tool'])) {
+    $installer->switchDataValidatorTool('configure');
   }
 
-  // Upgrade the Datasets Management Tool library
-  if(isset($arguments['upgrade-osf-permissions-management-tool']))
-  {
-    $installer->upgradePermissionsManagementTool($arguments['upgrade-osf-permissions-management-tool']);
+  /**
+   *  Permissions Management Tool
+   */
+  if (isset($arguments['install-osf-permissions-management-tool'])) {
+    $installer->switchPermissionsManagementTool('install', $arguments['install-osf-permissions-management-tool']);
+  }
+  if (isset($arguments['upgrade-osf-permissions-management-tool'])) {
+    $installer->switchPermissionsManagementTool('upgrade', $arguments['upgrade-osf-permissions-management-tool']);
+  }
+  if (isset($arguments['uninstall-osf-permissions-management-tool'])) {
+    $installer->switchPermissionsManagementTool('uninstall');
+  }
+  if (isset($arguments['configure-osf-permissions-management-tool'])) {
+    $installer->switchPermissionsManagementTool('configure');
   }
 
-  // Install the Data Validator Tool library
-  if(isset($arguments['install-osf-data-validator-tool']))
-  {
-    $installer->installDataValidatorTool($arguments['install-osf-data-validator-tool']);
+  /**
+   *  Datasets Management Tool
+   */
+  if (isset($arguments['install-osf-datasets-management-tool'])) {
+    $installer->switchDatasetsManagementTool('install', $arguments['install-osf-datasets-management-tool']);
   }
-  
-  // Upgrade the Data Validator Tool library
-  if(isset($arguments['upgrade-osf-data-validator-tool']))
-  {
-    $installer->upgradeDataValidatorTool($arguments['upgrade-osf-data-validator-tool']);
+  if (isset($arguments['upgrade-osf-datasets-management-tool'])) {
+    $installer->switchDatasetsManagementTool('upgrade', $arguments['upgrade-osf-datasets-management-tool']);
+  }
+  if (isset($arguments['uninstall-osf-datasets-management-tool'])) {
+    $installer->switchDatasetsManagementTool('uninstall');
+  }
+  if (isset($arguments['configure-osf-datasets-management-tool'])) {
+    $installer->switchDatasetsManagementTool('configure');
   }
 
-  // Install Ontologies Management Tool
-  if(isset($arguments['install-osf-ontologies-management-tool']))
-  {
+  /**
+   *  Ontologies Management Tool
+   */
+  if (isset($arguments['install-osf-ontologies-management-tool'])) {
     $installer->switchOntologiesManagementTool('install', $arguments['install-osf-ontologies-management-tool']);
   }
-
-  // Upgrade Ontologies Management Tool
-  if(isset($arguments['upgrade-osf-ontologies-management-tool']))
-  {
+  if (isset($arguments['upgrade-osf-ontologies-management-tool'])) {
     $installer->switchOntologiesManagementTool('upgrade', $arguments['upgrade-osf-ontologies-management-tool']);
   }
-
-  // Uninstall Ontologies Management Tool
-  if(isset($arguments['uninstall-osf-ontologies-management-tool']))
-  {
-    $installer->switchOntologiesManagementTool('uninstall', $arguments['uninstall-osf-ontologies-management-tool']);
+  if (isset($arguments['uninstall-osf-ontologies-management-tool'])) {
+    $installer->switchOntologiesManagementTool('uninstall');
+  }
+  if (isset($arguments['configure-osf-ontologies-management-tool'])) {
+    $installer->switchOntologiesManagementTool('configure');
   }
 
-  // Configure Ontologies Management Tool
-  if(isset($arguments['configure-osf-ontologies-management-tool']))
-  {
-    $installer->configOntologiesManagementTool('configure', $arguments['configure-osf-ontologies-management-tool']);
-  }
-
-  // Install OSF Web Services Tests Suites
-  if(isset($arguments['install-osf-tests-suites']))
-  {
-    $installer->installOSFTestsSuites($arguments['install-osf-tests-suites']);
-  }
-  
-  // Upgrade OSF Web Services Tests Suites
-  if(isset($arguments['upgrade-osf-tests-suites']))
-  {
-    $installer->upgradeOSFTestsSuites($arguments['upgrade-osf-tests-suites']);
-  }
-  
   // Install Apache2 on the system
   if(isset($arguments['install-apache2']))
   {
@@ -258,28 +326,6 @@
   {
     $installer->installPhpMyAdmin();
   }
-  
-  // Install OSF Web Services on the system
-  if(isset($arguments['install-osf-ws']))
-  {
-    $installer->installOSFWebServices($arguments['install-osf-ws']);
-  }
-  
-  // Upgrade the OSF Web Services version on the system
-  if(isset($arguments['upgrade-osf-web-services']))
-  {
-    include_once('inc/OSFWebServicesUpgrader.php');    
-    
-    $upgrader = new OSFWebServicesUpgrader(getcwd().'/installer.ini');
-  }
-  
-  // Upgrade the OSF Web Services to the latest development code
-  if(isset($arguments['upgrade-osf-web-services-code-base']))
-  {
-    include_once('inc/OSFWebServicesUpgrader.php');    
-    
-    $upgrader = new OSFWebServicesUpgrader(getcwd().'/installer.ini', TRUE);
-  }  
   
   // Install Virtuoso on the system
   if(isset($arguments['install-virtuoso']))

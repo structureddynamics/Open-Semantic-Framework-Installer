@@ -6,68 +6,73 @@
   {
     /* Parsed intaller.ini configuration file */
     protected $config;
-    
+
     // Configuration options
 
     /* Determine if the installer is configured */
     public $installer_osf_configured = FALSE;
     public $installer_osf_drupal_configured = FALSE;
-    
-    /* Version of drupal to install */
-    protected $drupal_version = "7.23";
-
-    /* Version of OSF Web Services to install */
-    protected $osf_web_services_version = "dev";
-
-    /* Version of OSF-WS-PHP-API to install */
-    protected $osf_ws_php_api_version = "dev";
-
-    /* Version of OSF Tests Suites to install */
-    protected $osf_tests_suites_version = "dev";
-
-    /* Version of OSF Drupal to install */
-    protected $osf_drupal_version = "7.x-2.x";
 
     /* Folder where the data is managed */
     protected $data_folder = "/data";
 
+    /* Folder where to put the logging files */
+    protected $logging_folder = "/tmp";
+
+    /* Domain name where to access the OSF Web Services instance */
+    protected $osf_web_services_domain = "localhost";    
+
+    /* Application ID and Key for the web services */
+    protected $application_id = 'administer';
+    protected $appID = 'administer';
+    protected $api_key = 'some-key';
+    protected $apiKey = 'some-key';
+
+    /* Version of OSF Drupal to install */
+    protected $osf_drupal_version = "7.x-2.x";
+    /* Version of drupal to install */
+    protected $drupal_version = "7.23";
+    /* Folder where to install Drupal/OSF Drupal */
+    protected $drupal_folder = "/usr/share/drupal";
+
+    /* Version of OSF Web Services to install */
+    protected $osf_web_services_version = "";
     /* Folder where to install OSF Web Services */
     protected $osf_web_services_folder = "/usr/share/osf";
 
-    /* Folder where to install Drupal/OSF Drupal */
-    protected $drupal_folder = "/usr/share/drupal";
-    
     /* Namespace extension of the OSF Web Services folder. This is where the code resides */
     protected $osf_web_services_ns = "/StructuredDynamics/osf/ws";
-    
-    /* Folder where to install the Datasets Management Tool */
-    protected $datasets_management_tool_folder = "/usr/share/datasets-management-tool";
 
+    /* Version of OSF-WS-PHP-API to install */
+    protected $osf_ws_php_api_version = "";
+    /* Folder where to install the WS-PHP-API */
+    protected $osf_ws_php_api_folder = "StructuredDynamics/osf";
+
+    /* Version of OSF Tests Suites to install */
+    protected $osf_tests_suites_version = "";
+    /* Folder where to install the Tests Suites */
+    protected $osf_tests_suites_folder = "StructuredDynamics/osf/tests";
+
+    /* Version of the Data Validator Tool to install */
+    protected $data_validator_tool_version = "";
+    /* Folder where to install the Data Validator Tool */
+    protected $data_validator_tool_folder = "StructuredDynamics/osf/validator";
+
+    /* Version of the Permissions Management Tool to install */
+    protected $permissions_management_tool_version = "";
     /* Folder where to install the Permissions Management Tool */
     protected $permissions_management_tool_folder = "/usr/share/permissions-management-tool";
 
+    /* Version of the Datasets Management Tool to install */
+    protected $datasets_management_tool_version = "";
+    /* Folder where to install the Datasets Management Tool */
+    protected $datasets_management_tool_folder = "/usr/share/datasets-management-tool";
+
+    /* Version of the Ontologies Management Tool to install */
+    protected $ontologies_management_tool_version = "";
     /* Folder where to install the Ontologies Management Tool */
     protected $ontologies_management_tool_folder = "/usr/share/ontologies-management-tool";
 
-    /* Version of the Datasets Management Tool to install */
-    protected $datasets_management_tool_version = "dev";
-
-    /* Version of the Permissions Management Tool to install */
-    protected $permissions_management_tool_version = "dev";
-
-    /* Version of the Ontologies Management Tool to install */
-    protected $ontologies_management_tool_version = "dev";
-
-    /* Folder where to put the logging files */
-    protected $logging_folder = "/tmp";
-    
-    /* Domain name where to access the OSF Web Services instance */
-    protected $osf_web_services_domain = "localhost";    
-    
-    protected $application_id = 'administer';
-    
-    protected $api_key = 'some-key';
-    
     function __construct($configFile)
     {
       parent::__construct();
@@ -186,7 +191,24 @@
         {
           $this->ontologies_management_tool_folder = rtrim($this->config['tools']['ontologies-management-tool-folder'], '/');
         }        
-        
+
+        if(isset($this->config['tools']['data-validator-tool-folder']))
+        {
+          $this->data_validator_tool_folder = rtrim($this->config['tools']['data-validator-tool-folder'], '/');
+        } 
+
+        if(isset($this->config['tools']['data-validator-tool-version']))
+        {
+          if(strtolower($this->config['tools']['data-validator-tool-version']) == 'dev')
+          {
+            $this->data_validator_tool_version = 'master';
+          }
+          else
+          {
+            $this->data_validator_tool_version = $this->config['tools']['data-validator-tool-version'];
+          }
+        }  
+
         if(isset($this->config['tools']['permissions-management-tool-version']))
         {
           if(strtolower($this->config['tools']['permissions-management-tool-version']) == 'dev')

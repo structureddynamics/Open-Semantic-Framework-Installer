@@ -169,28 +169,66 @@
     }
 
     /**
-    * Outputs a header #1
+    * Outputs a header message
     * 
-    * @param string  $msg       Message to output
+    * @param string  $message   Message to output
+    * @param string  $severity  Severity of message (optional)
     */
-    public function h1($msg)
+    public function header($message, $severity = 'info')
     {
-      $msglen = strlen($msg) + 2;
-      $this->cecho("\n\n", 'WHITE');
-      $this->cecho(str_repeat('-', $msglen) . "\n", 'WHITE');
-      $this->cecho(" {$msg} \n", 'WHITE');
-      $this->cecho(str_repeat('-', $msglen) . "\n", 'WHITE');
-      $this->cecho("\n", 'WHITE');
+      // Check severity
+      switch ($severity) {
+        case 'info':
+          $color = 'WHITE';
+          break;
+        case 'debug':
+          $color = 'BLUE';
+          break;
+        case 'warn':
+          $color = 'YELLOW';
+          break;
+        case 'error':
+          $color = 'RED';
+          break;
+        default:
+          $color = 'WHITE';
+          break;
+      }
+      $msglen = strlen($message) + 4;
+      $this->cecho("\n\n", $color);
+      $this->cecho(str_repeat('-', $msglen) . "\n", $color);
+      $this->cecho("| {$message} |\n", $color);
+      $this->cecho(str_repeat('-', $msglen) . "\n", $color);
+      $this->cecho("\n", $color);
     }
 
     /**
-    * Outputs a header #2
+    * Outputs a span message
     * 
-    * @param string  $msg       Message to output
+    * @param string  $message   Message to output
+    * @param string  $severity  Severity of message (optional)
     */
-    public function h2($msg)
+    public function span($message, $severity = 'info')
     {
-      $this->cecho("{$msg}\n", 'WHITE');
+      // Check severity
+      switch ($severity) {
+        case 'info':
+          $color = 'WHITE';
+          break;
+        case 'debug':
+          $color = 'BLUE';
+          break;
+        case 'warn':
+          $color = 'YELLOW';
+          break;
+        case 'error':
+          $color = 'RED';
+          break;
+        default:
+          $color = 'WHITE';
+          break;
+      }
+      $this->cecho("{$message}\n", $color);
     }
 
     /**
