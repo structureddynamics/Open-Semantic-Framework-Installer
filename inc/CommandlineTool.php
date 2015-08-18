@@ -1,136 +1,127 @@
 <?php
-  
+
   class CommandlineTool
   {
     /* Specify if if we output everything we got from the commands */
     protected $verbose = FALSE;
-    
+
     /* Full path of the logfile */
     protected $log_file = '';
-    
+
     protected $currentWorkingDirectory;
-    
+
     function __construct()
     {
       $this->currentWorkingDirectory = getcwd();
-    }    
-    
+    }
+
     /**
-    * Execute a shell command. The command is also logged into the logging file.
-    *     
-    * @param $command the shell command to execute
-    * @param $errorLevel the level of the error if an error happens. There are 4 levels:
-    *                    (1) ignore, (2) notice, (3) warning and (4) error. The ignore
-    *                    level doesn't display anything, the notice level output an error
-    *                    in light-cyan, the warning level output an error message in yellow
-    *                    color and a error error output an error message in red and 
-    *                    stops the execution of the script.
-    * 
-    * @return Returns TRUE if the command succeeded, FALSE otherwise
-    */
+     * Execute a shell command
+     * The command is also logged into the logging file
+     *     
+     * @param $command    the shell command to execute
+     * @param $errorLevel the level of the error if an error happens. There are 4 levels:
+     *                    (1) ignore, (2) notice, (3) warning and (4) error. The ignore
+     *                    level doesn't display anything, the notice level output an error
+     *                    in light-cyan, the warning level output an error message in yellow
+     *                    color and a error error output an error message in red and 
+     *                    stops the execution of the script.
+     * 
+     * @return Returns TRUE if the command succeeded, FALSE otherwise
+     */
     public function exec($command, $errorLevel = 'error')
     {
       $output = array();
-      $this->log(array($command), TRUE);      
+      $this->log(array($command), TRUE);
+
       exec($command, $output, $return);
-      
-      $this->log($output);      
-      
-      if($return > 0)
-      {
-        switch(strtolower($errorLevel))
-        {
+      $this->log($output);
+
+      if ($return > 0) {
+        switch (strtolower($errorLevel)) {
           case 'notice':
-            $this->cecho("An occured but the script continue its process. Check the log to see what was the error: ".$this->log_file."\n", 'LIGHT_CYAN');
+            $this->cecho("An occured but the script continue its process. Check the log to see what was the error: {$this->log_file}\n", 'LIGHT_CYAN');
           break;
-          
+
           case 'warning':
-            $this->cecho("An occured but the script continue its process. Check the log to see what was the error: ".$this->log_file."\n", 'YELLOW');
+            $this->cecho("An occured but the script continue its process. Check the log to see what was the error: {$this->log_file}\n", 'YELLOW');
           break;
-          
+
           case 'error':
-            $this->cecho("A non-recoverable error happened. Check the log to see what was the error: ".$this->log_file."\n", 'RED');
-            
-            $yes = $this->isYes($this->getInput("Do you want to continue the execution. If yes, then try to fix this error by hands before continuing, otherwise errors may occurs later in the process? (yes/no)\n"));             
-            
-            if(!$yes)
-            {
+            $this->cecho("A non-recoverable error happened. Check the log to see what was the error: {$this->log_file}\n", 'RED');
+
+            $yes = $this->isYes($this->getInput("Do you want to continue the execution. If yes, then try to fix this error by hands before continuing, otherwise errors may occurs later in the process? (yes/no)\n"));
+            if (!$yes) {
               exit(1);
-            }                        
+            }
           break;
         }
-        
+
         return(FALSE);
-      }
-      else
-      {
+      } else {
         return(TRUE);
       }
     }
-    
+
     /**
-    * Change the current folder of the script. The command is also logged into the logging file.
-    *     
-    * @param mixed $dir folder path where to go
-    * @param $errorLevel the level of the error if an error happens. There are 4 levels:
-    *                    (1) ignore, (2) notice, (3) warning and (4) error. The ignore
-    *                    level doesn't display anything, the notice level output an error
-    *                    in light-cyan, the warning level output an error message in yellow
-    *                    color and a error error output an error message in red and 
-    *                    stops the execution of the script. 
-    * 
-    * @return Return TRUE if the comman succeeded, FALSE otherwise
-    */
+     * Change the current folder of the script
+     * The command is also logged into the logging file
+     *     
+     * @param mixed $dir  folder path where to go
+     * @param $errorLevel the level of the error if an error happens. There are 4 levels:
+     *                    (1) ignore, (2) notice, (3) warning and (4) error. The ignore
+     *                    level doesn't display anything, the notice level output an error
+     *                    in light-cyan, the warning level output an error message in yellow
+     *                    color and a error error output an error message in red and 
+     *                    stops the execution of the script. 
+     * 
+     * @return Return TRUE if the comman succeeded, FALSE otherwise
+     */
     public function chdir($dir, $errorLevel = 'error')
     {
-      $this->log(array('cd '.$dir), TRUE);      
+      $this->log(array("cd {$dir}"), TRUE);
 
       $success = chdir($dir);
-      
-      if(!$success)
-      {
-        switch(strtolower($errorLevel))
-        {
+
+      if (!$success) {
+        switch (strtolower($errorLevel)) {
           case 'notice':
-            $this->cecho("An occured but the script continue its process. Check the log to see what was the error: ".$this->log_file."\n", 'LIGHT_CYAN');
+            $this->cecho("An occured but the script continue its process. Check the log to see what was the error: {$this->log_file}\n", 'LIGHT_CYAN');
           break;
-          
+
           case 'warning':
-            $this->cecho("An occured but the script continue its process. Check the log to see what was the error: ".$this->log_file."\n", 'YELLOW');
+            $this->cecho("An occured but the script continue its process. Check the log to see what was the error: {$this->log_file}\n", 'YELLOW');
           break;
-          
+
           case 'error':
-            $this->cecho("A non-recoverable error happened. Check the log to see what was the error: ".$this->log_file."\n", 'RED');
+            $this->cecho("A non-recoverable error happened. Check the log to see what was the error: {$this->log_file}\n", 'RED');
 
             $yes = $this->isYes($this->getInput("Do you want to continue the execution. If yes, then try to fix this error by hands before continuing, otherwise errors may occurs later in the process? (yes/no)\n"));             
-            
-            if(!$yes)
-            {
+            if (!$yes) {
               exit(1);
-            }                                    
+            }
           break;
-        }      
-        
+        }
+
         return(FALSE);
-      }
-      else
-      {
+      } else {
         return(TRUE);
       }
-    }  
-    
+    }
+
     /**
-    * Colorize an output to the shell terminal.
-    * 
-    * @param mixed $text Text to echo into the terminal screen
-    * @param mixed $color Color to use
-    * @param mixed $return specify if we want to return the colorized text to the script instead of the terminal
-    */
+     * Colorize an output to the shell terminal.
+     * 
+     * @param mixed $text    Text to echo into the terminal screen
+     * @param mixed $color   Color to use
+     * @param mixed $return  specify if we want to return the colorized text to
+     *                       the script instead of the terminal
+     */
     public function cecho($text, $color = "NORMAL", $return = FALSE)
     {
       // Log the text
       file_put_contents($this->log_file, $text, FILE_APPEND);
-      
+
       $_colors = array(
         'LIGHT_RED'    => "[1;31m",
         'LIGHT_GREEN'  => "[1;32m",
@@ -149,53 +140,31 @@
         'BOLD'         => "[1m",
         'UNDERSCORE'   => "[4m",
         'REVERSE'      => "[7m",
-      );    
-      
+      );
+
       $out = $_colors["$color"];
-      
-      if($out == "")
-      { 
-        $out = "[0m"; 
+      if ($out == "") {
+        $out = "[0m";
       }
-      
-      if($return)
-      {
-        return(chr(27)."$out$text".chr(27)."[0m");
+
+      if ($return) {
+        return(chr(27) . "$out$text" . chr(27) . "[0m");
       }
-      else
-      {
-        echo chr(27)."$out$text".chr(27).chr(27)."[0m";
+      else {
+        echo chr(27) . "$out$text" . chr(27) . chr(27) . "[0m";
       }
     }
 
     /**
-    * Outputs a header message
-    * 
-    * @param string  $message   Message to output
-    * @param string  $severity  Severity of message (optional)
-    */
-    public function header($message, $severity = 'info')
+     * Outputs a header #1 (h1) message
+     * 
+     * @param string  $message   Message to output
+     */
+    public function h1($message)
     {
-      // Check severity
-      switch ($severity) {
-        case 'info':
-          $color = 'WHITE';
-          break;
-        case 'debug':
-          $color = 'BLUE';
-          break;
-        case 'warn':
-          $color = 'YELLOW';
-          break;
-        case 'error':
-          $color = 'RED';
-          break;
-        default:
-          $color = 'WHITE';
-          break;
-      }
+      $color = 'WHITE';
       $msglen = strlen($message) + 4;
-      $this->cecho("\n\n", $color);
+      $this->cecho("\n", $color);
       $this->cecho(str_repeat('-', $msglen) . "\n", $color);
       $this->cecho("| {$message} |\n", $color);
       $this->cecho(str_repeat('-', $msglen) . "\n", $color);
@@ -203,11 +172,37 @@
     }
 
     /**
-    * Outputs a span message
-    * 
-    * @param string  $message   Message to output
-    * @param string  $severity  Severity of message (optional)
-    */
+     * Outputs a header #2 (h2) message
+     * 
+     * @param string  $message   Message to output
+     */
+    public function h2($message)
+    {
+      $color = 'CYAN';
+      $this->cecho("\n", $color);
+      $this->cecho("{$message}\n", $color);
+      $this->cecho("\n", $color);
+    }
+
+    /**
+     * Outputs a header #3 (h3) message
+     * 
+     * @param string  $message   Message to output
+     */
+    public function h3($message)
+    {
+      $color = 'BROWN';
+      $this->cecho("\n", $color);
+      $this->cecho("{$message}\n", $color);
+      $this->cecho("\n", $color);
+    }
+
+    /**
+     * Outputs a span message
+     * 
+     * @param string  $message   Message to output
+     * @param string  $severity  Severity of message (optional)
+     */
     public function span($message, $severity = 'info')
     {
       // Check severity
@@ -232,98 +227,97 @@
     }
 
     /**
-    * Log information into the logging file
-    * 
-    * @param mixed $lines An array of lines to log into the logging file
-    * @param mixed $forceSilence Specify if we want to overwrite the verbosity of 
-    *                            the script and make sure that log() stay silent.
-    */
-    public function log($lines, $forceSilence=FALSE)
+     * Log information into the logging file
+     * 
+     * @param mixed $lines         An array of lines to log into the logging file
+     * @param mixed $forceSilence  Specify if we want to overwrite the verbosity of 
+     *                             the script and make sure that log() stay silent
+     */
+    public function log($lines, $forceSilence = FALSE)
     {
-      foreach($lines as $line)
-      {
+      foreach($lines as $line) {
         file_put_contents($this->log_file, $line."\n", FILE_APPEND);
-
-        if($this->verbose && !$forceSilence)
-        {
+        if($this->verbose && !$forceSilence) {
           $this->cecho($line."\n", 'BLUE');
         }
       }
-    }  
-    
+    }
+
     /**
-    * Enable the verbosity of the class. Everything get outputed to the shell terminal
-    */
+     * Enable the verbosity of the class. Everything get outputed to the 
+     * shell terminal
+     */
     public function verbose()
     {
-      $this->verbose = TRUE;      
-    }  
-    
+      $this->verbose = TRUE;
+    }
+
     /**
-    * Disable the verbosity of the class. No command output will be displayed to the terminal.
-    */
+     * Disable the verbosity of the class. No command output will be displayed
+     * to the terminal.
+     */
     public function silent()
     {
       $this->verbose = FALSE;
     }
 
     /**
-    * Prompt the user with a question, wait for input, and return that input from the user.
-    *     
-    * @param mixed $msg Message to display to the user before waiting for an answer.
-    * 
-    * @return Returns the answer of the user.
-    */
+     * Prompt the user with a question, wait for input, and return that input
+     * from the user.
+     *     
+     * @param mixed $msg Message to display to the user before waiting for an answer.
+     * 
+     * @return Returns the answer of the user.
+     */
     public function getInput($msg)
     {
       fwrite(STDOUT, $this->cecho("$msg: ", 'MAGENTA', TRUE));
       $varin = trim(fgets(STDIN));
-      
+
       $this->log(array("[USER-INPUT]: ".$varin."\n"), TRUE);
-      
+
       return $varin;
-    }       
+    }
 
     /**
-    * Check if the answer of an input is equivalent to "yes". The strings that are equivalent to "yes" are:    
-    * "1", "true", "on", "y" and "yes". Returns FALSE otherwise. 
-    * 
-    * @param mixed $input Input to test
-    * 
-    * @param Returns TRUE if the input is equivalent to "yes", FALSE otherwise
-    */
-    public function isYes($input) 
+     * Check if the answer of an input is equivalent to "yes". The strings that
+     * are equivalent to "yes" are:
+     *   "1", "true", "on", "y" and "yes". Returns FALSE otherwise.
+     * 
+     * @param mixed $input Input to test
+     * 
+     * @param Returns TRUE if the input is equivalent to "yes", FALSE otherwise
+     */
+    public function isYes($input)
     {
-      $input = strtolower($input);
-      
-      $answer = filter_var($input, FILTER_VALIDATE_BOOLEAN, array('flags' => FILTER_NULL_ON_FAILURE));
-      
-      if($input === NULL)
-      {
+      if ($input === NULL) {
         return(FALSE);
-      }  
-      
-      if($input == 'y')      
-      {
+      }
+
+      $input = strtolower($input);
+      $answer = filter_var($input, FILTER_VALIDATE_BOOLEAN, array('flags' => FILTER_NULL_ON_FAILURE));
+
+      if ($input == 'y') {
         return(TRUE);
       }
-      
+
       return($answer);
     }
 
     /**
-    * Check if the provided version is a valid version.
-    * 
-    * @param mixed $input Input to test
-    * 
-    * @param Returns TRUE if the input is a valid version, FALSE otherwise
-    */
+     * Check if the provided version is a valid version
+     * 
+     * @param mixed $input        Input to test
+     * 
+     * @param Returns TRUE if the input is a valid version, FALSE otherwise
+     */
     public function isVersion($input) {
       if ($input === NULL) {
         return(FALSE);
       }
 
       $validation = preg_match('/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?(?:\+([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?$/', $input);
+
       if ($validation == FALSE) {
         return(FALSE);
       }
@@ -332,18 +326,24 @@
     }
 
     /**
-    * Check if the provided path is a valid path.
-    * 
-    * @param mixed $input Input to test
-    * 
-    * @param Returns TRUE if the input is a valid path, FALSE otherwise
-    */
-    public function isPath($input) {
+     * Check if the provided path is a valid path
+     * 
+     * @param mixed $input        Input to test
+     * @param mixed $absolute     Treat the path as absolute or not
+     * 
+     * @param Returns TRUE if the input is a valid path, FALSE otherwise
+     */
+    public function isPath($input, $absolute = TRUE) {
       if ($input === NULL) {
         return(FALSE);
       }
 
-      $validation = preg_match('#^(/[^/]+)+$#', $input);
+      if ($absolute = TRUE) {
+        $validation = preg_match('#^(/[^/]+)+$#', $input);
+      } else {
+        $validation = preg_match('^[a-z0-9]([a-z0-9-]*[a-z0-9])?(/[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$^', $input);
+      }
+
       if ($validation == FALSE) {
         return(FALSE);
       }
@@ -352,12 +352,33 @@
     }
 
     /**
-    * Finds and replaces content in a file
-    * 
-    * @param string  $find       String to find
-    * @param string  $replace    String to replace
-    * @param string  $file       File to update
-    */
+     * Check if the provided domain is a valid domain
+     * 
+     * @param mixed $input        Input to test
+     * 
+     * @param Returns TRUE if the input is a valid domain, FALSE otherwise
+     */
+    public function isDomain($input) {
+      if ($input === NULL) {
+        return(FALSE);
+      }
+
+      $validation = preg_match('^(?!\-)(?:[a-zA-Z\d\-]{0,62}[a-zA-Z\d]\.){1,126}(?!\d+)[a-zA-Z\d]{1,63}$^', $input);
+
+      if ($validation == FALSE) {
+        return(FALSE);
+      }
+
+      return(TRUE);
+    }
+
+    /**
+     * Finds and replaces content in a file
+     * 
+     * @param string  $find       String to find
+     * @param string  $replace    String to replace
+     * @param string  $file       File to update
+     */
     public function sed($find, $replace, $file)
     {
       $output = array();
@@ -377,10 +398,10 @@
     }
 
     /**
-    * Creates a directory
-    * 
-    * @param string  $path       Path to create
-    */
+     * Creates a directory
+     * 
+     * @param string  $path       Path to create
+     */
     public function mkdir($path)
     {
       $output = array();
@@ -400,11 +421,11 @@
     }
 
     /**
-    * Remove path from filesystem
-    * 
-    * @param string  $path       Path to remove
-    * @param boolean $recursion  Enable or disable recursion (optional)
-    */
+     * Remove path from filesystem
+     * 
+     * @param string  $path       Path to remove
+     * @param boolean $recursion  Enable or disable recursion (optional)
+     */
     public function rm($path, $recursion = FALSE)
     {
       $output = array();
@@ -430,12 +451,12 @@
     }
 
     /**
-    * Changes owner for a path
-    * 
-    * @param string  $path       Path to target
-    * @param string  $own        Owner to apply
-    * @param boolean $recursion  Enable or disable recursion (optional)
-    */
+     * Changes owner for a path
+     * 
+     * @param string  $path       Path to target
+     * @param string  $own        Owner to apply
+     * @param boolean $recursion  Enable or disable recursion (optional)
+     */
     public function chown($path, $own, $recursion = FALSE)
     {
       $output = array();
@@ -461,12 +482,12 @@
     }
 
     /**
-    * Changes group for a path
-    * 
-    * @param string  $path       Path to target
-    * @param string  $grp        Group to apply
-    * @param boolean $recursion  Enable or disable recursion (optional)
-    */
+     * Changes group for a path
+     * 
+     * @param string  $path       Path to target
+     * @param string  $grp        Group to apply
+     * @param boolean $recursion  Enable or disable recursion (optional)
+     */
     public function chgrp($path, $grp, $recursion = FALSE)
     {
       $output = array();
@@ -492,12 +513,12 @@
     }
 
     /**
-    * Changes permissions for a path
-    * 
-    * @param string  $path       Path to target
-    * @param string  $mod        Permissions modifier in octal or symbolic notion
-    * @param boolean $recursion  Enable or disable recursion (optional)
-    */
+     * Changes permissions for a path
+     * 
+     * @param string  $path       Path to target
+     * @param string  $mod        Permissions modifier in octal or symbolic notion
+     * @param boolean $recursion  Enable or disable recursion (optional)
+     */
     public function chmod($path, $mod, $recursion = FALSE)
     {
       $output = array();
@@ -523,11 +544,11 @@
     }
 
     /**
-    * Soft links a source file or directory
-    * 
-    * @param string  $src        Source file or directory
-    * @param string  $dest       Destination file or directory (optional)
-    */
+     * Soft links a source file or directory
+     * 
+     * @param string  $src        Source file or directory
+     * @param string  $dest       Destination file or directory (optional)
+     */
     public function ln($src, $dest = '')
     {
       $output = array();
@@ -551,12 +572,12 @@
     }
 
     /**
-    * Copies source files or directories to destination
-    * 
-    * @param string  $src        Source file or directory
-    * @param string  $dest       Destination file or directory
-    * @param boolean $recursion  Enable or disable recursion (optional)
-    */
+     * Copies source files or directories to destination
+     * 
+     * @param string  $src        Source file or directory
+     * @param string  $dest       Destination file or directory
+     * @param boolean $recursion  Enable or disable recursion (optional)
+     */
     public function cp($src, $dest, $recursion = FALSE)
     {
       $output = array();
@@ -582,11 +603,11 @@
     }
 
     /**
-    * Moves source files or directories to destination
-    * 
-    * @param string  $src        Source file or directory
-    * @param string  $dest       Destination file or directory
-    */
+     * Moves source files or directories to destination
+     * 
+     * @param string  $src        Source file or directory
+     * @param string  $dest       Destination file or directory
+     */
     public function mv($src, $dest)
     {
       $output = array();
@@ -606,11 +627,11 @@
     }
 
     /**
-    * Unzips an archive in the ZIP format, using unzip command
-    * 
-    * @param string  $arch       Archive file
-    * @param string  $dest       Destination directory (optional)
-    */
+     * Unzips an archive in the ZIP format, using unzip command
+     * 
+     * @param string  $arch       Archive file
+     * @param string  $dest       Destination directory (optional)
+     */
     public function unzip($arch, $dest = '')
     {
       $output = array();
@@ -634,11 +655,11 @@
     }
 
     /**
-    * Downloads an URL to local system, using wget command
-    * 
-    * @param string  $url        Source URL
-    * @param string  $dest       Destination directory (optional)
-    */
+     * Downloads an URL to local system, using wget command
+     * 
+     * @param string  $url        Source URL
+     * @param string  $dest       Destination directory (optional)
+     */
     public function wget($url, $dest = '')
     {
       $output = array();
@@ -670,26 +691,32 @@
       return(TRUE);
     }
 
-    public function curl($url, $download_file = '')
+    /**
+     * Downloads an URL to local system, using curl command
+     * 
+     * @param string  $url        Source URL
+     * @param string  $dest       Destination file (optional)
+     */
+    public function curl($url, $dest = '')
     {
       $output = array();
-      $this->log(array($url, $download_file), TRUE);
+      $this->log(array($url, $dest), TRUE);
 
       exec("curl {$url}", $output, $return);
       $this->log($output);
 
       if ($return > 0) {
-        if (!empty($download_file)) {
+        if (!empty($dest)) {
           // Remove the file it tries to install
-          exec("rm {$download_file}");
+          exec("rm {$dest}");
 
-          $this->cecho("Connection error downloading file $download_file; retrying...\n", 'YELLOW');
+          $this->cecho("Connection error downloading file $dest; retrying...\n", 'YELLOW');
         }
         else {
           $this->cecho("Connection error using Curl; retrying...\n", 'YELLOW');
         }
 
-        $this->curl($url, $download_file);
+        $this->curl($url, $dest);
       }
 
       return(TRUE);

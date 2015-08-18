@@ -469,7 +469,7 @@
       // Check operation mode
       switch ($op) {
         case 'install':
-          $this->header("Installing {$pkgName} {$pkgVersion}", 'info');
+          $this->h2("Installing {$pkgName} {$pkgVersion}");
           // Check if is installed
           if (is_dir("{$installPath}/php/")) {
             $this->span("The package is already installed. Consider upgrading it with the option: --upgrade-osf-ws-php-api", 'warn');
@@ -478,7 +478,7 @@
           $this->installWSPHPAPI($pkgVersion);
           break;
         case 'upgrade':
-          $this->header("Upgrading {$pkgName} {$pkgVersion}", 'info');
+          $this->h2("Upgrading {$pkgName} {$pkgVersion}");
           // Check if is not installed
           if (!is_dir("{$installPath}/php/")) {
             $this->span("The package is not installed. Consider installing it with the option: --install-osf-ws-php-api", 'warn');
@@ -487,7 +487,7 @@
           $this->upgradeWSPHPAPI($pkgVersion);
           break;
         case 'uninstall':
-          $this->header("Uninstalling {$pkgName} {$pkgVersion}", 'info');
+          $this->h2("Uninstalling {$pkgName} {$pkgVersion}");
           // Check if is not installed
           if (!is_dir("{$installPath}/php/")) {
             $this->span("The package is not installed. Nothing to do.", 'warn');
@@ -496,7 +496,7 @@
           $this->uninstallWSPHPAPI($pkgVersion);
           break;
         default:
-          $this->header("{$pkgName} {$pkgVersion}", 'warn');
+          $this->h2("{$pkgName} {$pkgVersion}");
           $this->span("Wrong operation. Nothing to do.", 'warn');
           return;
           break;
@@ -570,7 +570,7 @@
       // Check operation mode
       switch ($op) {
         case 'install':
-          $this->header("Installing {$pkgName} {$pkgVersion}", 'info');
+          $this->h2("Installing {$pkgName} {$pkgVersion}");
           // Check if is installed
           if (is_dir("{$installPath}/")) {
             $this->span("The package is already installed. Consider upgrading it with the option: --upgrade-osf-tests-suites", 'warn');
@@ -580,7 +580,7 @@
           $this->configTestsSuites();
           break;
         case 'upgrade':
-          $this->header("Upgrading {$pkgName} {$pkgVersion}", 'info');
+          $this->h2("Upgrading {$pkgName} {$pkgVersion}");
           // Check if is not installed
           if (!is_dir("{$installPath}/")) {
             $this->span("The package is not installed. Consider installing it with the option: --install-osf-tests-suites", 'warn');
@@ -589,7 +589,7 @@
           $this->upgradeTestsSuites($pkgVersion);
           break;
         case 'uninstall':
-          $this->header("Uninstalling {$pkgName} {$pkgVersion}", 'info');
+          $this->h2("Uninstalling {$pkgName} {$pkgVersion}");
           // Check if is not installed
           if (!is_dir("{$installPath}/")) {
             $this->span("The package is not installed. Nothing to do.", 'warn');
@@ -598,7 +598,7 @@
           $this->uninstallTestsSuites($pkgVersion);
           break;
         case 'configure':
-          $this->header("Configuring {$pkgName} {$pkgVersion}", 'info');
+          $this->h2("Configuring {$pkgName} {$pkgVersion}");
           // Check if is not installed
           if (!is_dir("{$installPath}/")) {
             $this->span("The package is not installed. Consider installing it with the option: --install-osf-tests-suites", 'warn');
@@ -607,7 +607,7 @@
           $this->configTestsSuites($pkgVersion);
           break;
         default:
-          $this->header("{$pkgName} {$pkgVersion}", 'warn');
+          $this->h2("{$pkgName} {$pkgVersion}");
           $this->span("Wrong operation. Nothing to do.", 'warn');
           return;
           break;
@@ -721,7 +721,7 @@
       // Check operation mode
       switch ($op) {
         case 'install':
-          $this->header("Installing {$pkgName} {$pkgVersion}", 'info');
+          $this->h2("Installing {$pkgName} {$pkgVersion}");
           // Check if is installed
           if (is_dir("{$installPath}/")) {
             $this->span("The package is already installed. Consider upgrading it with the option: --upgrade-data-validator-tool", 'warn');
@@ -731,7 +731,7 @@
           $this->configDataValidatorTool();
           break;
         case 'upgrade':
-          $this->header("Upgrading {$pkgName} {$pkgVersion}", 'info');
+          $this->h2("Upgrading {$pkgName} {$pkgVersion}");
           // Check if is not installed
           if (!is_dir("{$installPath}/")) {
             $this->span("The package is not installed. Consider installing it with the option: --install-data-validator-tool", 'warn');
@@ -740,7 +740,7 @@
           $this->upgradeDataValidatorTool($pkgVersion);
           break;
         case 'uninstall':
-          $this->header("Uninstalling {$pkgName} {$pkgVersion}", 'info');
+          $this->h2("Uninstalling {$pkgName} {$pkgVersion}");
           // Check if is not installed
           if (!is_dir("{$installPath}/")) {
             $this->span("The package is not installed. Nothing to do.", 'warn');
@@ -749,7 +749,7 @@
           $this->uninstallDataValidatorTool($pkgVersion);
           break;
         case 'configure':
-          $this->header("Configuring {$pkgName} {$pkgVersion}", 'info');
+          $this->h2("Configuring {$pkgName} {$pkgVersion}");
           // Check if is not installed
           if (!is_dir("{$installPath}/")) {
             $this->span("The package is not installed. Consider installing it with the option: --install-data-validator-tool", 'warn');
@@ -758,7 +758,7 @@
           $this->configDataValidatorTool($pkgVersion);
           break;
         default:
-          $this->header("{$pkgName} {$pkgVersion}", 'warn');
+          $this->h2("{$pkgName} {$pkgVersion}");
           $this->span("Wrong operation. Nothing to do.", 'warn');
           return;
           break;
@@ -865,7 +865,7 @@
       // Check operation mode
       switch ($op) {
         case 'install':
-          $this->header("Installing {$pkgName} {$pkgVersion}", 'info');
+          $this->h2("Installing {$pkgName} {$pkgVersion}");
           // Check if is installed
           if (is_dir("{$installPath}/")) {
             $this->span("The package is already installed. Consider upgrading it with the option: --upgrade-permissions-management-tool", 'warn');
@@ -875,7 +875,7 @@
           $this->configPermissionsManagementTool();
           break;
         case 'upgrade':
-          $this->header("Upgrading {$pkgName} {$pkgVersion}", 'info');
+          $this->h2("Upgrading {$pkgName} {$pkgVersion}");
           // Check if is not installed
           if (!is_dir("{$installPath}/")) {
             $this->span("The package is not installed. Consider installing it with the option: --install-permissions-management-tool", 'warn');
@@ -884,7 +884,7 @@
           $this->upgradePermissionsManagementTool($pkgVersion);
           break;
         case 'uninstall':
-          $this->header("Uninstalling {$pkgName} {$pkgVersion}", 'info');
+          $this->h2("Uninstalling {$pkgName} {$pkgVersion}");
           // Check if is not installed
           if (!is_dir("{$installPath}/")) {
             $this->span("The package is not installed. Nothing to do.", 'warn');
@@ -893,7 +893,7 @@
           $this->uninstallPermissionsManagementTool($pkgVersion);
           break;
         case 'configure':
-          $this->header("Configuring {$pkgName} {$pkgVersion}", 'info');
+          $this->h2("Configuring {$pkgName} {$pkgVersion}");
           // Check if is not installed
           if (!is_dir("{$installPath}/")) {
             $this->span("The package is not installed. Consider installing it with the option: --install-permissions-management-tool", 'warn');
@@ -902,7 +902,7 @@
           $this->configPermissionsManagementTool($pkgVersion);
           break;
         default:
-          $this->header("{$pkgName} {$pkgVersion}", 'warn');
+          $this->h2("{$pkgName} {$pkgVersion}");
           $this->span("Wrong operation. Nothing to do.", 'warn');
           return;
           break;
@@ -1010,7 +1010,7 @@
       // Check operation mode
       switch ($op) {
         case 'install':
-          $this->header("Installing {$pkgName} {$pkgVersion}", 'info');
+          $this->h2("Installing {$pkgName} {$pkgVersion}");
           // Check if is installed
           if (is_dir("{$installPath}/")) {
             $this->span("The package is already installed. Consider upgrading it with the option: --upgrade-datasets-management-tool", 'warn');
@@ -1020,7 +1020,7 @@
           $this->configDatasetsManagementTool();
           break;
         case 'upgrade':
-          $this->header("Upgrading {$pkgName} {$pkgVersion}", 'info');
+          $this->h2("Upgrading {$pkgName} {$pkgVersion}");
           // Check if is not installed
           if (!is_dir("{$installPath}/")) {
             $this->span("The package is not installed. Consider installing it with the option: --install-datasets-management-tool", 'warn');
@@ -1029,7 +1029,7 @@
           $this->upgradeDatasetsManagementTool($pkgVersion);
           break;
         case 'uninstall':
-          $this->header("Uninstalling {$pkgName} {$pkgVersion}", 'info');
+          $this->h2("Uninstalling {$pkgName} {$pkgVersion}");
           // Check if is not installed
           if (!is_dir("{$installPath}/")) {
             $this->span("The package is not installed. Nothing to do.", 'warn');
@@ -1038,7 +1038,7 @@
           $this->uninstallDatasetsManagementTool($pkgVersion);
           break;
         case 'configure':
-          $this->header("Configuring {$pkgName} {$pkgVersion}", 'info');
+          $this->h2("Configuring {$pkgName} {$pkgVersion}");
           // Check if is not installed
           if (!is_dir("{$installPath}/")) {
             $this->span("The package is not installed. Consider installing it with the option: --install-datasets-management-tool", 'warn');
@@ -1047,7 +1047,7 @@
           $this->configDatasetsManagementTool($pkgVersion);
           break;
         default:
-          $this->header("{$pkgName} {$pkgVersion}", 'warn');
+          $this->h2("{$pkgName} {$pkgVersion}");
           $this->span("Wrong operation. Nothing to do.", 'warn');
           return;
           break;
@@ -1157,7 +1157,7 @@
       // Check operation mode
       switch ($op) {
         case 'install':
-          $this->header("Installing {$pkgName} {$pkgVersion}", 'info');
+          $this->h2("Installing {$pkgName} {$pkgVersion}");
           // Check if is installed
           if (is_dir("{$installPath}/")) {
             $this->span("The package is already installed. Consider upgrading it with the option: --upgrade-ontologies-management-tool", 'warn');
@@ -1167,7 +1167,7 @@
           $this->configOntologiesManagementTool();
           break;
         case 'upgrade':
-          $this->header("Upgrading {$pkgName} {$pkgVersion}", 'info');
+          $this->h2("Upgrading {$pkgName} {$pkgVersion}");
           // Check if is not installed
           if (!is_dir("{$installPath}/")) {
             $this->span("The package is not installed. Consider installing it with the option: --install-ontologies-management-tool", 'warn');
@@ -1176,7 +1176,7 @@
           $this->upgradeOntologiesManagementTool($pkgVersion);
           break;
         case 'uninstall':
-          $this->header("Uninstalling {$pkgName} {$pkgVersion}", 'info');
+          $this->h2("Uninstalling {$pkgName} {$pkgVersion}");
           // Check if is not installed
           if (!is_dir("{$installPath}/")) {
             $this->span("The package is not installed. Nothing to do.", 'warn');
@@ -1185,7 +1185,7 @@
           $this->uninstallOntologiesManagementTool($pkgVersion);
           break;
         case 'configure':
-          $this->header("Configuring {$pkgName} {$pkgVersion}", 'info');
+          $this->h2("Configuring {$pkgName} {$pkgVersion}");
           // Check if is not installed
           if (!is_dir("{$installPath}/")) {
             $this->span("The package is not installed. Consider installing it with the option: --install-ontologies-management-tool", 'warn');
@@ -1194,7 +1194,7 @@
           $this->configOntologiesManagementTool($pkgVersion);
           break;
         default:
-          $this->header("{$pkgName} {$pkgVersion}", 'warn');
+          $this->h2("{$pkgName} {$pkgVersion}");
           $this->span("Wrong operation. Nothing to do.", 'warn');
           return;
           break;
