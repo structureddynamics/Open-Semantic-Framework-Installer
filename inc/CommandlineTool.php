@@ -312,6 +312,46 @@
     }
 
     /**
+    * Check if the provided version is a valid version.
+    * 
+    * @param mixed $input Input to test
+    * 
+    * @param Returns TRUE if the input is a valid version, FALSE otherwise
+    */
+    public function isVersion($input) {
+      if ($input === NULL) {
+        return(FALSE);
+      }
+
+      $validation = preg_match('/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?(?:\+([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?$/', $input);
+      if ($validation == FALSE) {
+        return(FALSE);
+      }
+
+      return(TRUE);
+    }
+
+    /**
+    * Check if the provided path is a valid path.
+    * 
+    * @param mixed $input Input to test
+    * 
+    * @param Returns TRUE if the input is a valid path, FALSE otherwise
+    */
+    public function isPath($input) {
+      if ($input === NULL) {
+        return(FALSE);
+      }
+
+      $validation = preg_match('#^(/[^/]+)+$#', $input);
+      if ($validation == FALSE) {
+        return(FALSE);
+      }
+
+      return(TRUE);
+    }
+
+    /**
     * Finds and replaces content in a file
     * 
     * @param string  $find       String to find

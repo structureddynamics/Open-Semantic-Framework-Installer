@@ -7,274 +7,277 @@
     /* Parsed intaller.ini configuration file */
     protected $config;
 
-    // Configuration options
-
-    /* Determine if the installer is configured */
+    /* OSF Installation status */
     public $installer_osf_configured = FALSE;
+
+    /* Drupal Installation status */
     public $installer_osf_drupal_configured = FALSE;
 
-    /* Folder where the data is managed */
-    protected $data_folder = "/data";
-
-    /* Folder where to put the logging files */
-    protected $logging_folder = "/tmp";
-
-    /* Domain name where to access the OSF Web Services instance */
-    protected $osf_web_services_domain = "localhost";    
-
-    /* Application ID and Key for the web services */
+    /* OSF Application ID and Key */
     protected $application_id = 'administer';
-    protected $appID = 'administer';
     protected $api_key = 'some-key';
-    protected $apiKey = 'some-key';
 
-    /* Version of OSF Drupal to install */
-    protected $osf_drupal_version = "7.x-2.x";
-    /* Version of drupal to install */
-    protected $drupal_version = "7.23";
-    /* Folder where to install Drupal/OSF Drupal */
-    protected $drupal_folder = "/usr/share/drupal";
-
-    /* Version of OSF Web Services to install */
-    protected $osf_web_services_version = "";
-    /* Folder where to install OSF Web Services */
-    protected $osf_web_services_folder = "/usr/share/osf";
+    /* OSF Storage paths */
+    protected $data_folder = "/data";
+    protected $logging_folder = "/tmp";
 
     /* Namespace extension of the OSF Web Services folder. This is where the code resides */
     protected $osf_web_services_ns = "/StructuredDynamics/osf/ws";
 
-    /* Version of OSF-WS-PHP-API to install */
-    protected $osf_ws_php_api_version = "";
-    /* Folder where to install the WS-PHP-API */
+    /* OSF WS */
+    protected $osf_web_services_version = "3.3.0";
+    protected $osf_web_services_folder = "/usr/share/osf";
+    protected $osf_web_services_domain = "localhost";
+
+    /* OSF WS-PHP-API */
+    protected $osf_ws_php_api_version = "3.1.2";
     protected $osf_ws_php_api_folder = "StructuredDynamics/osf";
 
-    /* Version of OSF Tests Suites to install */
-    protected $osf_tests_suites_version = "";
-    /* Folder where to install the Tests Suites */
+    /* OSF Tests Suites */
+    protected $osf_tests_suites_version = "3.3.0";
     protected $osf_tests_suites_folder = "StructuredDynamics/osf/tests";
 
-    /* Version of the Data Validator Tool to install */
-    protected $data_validator_tool_version = "";
-    /* Folder where to install the Data Validator Tool */
+    /* OSF Data Validator Tool */
+    protected $data_validator_tool_version = "3.1.0";
     protected $data_validator_tool_folder = "StructuredDynamics/osf/validator";
 
-    /* Version of the Permissions Management Tool to install */
-    protected $permissions_management_tool_version = "";
-    /* Folder where to install the Permissions Management Tool */
+    /* OSF Permissions Management Tool */
+    protected $permissions_management_tool_version = "3.1.0";
     protected $permissions_management_tool_folder = "/usr/share/permissions-management-tool";
 
-    /* Version of the Datasets Management Tool to install */
-    protected $datasets_management_tool_version = "";
-    /* Folder where to install the Datasets Management Tool */
+    /* OSF Datasets Management Tool */
+    protected $datasets_management_tool_version = "3.3.0";
     protected $datasets_management_tool_folder = "/usr/share/datasets-management-tool";
 
-    /* Version of the Ontologies Management Tool to install */
-    protected $ontologies_management_tool_version = "";
-    /* Folder where to install the Ontologies Management Tool */
+    /* OSF Ontologies Management Tool */
+    protected $ontologies_management_tool_version = "3.1.0";
     protected $ontologies_management_tool_folder = "/usr/share/ontologies-management-tool";
 
+    /* Drupal framework */
+    protected $drupal_version = "7.23";
+    protected $drupal_folder = "/usr/share/drupal";
+    protected $drupal_domain = "localhost";
+
+    /* Drupal OSF module */
+    protected $osf_drupal_version = "7.x-2.x";
+
+    /**
+     *  Construct class by loading configuration
+     */
     function __construct($configFile)
     {
       parent::__construct();
-      
+
       // Load the installer configuration file
-      $this->config = parse_ini_file($configFile, TRUE); 
-      
-      if(!$this->config)
-      {
-        $this->cecho('An error occured when we tried to parse the '.$configFile.' file. Make sure it is parseable and try again.'."\n", 'RED');  
+      $this->config = parse_ini_file($configFile, TRUE);
+
+      if (!$this->config) {
+        $this->cecho("An error occured when we tried to parse the {$configFile} file. Make sure it is parseable and try again\n", 'RED');
         exit(1);
-      }      
-      else
-      {
-        if(isset($this->config['installer']['osfConfigured']))
-        {
-          if(strtolower($this->config['installer']['osfConfigured']) === 'false')
-          {
-            $this->installer_osf_configured = FALSE;
-          }
-          else
-          {
-            $this->installer_osf_configured = TRUE;
-          }
-        }
-        
-        if(isset($this->config['installer']['osfDrupalConfigured']))
-        {
-          if(strtolower($this->config['installer']['osfDrupalConfigured']) === 'false')
-          {
-            $this->installer_osf_drupal_configured = FALSE;
-          }
-          else
-          {
-            $this->installer_osf_drupal_configured = TRUE;
-          }
-        }
-        
-        if(isset($this->config['osf-drupal']['drupal-version']))
-        {
-          $this->drupal_version = $this->config['osf-drupal']['drupal-version'];
-        }
-        
-        if(isset($this->config['osf-web-services']['osf-web-services-version']))
-        {
-          if(strtolower($this->config['osf-web-services']['osf-web-services-version']) == 'dev')
-          {
-            $this->osf_web_services_version = 'master';
-          }
-          else
-          {
-            $this->osf_web_services_version = $this->config['osf-web-services']['osf-web-services-version'];
-          }
-        }        
-        
-        if(isset($this->config['osf-web-services']['osf-ws-php-api-version']))
-        {
-          if(strtolower($this->config['osf-web-services']['osf-ws-php-api-version']) == 'dev')
-          {
-            $this->osf_ws_php_api_version = 'master';
-          }
-          else
-          {
-            $this->osf_ws_php_api_version = $this->config['osf-web-services']['osf-ws-php-api-version'];
-          }
-        }        
-
-        if(isset($this->config['osf-web-services']['osf-tests-suites-version']))
-        {
-          if(strtolower($this->config['osf-web-services']['osf-tests-suites-version']) == 'dev')
-          {
-            $this->osf_tests_suites_version = 'master';
-          }
-          else
-          {
-            $this->osf_tests_suites_version = $this->config['osf-web-services']['osf-tests-suites-version'];
-          }
-        }        
-        
-        if(isset($this->config['osf-drupal']['osf-drupal-version']))
-        {
-          $this->osf_drupal_version = $this->config['osf-drupal']['osf-drupal-version'];
-        }
-        
-        if(isset($this->config['osf-web-services']['osf-web-services-domain']))
-        {
-          $this->osf_web_services_domain = $this->config['osf-web-services']['osf-web-services-domain'];
-        }
-        
-        if(isset($this->config['data']['data-folder']))
-        {
-          $this->data_folder = rtrim($this->config['data']['data-folder'], '/');
-        }
-        
-        if(isset($this->config['osf-web-services']['osf-web-services-folder']))
-        {
-          $this->osf_web_services_folder = rtrim($this->config['osf-web-services']['osf-web-services-folder'], '/');
-        }
-        
-        if(isset($this->config['osf-drupal ']['drupal-folder']))
-        {
-          $this->drupal_folder = rtrim($this->config['osf-drupal']['drupal-folder'], '/');
-        }
-        
-        if(isset($this->config['tools']['datasets-management-tool-folder']))
-        {
-          $this->datasets_management_tool_folder = rtrim($this->config['tools']['datasets-management-tool-folder'], '/');
-        }
-        
-        if(isset($this->config['tools']['permissions-management-tool-folder']))
-        {
-          $this->permissions_management_tool_folder = rtrim($this->config['tools']['permissions-management-tool-folder'], '/');
-        }
-        
-        if(isset($this->config['tools']['ontologies-management-tool-folder']))
-        {
-          $this->ontologies_management_tool_folder = rtrim($this->config['tools']['ontologies-management-tool-folder'], '/');
-        }        
-
-        if(isset($this->config['tools']['data-validator-tool-folder']))
-        {
-          $this->data_validator_tool_folder = rtrim($this->config['tools']['data-validator-tool-folder'], '/');
-        } 
-
-        if(isset($this->config['tools']['data-validator-tool-version']))
-        {
-          if(strtolower($this->config['tools']['data-validator-tool-version']) == 'dev')
-          {
-            $this->data_validator_tool_version = 'master';
-          }
-          else
-          {
-            $this->data_validator_tool_version = $this->config['tools']['data-validator-tool-version'];
-          }
-        }  
-
-        if(isset($this->config['tools']['permissions-management-tool-version']))
-        {
-          if(strtolower($this->config['tools']['permissions-management-tool-version']) == 'dev')
-          {
-            $this->permissions_management_tool_version = 'master';
-          }
-          else
-          {
-            $this->permissions_management_tool_version = $this->config['tools']['permissions-management-tool-version'];
-          }
-        }         
-        
-        if(isset($this->config['tools']['ontologies-management-tool-version']))
-        {
-          if(strtolower($this->config['tools']['ontologies-management-tool-version']) == 'dev')
-          {
-            $this->ontologies_management_tool_version = 'master';
-          }
-          else
-          {
-            $this->ontologies_management_tool_version = $this->config['tools']['ontologies-management-tool-version'];
-          }
-        }        
-        
-        if(isset($this->config['tools']['datasets-management-tool-version']))
-        {
-          if(strtolower($this->config['tools']['datasets-management-tool-version']) == 'dev')
-          {
-            $this->datasets_management_tool_version = 'master';
-          }
-          else
-          {
-            $this->datasets_management_tool_version = $this->config['tools']['datasets-management-tool-version'];
-          }
-        }          
-                                              
-        if(isset($this->config['logging']['logging-folder']))
-        {
-          $this->logging_folder = rtrim($this->config['logging']['logging-folder'], '/');
-        }        
-        
-        $this->log_file = $this->logging_folder.'/osf-install-'.date('Y-m-d_H:i:s').'.log';        
       }
+
+      /**
+       *  OSF Installation status
+       */
+      if (isset($this->config['installer']['osfConfigured'])) {
+        if (strtolower($this->config['installer']['osfConfigured']) === 'false') {
+          $this->installer_osf_configured = FALSE;
+        } else {
+          $this->installer_osf_configured = TRUE;
+        }
+      }
+
+      /**
+       *  Drupal Installation status
+       */
+      if (isset($this->config['installer']['osfDrupalConfigured'])) {
+        if (strtolower($this->config['installer']['osfDrupalConfigured']) === 'false') {
+          $this->installer_osf_drupal_configured = FALSE;
+        } else {
+          $this->installer_osf_drupal_configured = TRUE;
+        }
+      }
+
+      /**
+       *  OSF Application ID and Key
+       */
+      if (isset($this->config['osf-web-services']['application-id'])) {
+        $this->application_id = $this->config['osf-web-services']['application-id'];
+      }
+      if (isset($this->config['osf-web-services']['api-key'])) {
+        $this->api_key = $this->config['osf-web-services']['api-key'];
+      }
+
+      /**
+       *  OSF Storage paths
+       */
+      if (isset($this->config['data']['data-folder'])) {
+        $this->data_folder = rtrim($this->config['data']['data-folder'], '/');
+      }
+      if (isset($this->config['logging']['logging-folder'])) {
+        $this->logging_folder = rtrim($this->config['logging']['logging-folder'], '/');
+      }
+
+      /**
+       *  OSF OSF WS
+       */
+      if (isset($this->config['osf-web-services']['osf-web-services-version'])) {
+        if (strtolower($this->config['osf-web-services']['osf-web-services-version']) == 'dev') {
+          $this->osf_web_services_version = 'master';
+        } else {
+          $this->osf_web_services_version = $this->config['osf-web-services']['osf-web-services-version'];
+        }
+      }
+      if (isset($this->config['osf-web-services']['osf-web-services-folder'])) {
+        $this->osf_web_services_folder = rtrim($this->config['osf-web-services']['osf-web-services-folder'], '/');
+      }
+      if (isset($this->config['osf-web-services']['osf-web-services-domain'])) {
+        $this->osf_web_services_domain = $this->config['osf-web-services']['osf-web-services-domain'];
+      }
+
+      /**
+       *  OSF WS-PHP-API
+       */
+      if (isset($this->config['osf-web-services']['osf-ws-php-api-version'])) {
+        if (strtolower($this->config['osf-web-services']['osf-ws-php-api-version']) == 'dev') {
+          $this->osf_ws_php_api_version = 'master';
+        } else {
+          $this->osf_ws_php_api_version = $this->config['osf-web-services']['osf-ws-php-api-version'];
+        }
+      }
+      if (isset($this->config['osf-web-services']['osf-ws-php-api-folder'])) {
+        $this->osf_ws_php_api_folder = rtrim($this->config['osf-web-services']['osf-ws-php-api-folder'], '/');
+      }
+
+      /**
+       *  OSF Tests Suites
+       */
+      if (isset($this->config['osf-web-services']['osf-tests-suites-version'])) {
+        if (strtolower($this->config['osf-web-services']['osf-tests-suites-version']) == 'dev') {
+          $this->osf_tests_suites_version = 'master';
+        } else {
+          $this->osf_tests_suites_version = $this->config['osf-web-services']['osf-tests-suites-version'];
+        }
+      }
+      if (isset($this->config['osf-web-services']['osf-tests-suites-folder'])) {
+        $this->osf_tests_suites_folder = rtrim($this->config['osf-web-services']['osf-tests-suites-folder'], '/');
+      }
+
+      /**
+       *  OSF Data Validator Tool
+       */
+      if (isset($this->config['tools']['data-validator-tool-version'])) {
+        if (strtolower($this->config['tools']['data-validator-tool-version']) == 'dev') {
+          $this->data_validator_tool_version = 'master';
+        } else {
+          $this->data_validator_tool_version = $this->config['tools']['data-validator-tool-version'];
+        }
+      }
+      if (isset($this->config['tools']['data-validator-tool-folder'])) {
+        $this->data_validator_tool_folder = rtrim($this->config['tools']['data-validator-tool-folder'], '/');
+      }
+
+      /**
+       *  OSF Permissions Management Tool
+       */
+      if (isset($this->config['tools']['permissions-management-tool-version'])) {
+        if (strtolower($this->config['tools']['permissions-management-tool-version']) == 'dev') {
+          $this->permissions_management_tool_version = 'master';
+        } else {
+          $this->permissions_management_tool_version = $this->config['tools']['permissions-management-tool-version'];
+        }
+      }
+      if (isset($this->config['tools']['permissions-management-tool-folder'])) {
+        $this->permissions_management_tool_folder = rtrim($this->config['tools']['permissions-management-tool-folder'], '/');
+      }
+
+      /**
+       *  OSF Datasets Management Tool
+       */
+      if (isset($this->config['tools']['datasets-management-tool-version'])) {
+        if(strtolower($this->config['tools']['datasets-management-tool-version']) == 'dev') {
+          $this->datasets_management_tool_version = 'master';
+        } else {
+          $this->datasets_management_tool_version = $this->config['tools']['datasets-management-tool-version'];
+        }
+      }
+      if (isset($this->config['tools']['datasets-management-tool-folder'])) {
+        $this->datasets_management_tool_folder = rtrim($this->config['tools']['datasets-management-tool-folder'], '/');
+      }
+
+      /**
+       *  OSF Ontologies Management Tool
+       */
+      if (isset($this->config['tools']['ontologies-management-tool-version'])) {
+        if (strtolower($this->config['tools']['ontologies-management-tool-version']) == 'dev') {
+          $this->ontologies_management_tool_version = 'master';
+        } else {
+          $this->ontologies_management_tool_version = $this->config['tools']['ontologies-management-tool-version'];
+        }
+      }
+      if (isset($this->config['tools']['ontologies-management-tool-folder'])) {
+        $this->ontologies_management_tool_folder = rtrim($this->config['tools']['ontologies-management-tool-folder'], '/');
+      }
+
+      /**
+       *  Drupal framework
+       */
+      if (isset($this->config['osf-drupal']['drupal-version'])) {
+        $this->drupal_version = $this->config['osf-drupal']['drupal-version'];
+      }
+      if (isset($this->config['osf-drupal ']['drupal-folder'])) {
+        $this->drupal_folder = rtrim($this->config['osf-drupal']['drupal-folder'], '/');
+      }
+      if (isset($this->config['osf-drupal ']['drupal-domain'])) {
+        $this->drupal_domain = $this->config['osf-drupal']['drupal-domain'];
+      }
+
+      /**
+       *  Drupal OSF module
+       */
+      if (isset($this->config['osf-drupal']['osf-drupal-version'])) {
+        $this->osf_drupal_version = $this->config['osf-drupal']['osf-drupal-version'];
+      }
+
+      // Dump to log
+      $this->log_file = $this->logging_folder . '/osf-install-' . date('Y-m-d_H:i:s') . '.log';
     }
-    
+
     /**
-    * Ask a series of questions to the user to configure the installer software related to OSF Web Services.
-    */
+     *  Ask a series of questions to the user to configure the installer 
+     *  software related to OSF Web Services
+     */
     public function configureInstallerOSF()
     {
-      $this->cecho("Configure the OSF-Installer Tool\n\n", 'WHITE');
+      $this->header("Configure the OSF-Installer Tool", 'info');
       $this->cecho("Note: if you want to use the default value, you simply have to press Enter on your keyboard.\n\n", 'WHITE');
 
       $this->cecho("\n\nOSF Web Services related configuration settings:\n", 'CYAN');
-      
-      $return = $this->getInput("What is the OSF Web Services version you want to install or upgrade? (default: ".($this->osf_web_services_version == 'master' ? 'dev' : $this->osf_web_services_version).")");
-      
-      if($return != '')
-      {
-        if($return == 'dev')
-        {
-          $return = 'master';
+
+      /**
+       *  OSF OSF WS
+       */
+      do {
+        $input = $this->getInput("What is the OSF Web Services version you want to install? (default: " . ($this->osf_web_services_version == 'master' ? 'dev' : $this->osf_web_services_version) . ", valid: dev or <version>)");
+        if (!empty($input)) {
+          if ($this->isVersion($input) == TRUE || $input == 'dev') {
+            $this->osf_web_services_version = $input;
+            break;
+          }
         }
-        
-        $this->osf_web_services_version = $return;
-      }          
+      } while (0);
+      do {
+        $input = $this->getInput("Where do you want to install the OSF Web Services? (default: {$this->osf_web_services_folder})");
+        if (!empty($input)) {
+          if ($this->isPath($input) == TRUE) {
+            $this->osf_web_services_folder = $input;
+            break;
+          }
+        }
+      } while (0);
+         
+      
+
       
       $return = $this->getInput("What is the OSF-WS-PHP-API version you want to install or upgrade? (default: ".($this->osf_ws_php_api_version == 'master' ? 'dev' : $this->osf_ws_php_api_version).")");
       
@@ -300,12 +303,7 @@
         $this->osf_tests_suites_version = $return;
       }          
       
-      $return = $this->getInput("Where do you what to install the OSF Web Services, or where are the OSF Web Services installed? (default: ".$this->osf_web_services_folder.")");
-      
-      if($return != '')
-      {
-        $this->osf_web_services_folder = $return;
-      }       
+
       
       $return = $this->getInput("What is the domain name where the OSF Web Services instance will be accessible (default: ".$this->osf_web_services_domain.")");
       
