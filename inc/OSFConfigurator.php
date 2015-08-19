@@ -221,7 +221,7 @@
        */
       if (isset($this->config['osf-tools']['datasets-management-tool-version'])) {
         if (!empty($this->config['osf-tools']['datasets-management-tool-version'])) {
-          if(strtolower($this->config['osf-tools']['datasets-management-tool-version']) == 'dev') {
+          if (strtolower($this->config['osf-tools']['datasets-management-tool-version']) == 'dev') {
             $this->datasets_management_tool_version = 'master';
           } else {
             $this->datasets_management_tool_version = $this->config['osf-tools']['datasets-management-tool-version'];
@@ -271,8 +271,10 @@
         }
       }
 
-      // Dump to log
+      // Prepare log file
+      exec("mkdir -p {$this->logging_folder}");
       $this->log_file = $this->logging_folder . '/osf-install-' . date('Y-m-d_H:i:s') . '.log';
+      exec("touch {$this->log_file}");
     }
 
     /**
@@ -288,16 +290,16 @@
        *  OSF Common
        */
       $this->h3("OSF Common configuration");
-      $input = $this->getInput("Input a Application ID: (default: {$this->application_id})");
+      $input = $this->getInput("Input a Application ID: (current: {$this->application_id})");
       if (!empty($input)) {
         $this->application_id = $input;
       }
-      $input = $this->getInput("Input a API Key: (default: {$this->api_key})");
+      $input = $this->getInput("Input a API Key: (current: {$this->api_key})");
       if (!empty($input)) {
         $this->api_key = $input;
       }
       do {
-        $input = $this->getInput("Input a data path: (default: {$this->data_folder})");
+        $input = $this->getInput("Input a data path: (current: {$this->data_folder})");
         if (!empty($input)) {
           if ($this->isPath(rtrim($input, '/')) == TRUE) {
             $this->data_folder = rtrim($input, '/');
@@ -308,7 +310,7 @@
         }
       } while (1);
       do {
-        $input = $this->getInput("Input a logging path: (default: {$this->logging_folder})");
+        $input = $this->getInput("Input a logging path: (current: {$this->logging_folder})");
         if (!empty($input)) {
           if ($this->isPath(rtrim($input, '/')) == TRUE) {
             $this->logging_folder = rtrim($input, '/');
@@ -324,7 +326,7 @@
        */
       $this->h3("OSF Web Services configuration");
       do {
-        $input = $this->getInput("Input a version: (default: " . ($this->osf_web_services_version == 'master' ? 'dev' : $this->osf_web_services_version) . ", valid: dev or <version>)");
+        $input = $this->getInput("Input a version: (current: " . ($this->osf_web_services_version == 'master' ? 'dev' : $this->osf_web_services_version) . ", valid: dev or <version>)");
         if (!empty($input)) {
           if ($this->isVersion($input) == TRUE || $input == 'dev') {
             $this->osf_web_services_version = $input;
@@ -335,7 +337,7 @@
         }
       } while (1);
       do {
-        $input = $this->getInput("Input a path: (default: {$this->osf_web_services_folder})");
+        $input = $this->getInput("Input a path: (current: {$this->osf_web_services_folder})");
         if (!empty($input)) {
           if ($this->isPath(rtrim($input, '/')) == TRUE) {
             $this->osf_web_services_folder = rtrim($input, '/');
@@ -346,7 +348,7 @@
         }
       } while (1);
       do {
-        $input = $this->getInput("Input a domain: (default: {$this->osf_web_services_domain})");
+        $input = $this->getInput("Input a domain: (current: {$this->osf_web_services_domain})");
         if (!empty($input)) {
           if ($this->isDomain($input) == TRUE) {
             $this->osf_web_services_domain = $input;
@@ -362,7 +364,7 @@
        */
       $this->h3("OSF WS-PHP-API configuration");
       do {
-        $input = $this->getInput("Input a version: (default: " . ($this->osf_ws_php_api_version == 'master' ? 'dev' : $this->osf_ws_php_api_version) . ", valid: dev or <version>)");
+        $input = $this->getInput("Input a version: (current: " . ($this->osf_ws_php_api_version == 'master' ? 'dev' : $this->osf_ws_php_api_version) . ", valid: dev or <version>)");
         if (!empty($input)) {
           if ($this->isVersion($input) == TRUE || $input == 'dev') {
             $this->osf_ws_php_api_version = $input;
@@ -373,7 +375,7 @@
         }
       } while (1);
       do {
-        $input = $this->getInput("Input a path: (default: {$this->osf_ws_php_api_folder})");
+        $input = $this->getInput("Input a path: (current: {$this->osf_ws_php_api_folder})");
         if (!empty($input)) {
           if ($this->isPath(rtrim($input, '/'), FALSE) == TRUE) {
             $this->osf_ws_php_api_folder = rtrim($input, '/');
@@ -389,7 +391,7 @@
        */
       $this->h3("OSF Tests Suites configuration");
       do {
-        $input = $this->getInput("Input a version: (default: " . ($this->osf_tests_suites_version == 'master' ? 'dev' : $this->osf_tests_suites_version) . ", valid: dev or <version>)");
+        $input = $this->getInput("Input a version: (current: " . ($this->osf_tests_suites_version == 'master' ? 'dev' : $this->osf_tests_suites_version) . ", valid: dev or <version>)");
         if (!empty($input)) {
           if ($this->isVersion($input) == TRUE || $input == 'dev') {
             $this->osf_tests_suites_version = $input;
@@ -400,7 +402,7 @@
         }
       } while (1);
       do {
-        $input = $this->getInput("Input a path: (default: {$this->osf_tests_suites_folder})");
+        $input = $this->getInput("Input a path: (current: {$this->osf_tests_suites_folder})");
         if (!empty($input)) {
           if ($this->isPath(rtrim($input, '/'), FALSE) == TRUE) {
             $this->osf_tests_suites_folder = rtrim($input, '/');
@@ -416,7 +418,7 @@
        */
       $this->h3("OSF Data Validator Tool configuration");
       do {
-        $input = $this->getInput("Input a version: (default: " . ($this->data_validator_tool_version == 'master' ? 'dev' : $this->data_validator_tool_version) . ", valid: dev or <version>)");
+        $input = $this->getInput("Input a version: (current: " . ($this->data_validator_tool_version == 'master' ? 'dev' : $this->data_validator_tool_version) . ", valid: dev or <version>)");
         if (!empty($input)) {
           if ($this->isVersion($input) == TRUE || $input == 'dev') {
             $this->data_validator_tool_version = $input;
@@ -427,7 +429,7 @@
         }
       } while (1);
       do {
-        $input = $this->getInput("Input a path: (default: {$this->data_validator_tool_folder})");
+        $input = $this->getInput("Input a path: (current: {$this->data_validator_tool_folder})");
         if (!empty($input)) {
           if ($this->isPath(rtrim($input, '/'), FALSE) == TRUE) {
             $this->data_validator_tool_folder = rtrim($input, '/');
@@ -443,7 +445,7 @@
        */
       $this->h3("OSF Permissions Management Tool configuration");
       do {
-        $input = $this->getInput("Input a version: (default: " . ($this->permissions_management_tool_version == 'master' ? 'dev' : $this->permissions_management_tool_version) . ", valid: dev or <version>)");
+        $input = $this->getInput("Input a version: (current: " . ($this->permissions_management_tool_version == 'master' ? 'dev' : $this->permissions_management_tool_version) . ", valid: dev or <version>)");
         if (!empty($input)) {
           if ($this->isVersion($input) == TRUE || $input == 'dev') {
             $this->permissions_management_tool_version = $input;
@@ -454,7 +456,7 @@
         }
       } while (1);
       do {
-        $input = $this->getInput("Input a path: (default: {$this->permissions_management_tool_folder})");
+        $input = $this->getInput("Input a path: (current: {$this->permissions_management_tool_folder})");
         if (!empty($input)) {
           if ($this->isPath(rtrim($input, '/')) == TRUE) {
             $this->permissions_management_tool_folder = rtrim($input, '/');
@@ -470,7 +472,7 @@
        */
       $this->h3("OSF Datasets Management Tool configuration");
       do {
-        $input = $this->getInput("Input a version: (default: " . ($this->datasets_management_tool_version == 'master' ? 'dev' : $this->datasets_management_tool_version) . ", valid: dev or <version>)");
+        $input = $this->getInput("Input a version: (current: " . ($this->datasets_management_tool_version == 'master' ? 'dev' : $this->datasets_management_tool_version) . ", valid: dev or <version>)");
         if (!empty($input)) {
           if ($this->isVersion($input) == TRUE || $input == 'dev') {
             $this->datasets_management_tool_version = $input;
@@ -481,7 +483,7 @@
         }
       } while (1);
       do {
-        $input = $this->getInput("Input a path: (default: {$this->datasets_management_tool_folder})");
+        $input = $this->getInput("Input a path: (current: {$this->datasets_management_tool_folder})");
         if (!empty($input)) {
           if ($this->isPath(rtrim($input, '/')) == TRUE) {
             $this->datasets_management_tool_folder = rtrim($input, '/');
@@ -497,7 +499,7 @@
        */
       $this->h3("OSF Ontologies Management Tool configuration");
       do {
-        $input = $this->getInput("Input a version: (default: " . ($this->ontologies_management_tool_version == 'master' ? 'dev' : $this->ontologies_management_tool_version) . ", valid: dev or <version>)");
+        $input = $this->getInput("Input a version: (current: " . ($this->ontologies_management_tool_version == 'master' ? 'dev' : $this->ontologies_management_tool_version) . ", valid: dev or <version>)");
         if (!empty($input)) {
           if ($this->isVersion($input) == TRUE || $input == 'dev') {
             $this->ontologies_management_tool_version = $input;
@@ -508,7 +510,7 @@
         }
       } while (1);
       do {
-        $input = $this->getInput("Input a path: (default: {$this->ontologies_management_tool_folder})");
+        $input = $this->getInput("Input a path: (current: {$this->ontologies_management_tool_folder})");
         if (!empty($input)) {
           if ($this->isPath(rtrim($input, '/')) == TRUE) {
             $this->ontologies_management_tool_folder = rtrim($input, '/');
@@ -541,7 +543,7 @@
        */
       $this->h3("Drupal framework configuration");
       do {
-        $input = $this->getInput("Input a version: (default: " . ($this->drupal_version == 'master' ? 'dev' : $this->drupal_version) . ", valid: dev or <version>)");
+        $input = $this->getInput("Input a version: (current: " . ($this->drupal_version == 'master' ? 'dev' : $this->drupal_version) . ", valid: dev or <version>)");
         if (!empty($input)) {
           if ($this->isVersion($input) == TRUE || $input == 'dev') {
             $this->drupal_version = $input;
@@ -552,7 +554,7 @@
         }
       } while (1);
       do {
-        $input = $this->getInput("Input a path: (default: {$this->drupal_folder})");
+        $input = $this->getInput("Input a path: (current: {$this->drupal_folder})");
         if (!empty($input)) {
           if ($this->isPath(rtrim($input, '/')) == TRUE) {
             $this->drupal_folder = rtrim($input, '/');
@@ -563,7 +565,7 @@
         }
       } while (1);
       do {
-        $input = $this->getInput("Input a domain: (default: {$this->drupal_domain})");
+        $input = $this->getInput("Input a domain: (current: {$this->drupal_domain})");
         if (!empty($input)) {
           if ($this->isDomain($input) == TRUE) {
             $this->drupal_domain = $input;
@@ -679,92 +681,5 @@
       $this->span("drupal-domain = \"{$this->drupal_domain}\"", 'info');
     }
 
-    /**
-    * Upgrade the OSF PHPUNIT Tests Suites
-    */
-    public function upgradeOSFTestsSuites($version)
-    {
-      $this->cecho("Upgrading tests suites...\n", 'WHITE');
-      
-      $this->exec('mkdir -p /tmp/osftestssuites-upgrade/');
-      
-      $this->chdir('/tmp/osftestssuites-upgrade/');
-      
-      $this->wget('https://github.com/structureddynamics/OSF-Tests-Suites/archive/'.$version.'.zip');
-      
-      $this->exec('unzip '.$version.'.zip');
-      
-      $this->chdir('/tmp/osftestssuites-upgrade/OSF-Tests-Suites-'.$version.'/StructuredDynamics/osf/');
-
-      // Extract existing settings
-      $configFile = file_get_contents($this->osf_web_services_folder.'/StructuredDynamics/osf/tests/Config.php');
-
-      preg_match('/this-\>osfInstanceFolder = "(.*)"/', $configFile, $matches);
-      $osfInstanceFolderExtracted = $matches[1];
-      preg_match('/this-\>endpointUrl = "(.*)"/', $configFile, $matches);
-      $endpointUrlExtracted = $matches[1];
-      preg_match('/this-\>endpointUri = "(.*)"/', $configFile, $matches);
-      $endpointUriExtracted = $matches[1];
-      preg_match('/this-\>userID = \'(.*)\'/', $configFile, $matches);
-      $userIDExtracted = $matches[1];
-      preg_match('/this-\>adminGroup = \'(.*)\'/', $configFile, $matches);
-      $adminGroupExtracted = $matches[1];
-      preg_match('/this-\>testGroup = "(.*)"/', $configFile, $matches);
-      $testGroupExtracted = $matches[1];
-      preg_match('/this-\>testUser = "(.*)"/', $configFile, $matches);
-      $testUserExtracted = $matches[1];
-      preg_match('/this-\>applicationID = \'(.*)\'/', $configFile, $matches);
-      $applicationIDExtracted = $matches[1];
-      preg_match('/this-\>apiKey = \'(.*)\'/', $configFile, $matches);
-      $apiKeyExtracted = $matches[1];      
-      
-      $this->exec('rm -rf '.$this->osf_web_services_folder.'/StructuredDynamics/osf/tests/');
-      
-      $this->exec('cp -af tests '.$this->osf_web_services_folder.'/StructuredDynamics/osf/');
-                  
-      $this->cecho("Configure the tests suites...\n", 'WHITE');
-
-      $this->chdir($this->osf_web_services_folder.'/StructuredDynamics/osf/tests/');
-      
-      $this->exec('sed -i "s>REPLACEME>'.$this->osf_web_services_folder.'/StructuredDynamics/osf>" phpunit.xml');
-
-      // Apply existing settings to new Config.php file
-      $this->exec('sudo sed -i "s>$this-\>osfInstanceFolder = \".*\";>$this-\>osfInstanceFolder = \"'.$osfInstanceFolderExtracted.'\";>" Config.php');
-      $this->exec('sudo sed -i "s>$this-\>endpointUrl = \".*\";>$this-\>endpointUrl = \"'.$endpointUrlExtracted.'\";>" Config.php');      
-      $this->exec('sudo sed -i "s>$this-\>endpointUri = \".*\";>$this-\>endpointUri = \"'.$endpointUriExtracted.'\";>" Config.php');      
-      $this->exec('sudo sed -i "s>$this-\>userID = \'.*\';>$this-\>userID = \''.$userIDExtracted.'\';>" Config.php');      
-      $this->exec('sudo sed -i "s>$this-\>adminGroup = \'.*\';>$this-\>adminGroup = \''.$adminGroupExtracted.'\';>" Config.php');      
-      $this->exec('sudo sed -i "s>$this-\>testGroup = \".*\";>$this-\>testGroup = \"'.$testGroupExtracted.'\";>" Config.php');      
-      $this->exec('sudo sed -i "s>$this-\>testUser = \".*\";>$this-\>testUser = \"'.$testUserExtracted.'\";>" Config.php');      
-      $this->exec('sudo sed -i "s>$this-\>applicationID = \'.*\';>$this-\>applicationID = \''.$applicationIDExtracted.'\';>" Config.php');      
-      $this->exec('sudo sed -i "s>$this-\>apiKey = \'.*\';>$this-\>apiKey = \''.$apiKeyExtracted.'\';>" Config.php');      
-      
-      $this->chdir($this->currentWorkingDirectory);
-      
-      $this->exec('rm -rf /tmp/osftestssuites-upgrade/');
-    }         
-    
-    public function runOSFTestsSuites($installationFolder = '')
-    {
-      if($installationFolder == '')
-      {
-        $installationFolder = $this->osf_web_services_folder;
-      }
-      
-      $this->chdir($installationFolder.'/StructuredDynamics/osf/tests/');
-      
-      $this->exec('phpunit --configuration phpunit.xml --filter \'StructuredDynamics\\osf\\tests\\ws\\crud\\read\\CrudReadTest::testLanguageEnglishSpecified\'');
-      
-      $this->cecho("Restarting Virtuoso...\n", 'WHITE');
-      $this->exec('/etc/init.d/virtuoso stop');
-      
-      sleep(20);
-      
-      $this->exec('/etc/init.d/virtuoso start');             
-      
-      passthru('phpunit --configuration phpunit.xml --verbose --colors --log-junit log.xml');
-      
-      $this->chdir($this->currentWorkingDirectory);      
-    }    
   }
-?>
+

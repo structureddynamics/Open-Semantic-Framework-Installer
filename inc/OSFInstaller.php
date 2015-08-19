@@ -115,6 +115,24 @@
     */
     abstract public function installOSFDrupal();
 
+    public function runOSFTestsSuites($installationFolder = '')
+    {
+      if ($installationFolder == '') {
+        $installationFolder = $this->osf_web_services_folder;
+      }
+
+      $this->chdir($installationFolder.'/StructuredDynamics/osf/tests/');
+      $this->exec('phpunit --configuration phpunit.xml --filter \'StructuredDynamics\\osf\\tests\\ws\\crud\\read\\CrudReadTest::testLanguageEnglishSpecified\'');
+
+      $this->cecho("Restarting Virtuoso...\n", 'WHITE');
+      $this->exec('/etc/init.d/virtuoso stop');
+      sleep(20);
+      $this->exec('/etc/init.d/virtuoso start');
+
+      passthru('phpunit --configuration phpunit.xml --verbose --colors --log-junit log.xml');
+      $this->chdir($this->currentWorkingDirectory);
+    }
+
     /**
     * Install OSF Web Services
     */
