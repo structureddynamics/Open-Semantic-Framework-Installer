@@ -216,17 +216,7 @@
         $this->exec('sed -i "s>sparql-insert = \"virtuoso\">sparql-insert = \"insert\">" "'.$this->osf_web_services_folder.$this->osf_web_services_ns.'/osf.ini"'); 
       }
             
-      // fix wsf_graph
-      $this->exec('sed -i "s>wsf_graph = \"http://localhost/wsf/\">wsf_graph = \"http://'.$this->osf_web_services_domain.'/wsf/\">" "'.$this->osf_web_services_folder.$this->osf_web_services_ns.'/osf.ini"');
 
-      // fix dtd_base
-      $this->exec('sudo sed -i "s>dtd_base = \"http://localhost/ws/dtd/\">dtd_base = \"http://'.$this->osf_web_services_domain.'/ws/dtd/\">" "'.$this->osf_web_services_folder.$this->osf_web_services_ns.'/osf.ini"');
-
-      // fix ontologies_files_folder
-      $this->exec('sudo sed -i "s>ontologies_files_folder = \"/data/ontologies/files/\">ontologies_files_folder = \""'.$this->data_folder.'"/ontologies/files/\">" "'.$this->osf_web_services_folder.$this->osf_web_services_ns.'/osf.ini"');
-
-      // fix ontological_structure_folder
-      $this->exec('sudo sed -i "s>ontological_structure_folder = \"/data/ontologies/structure/\">ontological_structure_folder = \"'.$this->data_folder.'/ontologies/structure/\">" "'.$this->osf_web_services_folder.$this->osf_web_services_ns.'/osf.ini"');
 
       // fix password
       $this->exec('sudo sed -i "s>password = \"dba\">password = \"'.$this->dbaPassword.'\">" "'.$this->osf_web_services_folder.$this->osf_web_services_ns.'/osf.ini"');
@@ -238,11 +228,7 @@
       // fix fields_index_folder
       $this->exec('sudo sed -i "s>fields_index_folder = \"/tmp/\">fields_index_folder = \"'.$this->data_folder.'/osf-web-services/tmp/\">" "'.$this->osf_web_services_folder.$this->osf_web_services_ns.'/osf.ini"');
       
-      // fix wsf_base_url
-      $this->exec('sudo sed -i "s>wsf_base_url = \"http://localhost\">wsf_base_url = \"http://'.$this->osf_web_services_domain.'\">" "'.$this->osf_web_services_folder.$this->osf_web_services_ns.'/osf.ini"');
 
-      // fix wsf_base_path
-      $this->exec('sudo sed -i "s>wsf_base_path = \"/usr/share/osf/StructuredDynamics/osf/ws/\">wsf_base_path = \"'.$this->osf_web_services_folder.$this->osf_web_services_ns.'/\">" "'.$this->osf_web_services_folder.$this->osf_web_services_ns.'/osf.ini"');
 
       $this->cecho("Create the OSF Web Services tmp folder...\n", 'WHITE');
       
@@ -252,12 +238,7 @@
       // Always geo-enable an instance
       $this->exec('sudo sed -i "s>geoenabled = \"false\">geoenabled = \"true\">" "'.$this->osf_web_services_folder.$this->osf_web_services_ns.'/osf.ini"');
       
-      $this->exec('sudo sed -i "s>administer = \"some-key\">'.$appID.' = \"'.$apiKey.'\">" "'.$this->osf_web_services_folder.$this->osf_web_services_ns.'/keys.ini"');              
-      
-      $this->cecho("Move the osf.ini and keys.ini files outside of the web root...\n", 'WHITE');
 
-      $this->exec('mv '.$this->osf_web_services_folder.$this->osf_web_services_ns.'/osf.ini '.$this->data_folder.'/osf-web-services/configs/osf.ini');
-      $this->exec('mv '.$this->osf_web_services_folder.$this->osf_web_services_ns.'/keys.ini '.$this->data_folder.'/osf-web-services/configs/keys.ini');
       
       $this->exec('chown -R www-data:www-data '.$this->data_folder.'/osf-web-services/');
       $this->exec('chmod -R 500 '.$this->data_folder.'/osf-web-services/');      
@@ -429,6 +410,29 @@
       $this->rm("{$tmpPath}/", TRUE);
       
       $this->runOSFTestsSuites($this->osf_web_services_folder);
+    }
+
+
+    /**
+    * Configure OSF Web Services
+    */
+    private function configWebServices()
+    {
+      // Get package info
+      $installPath = "{$this->osf_web_services_folder}/{$this->osf_web_services_ns}";
+
+      // Configure
+      $this->span("Configuring...", 'info');
+      $this->mv("{$this->osf_web_services_folder}/{$this->osf_web_services_ns}/keys.ini", "{$installPath}/osf-web-services/configs/keys.ini");
+      $this->exec('echo "{$this->application_id} = \"{$this->api_key}\"" >> "{$this->osf_web_services_folder}/{$installPath}/keys.ini"');
+      $this->mv("{$this->osf_web_services_folder}/{$this->osf_web_services_ns}/osf.ini", "{$installPath}/osf-web-services/configs/osf.ini");
+      $this->sed("wsf_base_url = \".*\"", "wsf_base_url = \"http://{$this->osf_web_services_domain}\"", "{$installPath}/osf.ini");
+      $this->sed("wsf_base_path = \".*\"", "wsf_base_path = \"{$installPath}/\"", "{$installPath}/osf.ini");
+      $this->sed("wsf_graph = \".*\"", "wsf_graph = \"http://{$this->osf_web_services_domain}/wsf/\"", "{$installPath}/osf.ini");
+      $this->sed("dtd_base = \".*\"", "dtd_base = \"http://{$this->osf_web_services_domain}/ws/dtd/\"", "{$installPath}/osf.ini");
+      $this->sed("ontologies_files_folder = \".*\"", "ontologies_files_folder = \"{$this->data_folder}/ontologies/files/\"", "{$installPath}/osf.ini");
+      $this->sed("ontological_structure_folder = \".*\"", "ontological_structure_folder = \"{$this->data_folder}/ontologies/structure/\"", "{$installPath}/osf.ini");
+
     }
 
     /**

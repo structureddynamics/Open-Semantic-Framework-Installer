@@ -301,7 +301,7 @@
         if ($this->isAlphaNumeric($input) == TRUE) {
           $this->api_key = $input;
         }
-      } else {
+      } elseif (empty($input) && $this->api_key == "some-key") {
         $this->span("Generating a API Key...", 'info');
         $this->api_key = strtoupper(bin2hex(openssl_random_pseudo_bytes(16)));
         $this->span("The generated API Key is {$this->api_key}", 'info');
