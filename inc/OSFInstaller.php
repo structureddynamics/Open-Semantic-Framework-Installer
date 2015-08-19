@@ -251,44 +251,8 @@
 
       // Always geo-enable an instance
       $this->exec('sudo sed -i "s>geoenabled = \"false\">geoenabled = \"true\">" "'.$this->osf_web_services_folder.$this->osf_web_services_ns.'/osf.ini"');
-
-      $appID = 'administer';
-      
-      $return = $this->getInput("What is the first Application ID of the OSF Web Services network you want to create? This key will be used by the PMT, DMT, OMT and OSF for Drupal tools. Only use alpha numeric characters *without* spaces (default: ".$appID.")");
-      
-      if($return != '')
-      {
-        $appID = $return;
-        
-        $appID = preg_replace('/[^A-Za-z0-9]/i', '', $appID);
-      }  
-      
-      $apiKey = strtoupper(bin2hex(openssl_random_pseudo_bytes(16)));
       
       $this->exec('sudo sed -i "s>administer = \"some-key\">'.$appID.' = \"'.$apiKey.'\">" "'.$this->osf_web_services_folder.$this->osf_web_services_ns.'/keys.ini"');              
-      
-      $this->cecho("\n................................................................\n", 'CYAN');
-      $this->cecho("The API Key of the '".$appID."' application ID is: '".$apiKey."'  \n", 'CYAN');
-      $this->cecho("................................................................\n\n", 'CYAN');
-
-      $this->application_id = $appID;
-      $this->api_key = $apiKey;
-      
-      $this->cecho("Configuring the application ID and the API Key for the PMT tool...\n", 'WHITE');
-      $this->exec('sudo sed -i "s>application-id = \"administer\">application-id = \"'.$appID.'\">" "'.$this->permissions_management_tool_folder.'/pmt.ini"');
-      $this->exec('sudo sed -i "s>api-key = \"some-key\">api-key = \"'.$apiKey.'\">" "'.$this->permissions_management_tool_folder.'/pmt.ini"');
-      $this->exec('sudo sed -i "s>user = \"http://localhost/wsf/users/admin\">user = \"http://'.$this->osf_web_services_domain.'/wsf/users/admin\">" "'.$this->permissions_management_tool_folder.'/pmt.ini"');
-
-      $this->cecho("Configuring the application ID and the API Key for the DMT tool...\n", 'WHITE');
-      $this->exec('sudo sed -i "s>application-id = \"administer\">application-id = \"'.$appID.'\">" "'.$this->datasets_management_tool_folder.'/dmt.ini"');
-      $this->exec('sudo sed -i "s>api-key = \"some-key\">api-key = \"'.$apiKey.'\">" "'.$this->datasets_management_tool_folder.'/dmt.ini"');
-      $this->exec('sudo sed -i "s>user = \"http://localhost/wsf/users/admin\">user = \"http://'.$this->osf_web_services_domain.'/wsf/users/admin\">" "'.$this->datasets_management_tool_folder.'/dmt.ini"');
-
-      $this->cecho("Configuring the application ID and the API Key for the OMT tool...\n", 'WHITE');
-      $this->exec('sudo sed -i "s>application-id = \"administer\">application-id = \"'.$appID.'\">" "'.$this->ontologies_management_tool_folder.'/omt.ini"');
-      $this->exec('sudo sed -i "s>api-key = \"some-key\">api-key = \"'.$apiKey.'\">" "'.$this->ontologies_management_tool_folder.'/omt.ini"');      
-      $this->exec('sudo sed -i "s>user = \"http://localhost/wsf/users/admin\">user = \"http://'.$this->osf_web_services_domain.'/wsf/users/admin\">" "'.$this->ontologies_management_tool_folder.'/omt.ini"');
-      $this->exec('sudo sed -i "s>group = \"http://localhost/wsf/groups/administrators\">group = \"http://'.$this->osf_web_services_domain.'/wsf/groups/administrators\">" "'.$this->ontologies_management_tool_folder.'/omt.ini"');
       
       $this->cecho("Move the osf.ini and keys.ini files outside of the web root...\n", 'WHITE');
 
@@ -1006,6 +970,9 @@
       $this->span("Configuring...", 'info');
       $this->sed("osfWebServicesFolder = \".*\"", "osfWebServicesFolder = \"{$this->osf_web_services_folder}/\"", "{$installPath}/pmt.ini");
       $this->sed("osfWebServicesEndpointsUrl = \".*\"", "osfWebServicesEndpointsUrl = \"http://{$this->osf_web_services_domain}/ws/\"", "{$installPath}/pmt.ini");
+      $this->sed("application-id = \".*\"", "application-id = \"{$this->application_id}\"", "{$installPath}/pmt.ini");
+      $this->sed("api-key = \".*\"", "api-key = \"{$this->api_key}\"", "{$installPath}/pmt.ini");
+      $this->sed("user = \".*\"", "user = \"http://{$this->osf_web_services_domain}/wsf/users/admin\"", "{$installPath}/pmt.ini");
     }
 
     /**
@@ -1153,6 +1120,9 @@
       $this->sed("indexesFolder = \".*\"", "indexesFolder = \"{$installPath}/datasetIndexes/\"", "{$installPath}/dmt.ini");
       $this->sed("ontologiesStructureFiles = \".*\"", "ontologiesStructureFiles = \"{$this->data_folder}/ontologies/structure/\"", "{$installPath}/dmt.ini");
       $this->sed("missingVocabulary = \".*\"", "missingVocabulary = \"{$installPath}/missing/\"", "{$installPath}/dmt.ini");
+      $this->sed("application-id = \".*\"", "application-id = \"{$this->application_id}\"", "{$installPath}/dmt.ini");
+      $this->sed("api-key = \".*\"", "api-key = \"{$this->api_key}\"", "{$installPath}/dmt.ini");
+      $this->sed("user = \".*\"", "user = \"http://{$this->osf_web_services_domain}/wsf/users/admin\"", "{$installPath}/dmt.ini");
     }
 
     /**
@@ -1297,6 +1267,10 @@
       // Configure
       $this->span("Configuring...", 'info');
       $this->sed("osfWebServicesFolder = \".*\"", "osfWebServicesFolder = \"{$this->osf_web_services_folder}/\"", "{$installPath}/omt.ini");
+      $this->sed("application-id = \".*\"", "application-id = \"{$this->application_id}\"", "{$installPath}/omt.ini");
+      $this->sed("api-key = \".*\"", "api-key = \"{$this->api_key}\"", "{$installPath}/omt.ini");
+      $this->sed("user = \".*\"", "user = \"http://{$this->osf_web_services_domain}/wsf/users/admin\"", "{$installPath}/omt.ini");
+      $this->sed("group = \".*\"", "group = \"http://{$this->osf_web_services_domain}/wsf/groups/administrators\"", "{$installPath}/omt.ini");
     }
 
     protected function commit($password)

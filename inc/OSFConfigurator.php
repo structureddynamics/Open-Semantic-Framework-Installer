@@ -292,11 +292,19 @@
       $this->h3("OSF Common configuration");
       $input = $this->getInput("Input a Application ID: (current: {$this->application_id})");
       if (!empty($input)) {
-        $this->application_id = $input;
+        if ($this->isAlphaNumeric($input) == TRUE) {
+          $this->application_id = $input;
+        }
       }
       $input = $this->getInput("Input a API Key: (current: {$this->api_key})");
       if (!empty($input)) {
-        $this->api_key = $input;
+        if ($this->isAlphaNumeric($input) == TRUE) {
+          $this->api_key = $input;
+        }
+      } else {
+        $this->span("Generating a API Key...", 'info');
+        $this->api_key = strtoupper(bin2hex(openssl_random_pseudo_bytes(16)));
+        $this->span("The generated API Key is {$this->api_key}", 'info');
       }
       do {
         $input = $this->getInput("Input a data path: (current: {$this->data_folder})");

@@ -305,6 +305,28 @@
     }
 
     /**
+     * Check if the provided string is an alpha numeric string
+     * 
+     * @param mixed $input        Input to test
+     * 
+     * @param Returns TRUE if the input is a valid alpha numeric, FALSE otherwise
+     */
+    public function isAlphaNumeric($input)
+    {
+      if ($input === NULL) {
+        return(FALSE);
+      }
+
+      $validation = preg_match('/^[a-zA-Z0-9]*$/', $input);
+
+      if ($validation == FALSE) {
+        return(FALSE);
+      }
+
+      return(TRUE);
+    }
+
+    /**
      * Check if the provided version is a valid version
      * 
      * @param mixed $input        Input to test
