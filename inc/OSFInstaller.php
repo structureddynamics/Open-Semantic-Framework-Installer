@@ -201,20 +201,7 @@
         file_put_contents('/etc/hosts', "\n\n# Added by the OSF-Installer to make the OSF Web Services are aware of themselves\n127.0.0.1 ".$this->osf_web_services_domain, FILE_APPEND);
       }       
       
-      $channel = '';     
       
-      while($channel != 'odbc' &&
-            $channel != 'http')
-      {
-        $channel = $this->getInput("What SPARQL communication channel do you want to use: 'odbc' or 'http'");        
-      }
-      
-      $this->exec('sed -i "s>channel = \"odbc\">channel = \"'.$channel.'\">" "'.$this->osf_web_services_folder.$this->osf_web_services_ns.'/osf.ini"'); 
-      
-      if($channel == 'http')
-      {
-        $this->exec('sed -i "s>sparql-insert = \"virtuoso\">sparql-insert = \"insert\">" "'.$this->osf_web_services_folder.$this->osf_web_services_ns.'/osf.ini"'); 
-      }
             
 
 
@@ -225,8 +212,7 @@
       $this->exec('sudo sed -i "s>host = \"localhost\">host = \"'.$this->osf_web_services_domain.'\">" "'.$this->osf_web_services_folder.$this->osf_web_services_ns.'/osf.ini"');
       $this->exec('sudo sed -i "s>solr_host = \"localhost\">solr_host = \"'.$this->osf_web_services_domain.'\">" "'.$this->osf_web_services_folder.$this->osf_web_services_ns.'/osf.ini"');
 
-      // fix fields_index_folder
-      $this->exec('sudo sed -i "s>fields_index_folder = \"/tmp/\">fields_index_folder = \"'.$this->data_folder.'/osf-web-services/tmp/\">" "'.$this->osf_web_services_folder.$this->osf_web_services_ns.'/osf.ini"');
+
       
 
 
@@ -424,15 +410,23 @@
       // Configure
       $this->span("Configuring...", 'info');
       $this->mv("{$this->osf_web_services_folder}/{$this->osf_web_services_ns}/keys.ini", "{$installPath}/osf-web-services/configs/keys.ini");
-      $this->exec('echo "{$this->application_id} = \"{$this->api_key}\"" >> "{$this->osf_web_services_folder}/{$installPath}/keys.ini"');
       $this->mv("{$this->osf_web_services_folder}/{$this->osf_web_services_ns}/osf.ini", "{$installPath}/osf-web-services/configs/osf.ini");
+      // Web Service credentials
+      $this->exec('echo "{$this->application_id} = \"{$this->api_key}\"" >> "{$this->osf_web_services_folder}/{$installPath}/keys.ini"');
+      // Web Service paths
       $this->sed("wsf_base_url = \".*\"", "wsf_base_url = \"http://{$this->osf_web_services_domain}\"", "{$installPath}/osf.ini");
       $this->sed("wsf_base_path = \".*\"", "wsf_base_path = \"{$installPath}/\"", "{$installPath}/osf.ini");
+      // Data paths
       $this->sed("wsf_graph = \".*\"", "wsf_graph = \"http://{$this->osf_web_services_domain}/wsf/\"", "{$installPath}/osf.ini");
       $this->sed("dtd_base = \".*\"", "dtd_base = \"http://{$this->osf_web_services_domain}/ws/dtd/\"", "{$installPath}/osf.ini");
       $this->sed("ontologies_files_folder = \".*\"", "ontologies_files_folder = \"{$this->data_folder}/ontologies/files/\"", "{$installPath}/osf.ini");
       $this->sed("ontological_structure_folder = \".*\"", "ontological_structure_folder = \"{$this->data_folder}/ontologies/structure/\"", "{$installPath}/osf.ini");
-
+      $this->sed("fields_index_folder = \"/.*/\"", "fields_index_folder = \"{$this->data_folder}/osf-web-services/tmp/\"", "{$installPath}/osf.ini");
+      // RDF engine
+      $this->sed("channel = \".*\"", "channel = \"{$this->channel}\"", "{$installPath}/osf.ini");
+      if ($this->channel == 'http') {
+        $this->sed("sparql-insert = \".*\"", "sparql-insert = \"insert\"", "{$installPath}/osf.ini");
+      }
     }
 
     /**
@@ -675,6 +669,7 @@
 
       // Configure
       $this->span("Configuring...", 'info');
+      // Web Service paths
       $this->sed("REPLACEME", "{$this->osf_web_services_folder}/StructuredDynamics/osf", "{$installPath}/phpunit.xml");
       $this->sed("\$this-\>osfInstanceFolder = \".*\";", "\$this-\>osfInstanceFolder = \"{$this->osf_web_services_folder}/{$this->osf_web_services_ns}/\";", "{$installPath}/Config.php");
       $this->sed("\$this-\>endpointUrl = \".*/ws/\";", "\$this-\>endpointUrl = \"http://{$this->osf_web_services_domain}/ws/\";", "{$installPath}/Config.php");
@@ -683,6 +678,7 @@
       $this->sed("\$this-\>adminGroup = '.*/wsf/groups/administrators';", "\$this-\>adminGroup = 'http://{$this->osf_web_services_domain}/wsf/groups/administrators';", "{$installPath}/Config.php");
       $this->sed("\$this-\>testGroup = \".*/wsf/groups/unittests\";", "\$this-\>testGroup = \"http://{$this->osf_web_services_domain}/wsf/groups/unittests\";", "{$installPath}/Config.php");
       $this->sed("\$this-\>testUser = \".*/wsf/users/unittests\";", "\$this-\>testUser = \"http://{$this->osf_web_services_domain}/wsf/users/unittests\";", "{$installPath}/Config.php");
+      // Web Service credentials
       $this->sed("\$this-\>applicationID = '.*';", "\$this-\>applicationID = '{$this->application_id}';", "{$installPath}/Config.php");
       $this->sed("\$this-\>apiKey = '.*';", "\$this-\>apiKey = '{$this->api_key}';", "{$installPath}/Config.php");
     }
@@ -828,7 +824,13 @@
 
       // Configure
       $this->span("Configuring...", 'info');
+      // Web Service paths
       $this->sed("folder = \".*\"", "folder = \"{$this->osf_web_services_folder}/\"", "{$installPath}/dvt.ini");
+      $this->sed("network = \".*\"", "network = \"http://{$this->osf_web_services_domain}/ws/\"", "{$installPath}/dvt.ini");
+      // Web Service credentials
+      $this->sed("application-id = \".*\"", "application-id = \"{$this->application_id}\"", "{$installPath}/dvt.ini");
+      $this->sed("api-key = \".*\"", "api-key = \"{$this->api_key}\"", "{$installPath}/dvt.ini");
+      $this->sed("user = \".*\"", "user = \"http://{$this->osf_web_services_domain}/wsf/users/admin\"", "{$installPath}/dvt.ini");
     }
 
     /**
@@ -972,8 +974,10 @@
 
       // Configure
       $this->span("Configuring...", 'info');
+      // Web Service paths
       $this->sed("osfWebServicesFolder = \".*\"", "osfWebServicesFolder = \"{$this->osf_web_services_folder}/\"", "{$installPath}/pmt.ini");
       $this->sed("osfWebServicesEndpointsUrl = \".*\"", "osfWebServicesEndpointsUrl = \"http://{$this->osf_web_services_domain}/ws/\"", "{$installPath}/pmt.ini");
+      // Web Service credentials
       $this->sed("application-id = \".*\"", "application-id = \"{$this->application_id}\"", "{$installPath}/pmt.ini");
       $this->sed("api-key = \".*\"", "api-key = \"{$this->api_key}\"", "{$installPath}/pmt.ini");
       $this->sed("user = \".*\"", "user = \"http://{$this->osf_web_services_domain}/wsf/users/admin\"", "{$installPath}/pmt.ini");
@@ -1120,10 +1124,13 @@
 
       // Configure
       $this->span("Configuring...", 'info');
+      // Web Service paths
       $this->sed("osfWebServicesFolder = \".*\"", "osfWebServicesFolder = \"{$this->osf_web_services_folder}/\"", "{$installPath}/dmt.ini");
+      // Datasets paths
       $this->sed("indexesFolder = \".*\"", "indexesFolder = \"{$installPath}/datasetIndexes/\"", "{$installPath}/dmt.ini");
       $this->sed("ontologiesStructureFiles = \".*\"", "ontologiesStructureFiles = \"{$this->data_folder}/ontologies/structure/\"", "{$installPath}/dmt.ini");
       $this->sed("missingVocabulary = \".*\"", "missingVocabulary = \"{$installPath}/missing/\"", "{$installPath}/dmt.ini");
+      // Web Service credentials
       $this->sed("application-id = \".*\"", "application-id = \"{$this->application_id}\"", "{$installPath}/dmt.ini");
       $this->sed("api-key = \".*\"", "api-key = \"{$this->api_key}\"", "{$installPath}/dmt.ini");
       $this->sed("user = \".*\"", "user = \"http://{$this->osf_web_services_domain}/wsf/users/admin\"", "{$installPath}/dmt.ini");
@@ -1270,7 +1277,9 @@
 
       // Configure
       $this->span("Configuring...", 'info');
+      // Web Service paths
       $this->sed("osfWebServicesFolder = \".*\"", "osfWebServicesFolder = \"{$this->osf_web_services_folder}/\"", "{$installPath}/omt.ini");
+      // Web Service credentials
       $this->sed("application-id = \".*\"", "application-id = \"{$this->application_id}\"", "{$installPath}/omt.ini");
       $this->sed("api-key = \".*\"", "api-key = \"{$this->api_key}\"", "{$installPath}/omt.ini");
       $this->sed("user = \".*\"", "user = \"http://{$this->osf_web_services_domain}/wsf/users/admin\"", "{$installPath}/omt.ini");

@@ -305,7 +305,75 @@
     }
 
     /**
-     * Check if the provided string is an alpha numeric string
+     * Check if the provided input is a boolean
+     * 
+     * @param mixed $input        Input to test
+     * 
+     * @param Returns TRUE if the input is a valid boolean, FALSE otherwise
+     */
+    public function isBoolean($input)
+    {
+      if ($input === NULL) {
+        return(FALSE);
+      }
+
+      $options = array(
+        'flags' => FILTER_NULL_ON_FAILURE,
+      );
+      $validation = filter_var($input, FILTER_VALIDATE_BOOLEAN, $options);
+
+      if (is_null($validation)) {
+        return(FALSE);
+      } else {
+        return(TRUE);
+      }
+    }
+
+    /**
+     * Get a boolean value from an input
+     * 
+     * @param mixed $input        Input to parse
+     * 
+     * @param Returns TRUE or FALSE
+     */
+    public function getBoolean($input)
+    {
+      if ($input === NULL) {
+        return(FALSE);
+      }
+
+      $options = array(
+        'flags' => FILTER_NULL_ON_FAILURE,
+      );
+      $result = (filter_var($input, FILTER_VALIDATE_BOOLEAN, $options)) ? 'true' : 'false';
+
+      return($result);
+    }
+
+    /**
+     * Check if the provided input is a integer number
+     * 
+     * @param mixed $input        Input to test
+     * 
+     * @param Returns TRUE if the input is a valid integer number, FALSE otherwise
+     */
+    public function isInteger($input)
+    {
+      if ($input === NULL) {
+        return(FALSE);
+      }
+
+      $validation = filter_var($input, FILTER_VALIDATE_INT);
+
+      if ($validation == FALSE) {
+        return(FALSE);
+      } else {
+        return(TRUE);
+      }
+    }
+
+    /**
+     * Check if the provided input is an alpha numeric string
      * 
      * @param mixed $input        Input to test
      * 
@@ -321,13 +389,13 @@
 
       if ($validation == FALSE) {
         return(FALSE);
+      } else {
+        return(TRUE);
       }
-
-      return(TRUE);
     }
 
     /**
-     * Check if the provided version is a valid version
+     * Check if the provided input is a valid version
      * 
      * @param mixed $input        Input to test
      * 
@@ -342,13 +410,13 @@
 
       if ($validation == FALSE) {
         return(FALSE);
+      } else {
+        return(TRUE);
       }
-
-      return(TRUE);
     }
 
     /**
-     * Check if the provided path is a valid path
+     * Check if the provided input is a valid path
      * 
      * @param mixed $input        Input to test
      * @param mixed $absolute     Treat the path as absolute or not
@@ -361,20 +429,37 @@
       }
 
       if ($absolute = TRUE) {
-        $validation = preg_match('#^(/[^/]+)+$#', $input);
+        $validation = preg_match('#^(/[^/]+)+$#', rtrim($input, '/'));
       } else {
-        $validation = preg_match('^[a-z0-9]([a-z0-9-]*[a-z0-9])?(/[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$^', $input);
+        $validation = preg_match('^[a-z0-9]([a-z0-9-]*[a-z0-9])?(/[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$^', rtrim($input, '/'));
       }
 
       if ($validation == FALSE) {
         return(FALSE);
+      } else {
+        return(TRUE);
       }
-
-      return(TRUE);
     }
 
     /**
-     * Check if the provided domain is a valid domain
+     * Get a path from an input
+     * 
+     * @param mixed $input        Input to parse
+     * 
+     * @param Returns string
+     */
+    public function getPath($input) {
+      if ($input === NULL) {
+        return(FALSE);
+      }
+
+      $result = rtrim($input, '/');
+
+      return($result);
+    }
+
+    /**
+     * Check if the provided input is a valid domain
      * 
      * @param mixed $input        Input to test
      * 
@@ -389,9 +474,58 @@
 
       if ($validation == FALSE) {
         return(FALSE);
+      } else {
+        return(TRUE);
+      }
+    }
+
+    /**
+     * Check if the provided input is a valid IP address
+     * 
+     * @param mixed $input        Input to test
+     * 
+     * @param Returns TRUE if the input is a valid IP address, FALSE otherwise
+     */
+    public function isIP($input) {
+      if ($input === NULL) {
+        return(FALSE);
       }
 
-      return(TRUE);
+      $validation = filter_var($input, FILTER_VALIDATE_IP);
+
+      if ($validation == FALSE) {
+        return(FALSE);
+      } else {
+        return(TRUE);
+      }
+    }
+
+    /**
+     * Check if the provided input is a port number
+     * 
+     * @param mixed $input        Input to test
+     * 
+     * @param Returns TRUE if the input is a valid port number, FALSE otherwise
+     */
+    public function isPort($input)
+    {
+      if ($input === NULL) {
+        return(FALSE);
+      }
+
+      $options = array(
+        'options' => array(
+          'min_range' => 1,
+          'max_range' => 65535,
+        ),
+      );
+      $validation = filter_var($input, FILTER_VALIDATE_INT, $options);
+
+      if ($validation == FALSE) {
+        return(FALSE);
+      } else {
+        return(TRUE);
+      }
     }
 
     /**

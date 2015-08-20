@@ -56,6 +56,55 @@
     protected $drupal_folder = "/usr/share/drupal";
     protected $drupal_domain = "localhost";
 
+    /* SQL dependency */
+    protected $sql_enabled = "true";
+    protected $sql_server = "mysql";
+    protected $sql_host = "localhost";
+    protected $sql_port = "3306";
+    protected $sql_root_username = "root";
+    protected $sql_root_password = "root";
+    protected $sql_app_username = "drupal";
+    protected $sql_app_password = "drupal";
+    protected $sql_app_database = "drupal";
+    protected $sql_app_engine = "innodb";
+    protected $sql_app_collation = "utf8_general_ci";
+
+    /* SPARQL dependency */
+    protected $sparql_enabled = "true";
+    protected $sparql_server = "virtuoso";
+    protected $sparql_channel = "odbc";
+    protected $sparql_dsn = "OSF-triples-store";
+    protected $sparql_host = "localhost";
+    protected $sparql_port = "8890";
+    protected $sparql_url = "/sparql";
+    protected $sparql_graph_url = "/sparql-graph-crud-auth";
+    protected $sparql_username = "dba";
+    protected $sparql_password = "dba";
+
+    /* Keycache dependency */
+    protected $keycache_enabled = "true";
+    protected $keycache_server = "memcached";
+    protected $keycache_host = "localhost";
+    protected $keycache_port = "11211";
+
+    /* Solr dependency */
+    protected $solr_enabled = "true";
+    protected $solr_host = "localhost";
+    protected $solr_port = "8983";
+    protected $solr_core = "";
+
+    /* OWL dependency */
+    protected $owl_enabled = "true";
+    protected $owl_host = "localhost";
+    protected $owl_port = "8080";
+    protected $owl_url = "/OWLAPI";
+
+    /* Scones dependency */
+    protected $scones_enabled = "true";
+    protected $scones_host = "localhost";
+    protected $scones_port = "8080";
+    protected $scones_url = "/scones";
+
     /**
      *  Construct class by loading configuration
      */
@@ -75,11 +124,10 @@
        *  OSF Installation status
        */
       if (isset($this->config['installer']['osfConfigured'])) {
-        if (!empty($this->config['installer']['osfConfigured'])) {
-          if (strtolower($this->config['installer']['osfConfigured']) === 'false') {
-            $this->installer_osf_configured = FALSE;
-          } else {
-            $this->installer_osf_configured = TRUE;
+        $input = $this->config['installer']['osfConfigured'];
+        if (!empty($input)) {
+          if ($this->isBoolean($input)) {
+            $this->installer_osf_configured = $this->getBoolean($input);
           }
         }
       }
@@ -88,11 +136,10 @@
        *  OSF Drupal Installation status
        */
       if (isset($this->config['installer']['osfDrupalConfigured'])) {
-        if (!empty($this->config['installer']['osfDrupalConfigured'])) {
-          if (strtolower($this->config['installer']['osfDrupalConfigured']) === 'false') {
-            $this->installer_osf_drupal_configured = FALSE;
-          } else {
-            $this->installer_osf_drupal_configured = TRUE;
+        $input = $this->config['installer']['osfDrupalConfigured'];
+        if (!empty($input)) {
+          if ($this->isBoolean($input)) {
+            $this->installer_osf_drupal_configured = $this->getBoolean($input);
           }
         }
       }
@@ -101,23 +148,35 @@
        *  OSF Common
        */
       if (isset($this->config['osf']['application-id'])) {
-        if (!empty($this->config['osf']['application-id'])) {
-          $this->application_id = $this->config['osf']['application-id'];
+        $input = $this->config['osf']['application-id'];
+        if (!empty($input)) {
+          if ($this->isAlphaNumeric($input)) {
+            $this->application_id = $input;
+          }
         }
       }
       if (isset($this->config['osf']['api-key'])) {
-        if (!empty($this->config['osf']['api-key'])) {
-          $this->api_key = $this->config['osf']['api-key'];
+        $input = $this->config['osf']['api-key'];
+        if (!empty($input)) {
+          if ($this->isAlphaNumeric($input)) {
+            $this->api_key = $input;
+          }
         }
       }
       if (isset($this->config['osf']['data-folder'])) {
-        if (!empty($this->config['osf']['data-folder'])) {
-          $this->data_folder = rtrim($this->config['osf']['data-folder'], '/');
+        $input = $this->config['osf']['data-folder'];
+        if (!empty($input)) {
+          if ($this->isPath($input)) {
+            $this->data_folder = $this->getPath($input);
+          }
         }
       }
       if (isset($this->config['osf']['logging-folder'])) {
-        if (!empty($this->config['osf']['logging-folder'])) {
-          $this->logging_folder = rtrim($this->config['osf']['logging-folder'], '/');
+        $input = $this->config['osf']['logging-folder'];
+        if (!empty($input)) {
+          if ($this->isPath($input)) {
+            $this->logging_folder = $this->getPath($input);
+          }
         }
       }
 
@@ -125,22 +184,29 @@
        *  OSF Web Services
        */
       if (isset($this->config['osf-web-services']['osf-web-services-version'])) {
-        if (!empty($this->config['osf-web-services']['osf-web-services-version'])) {
-          if (strtolower($this->config['osf-web-services']['osf-web-services-version']) == 'dev') {
+        $input = $this->config['osf-web-services']['osf-web-services-version'];
+        if (!empty($input)) {
+          if (strtolower($input) == 'dev' || strtolower($input) == 'master') {
             $this->osf_web_services_version = 'master';
-          } else {
-            $this->osf_web_services_version = $this->config['osf-web-services']['osf-web-services-version'];
+          } elseif ($this->isVersion($input)) {
+            $this->osf_web_services_version = $input;
           }
         }
       }
       if (isset($this->config['osf-web-services']['osf-web-services-folder'])) {
-        if (!empty($this->config['osf-web-services']['osf-web-services-folder'])) {
-          $this->osf_web_services_folder = rtrim($this->config['osf-web-services']['osf-web-services-folder'], '/');
+        $input = $this->config['osf-web-services']['osf-web-services-folder'];
+        if (!empty($input)) {
+          if ($this->isPath($input)) {
+            $this->osf_web_services_folder = $this->getPath($input);
+          }
         }
       }
       if (isset($this->config['osf-web-services']['osf-web-services-domain'])) {
-        if (!empty($this->config['osf-web-services']['osf-web-services-domain'])) {
-          $this->osf_web_services_domain = $this->config['osf-web-services']['osf-web-services-domain'];
+        $input = $this->config['osf-web-services']['osf-web-services-domain'];
+        if (!empty($input)) {
+          if ($this->isIP($input) || $this->isDomain($input)) {
+            $this->osf_web_services_domain = $input;
+          }
         }
       }
 
@@ -148,17 +214,21 @@
        *  OSF WS-PHP-API
        */
       if (isset($this->config['osf-components']['osf-ws-php-api-version'])) {
-        if (!empty($this->config['osf-components']['osf-ws-php-api-version'])) {
-          if (strtolower($this->config['osf-components']['osf-ws-php-api-version']) == 'dev') {
+        $input = $this->config['osf-components']['osf-ws-php-api-version'];
+        if (!empty($input)) {
+          if (strtolower($input) == 'dev' || strtolower($input) == 'master') {
             $this->osf_ws_php_api_version = 'master';
-          } else {
-            $this->osf_ws_php_api_version = $this->config['osf-components']['osf-ws-php-api-version'];
+          } elseif ($this->isVersion($input)) {
+            $this->osf_ws_php_api_version = $input;
           }
         }
       }
       if (isset($this->config['osf-components']['osf-ws-php-api-folder'])) {
-        if (!empty($this->config['osf-components']['osf-ws-php-api-folder'])) {
-          $this->osf_ws_php_api_folder = rtrim($this->config['osf-components']['osf-ws-php-api-folder'], '/');
+        $input = $this->config['osf-components']['osf-ws-php-api-folder'];
+        if (!empty($input)) {
+          if ($this->isPath($input)) {
+            $this->osf_ws_php_api_folder = $this->getPath($input);
+          }
         }
       }
 
@@ -166,17 +236,21 @@
        *  OSF Tests Suites
        */
       if (isset($this->config['osf-components']['osf-tests-suites-version'])) {
-        if (!empty($this->config['osf-components']['osf-tests-suites-version'])) {
-          if (strtolower($this->config['osf-components']['osf-tests-suites-version']) == 'dev') {
+        $input = $this->config['osf-components']['osf-tests-suites-version'];
+        if (!empty($input)) {
+          if (strtolower($input) == 'dev' || strtolower($input) == 'master') {
             $this->osf_tests_suites_version = 'master';
-          } else {
-            $this->osf_tests_suites_version = $this->config['osf-components']['osf-tests-suites-version'];
+          } elseif ($this->isVersion($input)) {
+            $this->osf_tests_suites_version = $input;
           }
         }
       }
       if (isset($this->config['osf-components']['osf-tests-suites-folder'])) {
-        if (!empty($this->config['osf-components']['osf-tests-suites-folder'])) {
-          $this->osf_tests_suites_folder = rtrim($this->config['osf-components']['osf-tests-suites-folder'], '/');
+        $input = $this->config['osf-components']['osf-tests-suites-folder'];
+        if (!empty($input)) {
+          if ($this->isPath($input)) {
+            $this->osf_tests_suites_folder = $this->getPath($input);
+          }
         }
       }
 
@@ -184,17 +258,21 @@
        *  OSF Data Validator Tool
        */
       if (isset($this->config['osf-components']['data-validator-tool-version'])) {
-        if (!empty($this->config['osf-components']['data-validator-tool-version'])) {
-          if (strtolower($this->config['osf-components']['data-validator-tool-version']) == 'dev') {
+        $input = $this->config['osf-components']['data-validator-tool-version'];
+        if (!empty($input)) {
+          if (strtolower($input) == 'dev' || strtolower($input) == 'master') {
             $this->data_validator_tool_version = 'master';
-          } else {
-            $this->data_validator_tool_version = $this->config['osf-components']['data-validator-tool-version'];
+          } elseif ($this->isVersion($input)) {
+            $this->data_validator_tool_version = $input;
           }
         }
       }
       if (isset($this->config['osf-components']['data-validator-tool-folder'])) {
-        if (!empty($this->config['osf-components']['data-validator-tool-folder'])) {
-          $this->data_validator_tool_folder = rtrim($this->config['osf-components']['data-validator-tool-folder'], '/');
+        $input = $this->config['osf-components']['data-validator-tool-folder'];
+        if (!empty($input)) {
+          if ($this->isPath($input)) {
+            $this->data_validator_tool_folder = $this->getPath($input);
+          }
         }
       }
 
@@ -202,17 +280,21 @@
        *  OSF Permissions Management Tool
        */
       if (isset($this->config['osf-tools']['permissions-management-tool-version'])) {
-        if (!empty($this->config['osf-tools']['permissions-management-tool-version'])) {
-          if (strtolower($this->config['osf-tools']['permissions-management-tool-version']) == 'dev') {
+        $input = $this->config['osf-tools']['permissions-management-tool-version'];
+        if (!empty($input)) {
+          if (strtolower($input) == 'dev' || strtolower($input) == 'master') {
             $this->permissions_management_tool_version = 'master';
-          } else {
-            $this->permissions_management_tool_version = $this->config['osf-tools']['permissions-management-tool-version'];
+          } elseif ($this->isVersion($input)) {
+            $this->permissions_management_tool_version = $input;
           }
         }
       }
       if (isset($this->config['osf-tools']['permissions-management-tool-folder'])) {
-        if (!empty($this->config['osf-tools']['permissions-management-tool-folder'])) {
-          $this->permissions_management_tool_folder = rtrim($this->config['osf-tools']['permissions-management-tool-folder'], '/');
+        $input = $this->config['osf-tools']['permissions-management-tool-folder'];
+        if (!empty($input)) {
+          if ($this->isPath($input)) {
+            $this->permissions_management_tool_folder = $this->getPath($input);
+          }
         }
       }
 
@@ -220,17 +302,21 @@
        *  OSF Datasets Management Tool
        */
       if (isset($this->config['osf-tools']['datasets-management-tool-version'])) {
-        if (!empty($this->config['osf-tools']['datasets-management-tool-version'])) {
-          if (strtolower($this->config['osf-tools']['datasets-management-tool-version']) == 'dev') {
+        $input = $this->config['osf-tools']['datasets-management-tool-version'];
+        if (!empty($input)) {
+          if (strtolower($input) == 'dev' || strtolower($input) == 'master') {
             $this->datasets_management_tool_version = 'master';
-          } else {
-            $this->datasets_management_tool_version = $this->config['osf-tools']['datasets-management-tool-version'];
+          } elseif ($this->isVersion($input)) {
+            $this->datasets_management_tool_version = $input;
           }
         }
       }
       if (isset($this->config['osf-tools']['datasets-management-tool-folder'])) {
-        if (!empty($this->config['osf-tools']['datasets-management-tool-folder'])) {
-          $this->datasets_management_tool_folder = rtrim($this->config['osf-tools']['datasets-management-tool-folder'], '/');
+        $input = $this->config['osf-tools']['datasets-management-tool-folder'];
+        if (!empty($input)) {
+          if ($this->isPath($input)) {
+            $this->datasets_management_tool_folder = $this->getPath($input);
+          }
         }
       }
 
@@ -238,17 +324,21 @@
        *  OSF Ontologies Management Tool
        */
       if (isset($this->config['osf-tools']['ontologies-management-tool-version'])) {
-        if (!empty($this->config['osf-tools']['ontologies-management-tool-version'])) {
-          if (strtolower($this->config['osf-tools']['ontologies-management-tool-version']) == 'dev') {
+        $input = $this->config['osf-tools']['ontologies-management-tool-version'];
+        if (!empty($input)) {
+          if (strtolower($input) == 'dev' || strtolower($input) == 'master') {
             $this->ontologies_management_tool_version = 'master';
-          } else {
-            $this->ontologies_management_tool_version = $this->config['osf-tools']['ontologies-management-tool-version'];
+          } elseif ($this->isVersion($input)) {
+            $this->ontologies_management_tool_version = $input;
           }
         }
       }
       if (isset($this->config['osf-tools']['ontologies-management-tool-folder'])) {
-        if (!empty($this->config['osf-tools']['ontologies-management-tool-folder'])) {
-          $this->ontologies_management_tool_folder = rtrim($this->config['osf-tools']['ontologies-management-tool-folder'], '/');
+        $input = $this->config['osf-tools']['ontologies-management-tool-folder'];
+        if (!empty($input)) {
+          if ($this->isPath($input)) {
+            $this->ontologies_management_tool_folder = $this->getPath($input);
+          }
         }
       }
 
@@ -256,18 +346,349 @@
        *  Drupal framework
        */
       if (isset($this->config['osf-drupal']['drupal-version'])) {
-        if (!empty($this->config['osf-drupal']['drupal-version'])) {
-          $this->drupal_version = $this->config['osf-drupal']['drupal-version'];
+        $input = $this->config['osf-drupal']['drupal-version'];
+        if (!empty($input)) {
+          if (strtolower($input) == 'dev' || strtolower($input) == 'master') {
+            $this->drupal_version = 'master';
+          } elseif ($this->isVersion($input)) {
+            $this->drupal_version = $input;
+          }
         }
       }
       if (isset($this->config['osf-drupal']['drupal-folder'])) {
-        if (!empty($this->config['osf-drupal']['drupal-folder'])) {
-          $this->drupal_folder = rtrim($this->config['osf-drupal']['drupal-folder'], '/');
+        $input = $this->config['osf-drupal']['drupal-folder'];
+        if (!empty($input)) {
+          if ($this->isPath($input)) {
+            $this->drupal_folder = $this->getPath($input);
+          }
         }
       }
       if (isset($this->config['osf-drupal']['drupal-domain'])) {
-        if (!empty($this->config['osf-drupal']['drupal-domain'])) {
-          $this->drupal_domain = $this->config['osf-drupal']['drupal-domain'];
+        $input = $this->config['osf-drupal']['drupal-domain'];
+        if (!empty($input)) {
+          if ($this->isIP($input) || $this->isDomain($input)) {
+            $this->drupal_domain = $input;
+          }
+        }
+      }
+
+      /**
+       *  SQL dependency
+       */
+      if (isset($this->config['sql']['sql-enabled'])) {
+        $input = $this->config['sql']['sql-enabled'];
+        if (!empty($input)) {
+          if ($this->isBoolean($input)) {
+            $this->sql_enabled = $this->getBoolean($input);
+          }
+        }
+      }
+      if (isset($this->config['sql']['sql-server'])) {
+        $input = $this->config['sql']['sql-server'];
+        if (!empty($input)) {
+          if ($input == 'mysql') {
+            $this->sql_server = $input;
+          }
+        }
+      }
+      if (isset($this->config['sql']['sql-host'])) {
+        $input = $this->config['sql']['sql-host'];
+        if (!empty($input)) {
+          if ($this->isIP($input) || $this->isDomain($input)) {
+            $this->sql_host = $input;
+          }
+        }
+      }
+      if (isset($this->config['sql']['sql-port'])) {
+        $input = $this->config['sql']['sql-port'];
+        if (!empty($input)) {
+          if ($this->isPort($input)) {
+            $this->sql_port = $input;
+          }
+        }
+      }
+      if (isset($this->config['sql']['sql-root-username'])) {
+        $input = $this->config['sql']['sql-root-username'];
+        if (!empty($input)) {
+          if ($this->isAlphaNumeric($input)) {
+            $this->sql_root_username = $input;
+          }
+        }
+      }
+      if (isset($this->config['sql']['sql-root-password'])) {
+        $input = $this->config['sql']['sql-root-password'];
+        if (!empty($input)) {
+          if ($this->isAlphaNumeric($input)) {
+            $this->sql_root_password = $input;
+          }
+        }
+      }
+      if (isset($this->config['sql']['sql-app-username'])) {
+        $input = $this->config['sql']['sql-app-username'];
+        if (!empty($input)) {
+          if ($this->isAlphaNumeric($input)) {
+            $this->sql_app_username = $input;
+          }
+        }
+      }
+      if (isset($this->config['sql']['sql-app-password'])) {
+        $input = $this->config['sql']['sql-app-password'];
+        if (!empty($input)) {
+          if ($this->isAlphaNumeric($input)) {
+            $this->sql_app_password = $input;
+          }
+        }
+      }
+      if (isset($this->config['sql']['sql-app-database'])) {
+        $input = $this->config['sql']['sql-app-database'];
+        if (!empty($input)) {
+          if ($this->isAlphaNumeric($input)) {
+            $this->sql_app_database = $input;
+          }
+        }
+      }
+      if (isset($this->config['sql']['sql-app-engine'])) {
+        $input = $this->config['sql']['sql-app-engine'];
+        if (!empty($input)) {
+          if ($input == 'innodb' || $input == 'xtradb') {
+            $this->sql_app_engine = $input;
+          }
+        }
+      }
+      if (isset($this->config['sql']['sql-app-collation'])) {
+        $input = $this->config['sql']['sql-app-collation'];
+        if (!empty($input)) {
+          if ($input == 'utf8_general_ci') {
+            $this->sql_app_collation = $input;
+          }
+        }
+      }
+
+      /**
+       *  SPARQL dependency
+       */
+      if (isset($this->config['sparql']['sparql-enabled'])) {
+        $input = $this->config['sparql']['sparql-enabled'];
+        if (!empty($input)) {
+          if ($this->isBoolean($input)) {
+            $this->sparql_enabled = $this->getBoolean($input);
+          }
+        }
+      }
+      if (isset($this->config['sparql']['sparql-server'])) {
+        $input = $this->config['sparql']['sparql-server'];
+        if (!empty($input)) {
+          if ($input == 'virtuoso') {
+            $this->sparql_server = $input;
+          }
+        }
+      }
+      if (isset($this->config['sparql']['sparql-channel'])) {
+        $input = $this->config['sparql']['sparql-channel'];
+        if (!empty($input)) {
+          if ($input == 'odbc' || $input == 'http') {
+            $this->sparql_channel = $input;
+          }
+        }
+      }
+      if (isset($this->config['sparql']['sparql-dsn'])) {
+        $input = $this->config['sparql']['sparql-dsn'];
+        if (!empty($input)) {
+          if ($this->isAlphaNumeric($input)) {
+            $this->sparql_dsn = $input;
+          }
+        }
+      }
+      if (isset($this->config['sparql']['sparql-host'])) {
+        $input = $this->config['sparql']['sparql-host'];
+        if (!empty($input)) {
+          if ($this->isIP($input) || $this->isDomain($input)) {
+            $this->sparql_host = $input;
+          }
+        }
+      }
+      if (isset($this->config['sparql']['sparql-port'])) {
+        $input = $this->config['sparql']['sparql-port'];
+        if (!empty($input)) {
+          if ($this->isPort($input)) {
+            $this->sparql_port = $input;
+          }
+        }
+      }
+      if (isset($this->config['sparql']['owl-url'])) {
+        $input = $this->config['sparql']['owl-url'];
+        if (!empty($input)) {
+          if ($this->isPath($input)) {
+            $this->sparql_url = $this->getPath($input);
+          }
+        }
+      }
+      if (isset($this->config['sparql']['sparql-graph-url'])) {
+        $input = $this->config['sparql']['sparql-graph-url'];
+        if (!empty($input)) {
+          if ($this->isPath($input)) {
+            $this->sparql_graph_url = $this->getPath($input);
+          }
+        }
+      }
+      if (isset($this->config['sparql']['sparql-username'])) {
+        $input = $this->config['sparql']['sparql-username'];
+        if (!empty($input)) {
+          if ($this->isAlphaNumeric($input)) {
+            $this->sparql_username = $input;
+          }
+        }
+      }
+      if (isset($this->config['sparql']['sparql-password'])) {
+        $input = $this->config['sparql']['sparql-password'];
+        if (!empty($input)) {
+          if ($this->isAlphaNumeric($input)) {
+            $this->sparql_password = $input;
+          }
+        }
+      }
+
+      /**
+       *  Keycache dependency
+       */
+      if (isset($this->config['keycache']['keycache-enabled'])) {
+        $input = $this->config['keycache']['keycache-enabled'];
+        if (!empty($input)) {
+          if ($this->isBoolean($input)) {
+            $this->keycache_enabled = $this->getBoolean($input);
+          }
+        }
+      }
+      if (isset($this->config['keycache']['keycache-server'])) {
+        $input = $this->config['keycache']['keycache-server'];
+        if (!empty($input)) {
+          if ($input == 'memcached') {
+            $this->keycache_server = $input;
+          }
+        }
+      }
+      if (isset($this->config['keycache']['keycache-host'])) {
+        $input = $this->config['keycache']['keycache-host'];
+        if (!empty($input)) {
+          if ($this->isIP($input) || $this->isDomain($input)) {
+            $this->keycache_host = $input;
+          }
+        }
+      }
+      if (isset($this->config['keycache']['keycache-port'])) {
+        $input = $this->config['keycache']['keycache-port'];
+        if (!empty($input)) {
+          if ($this->isPort($input)) {
+            $this->keycache_port = $input;
+          }
+        }
+      }
+
+      /**
+       *  Solr dependency
+       */
+      if (isset($this->config['solr']['solr-enabled'])) {
+        $input = $this->config['solr']['solr-enabled'];
+        if (!empty($input)) {
+          if ($this->isBoolean($input)) {
+            $this->solr_enabled = $this->getBoolean($input);
+          }
+        }
+      }
+      if (isset($this->config['solr']['solr-host'])) {
+        $input = $this->config['solr']['solr-host'];
+        if (!empty($input)) {
+          if ($this->isIP($input) || $this->isDomain($input)) {
+            $this->solr_host = $input;
+          }
+        }
+      }
+      if (isset($this->config['solr']['solr-port'])) {
+        $input = $this->config['solr']['solr-port'];
+        if (!empty($input)) {
+          if ($this->isPort($input)) {
+            $this->solr_port = $input;
+          }
+        }
+      }
+      if (isset($this->config['solr']['solr-core'])) {
+        $input = $this->config['solr']['solr-core'];
+        if (!empty($input)) {
+          if ($this->isAlphaNumeric($input)) {
+            $this->solr_core = $input;
+          }
+        }
+      }
+
+      /**
+       *  OWL dependency
+       */
+      if (isset($this->config['owl']['owl-enabled'])) {
+        $input = $this->config['owl']['owl-enabled'];
+        if (!empty($input)) {
+          if ($this->isBoolean($input)) {
+            $this->owl_enabled = $this->getBoolean($input);
+          }
+        }
+      }
+      if (isset($this->config['owl']['owl-host'])) {
+        $input = $this->config['owl']['owl-host'];
+        if (!empty($input)) {
+          if ($this->isIP($input) || $this->isDomain($input)) {
+            $this->owl_host = $input;
+          }
+        }
+      }
+      if (isset($this->config['owl']['owl-port'])) {
+        $input = $this->config['owl']['owl-port'];
+        if (!empty($input)) {
+          if ($this->isPort($input)) {
+            $this->owl_port = $input;
+          }
+        }
+      }
+      if (isset($this->config['owl']['owl-url'])) {
+        $input = $this->config['owl']['owl-url'];
+        if (!empty($input)) {
+          if ($this->isPath($input)) {
+            $this->owl_url = $this->getPath($input);
+          }
+        }
+      }
+
+      /**
+       *  Scones dependency
+       */
+      if (isset($this->config['scones']['scones-enabled'])) {
+        $input = $this->config['scones']['scones-enabled'];
+        if (!empty($input)) {
+          if ($this->isBoolean($input)) {
+            $this->scones_enabled = $this->getBoolean($input);
+          }
+        }
+      }
+      if (isset($this->config['scones']['scones-host'])) {
+        $input = $this->config['scones']['scones-host'];
+        if (!empty($input)) {
+          if ($this->isIP($input) || $this->isDomain($input)) {
+            $this->scones_host = $input;
+          }
+        }
+      }
+      if (isset($this->config['scones']['scones-port'])) {
+        $input = $this->config['scones']['scones-port'];
+        if (!empty($input)) {
+          if ($this->isPort($input)) {
+            $this->scones_port = $input;
+          }
+        }
+      }
+      if (isset($this->config['scones']['scones-url'])) {
+        $input = $this->config['scones']['scones-url'];
+        if (!empty($input)) {
+          if ($this->isPath($input)) {
+            $this->scones_url = $this->getPath($input);
+          }
         }
       }
 
@@ -290,27 +711,39 @@
        *  OSF Common
        */
       $this->h3("OSF Common configuration");
-      $input = $this->getInput("Input a Application ID: (current: {$this->application_id})");
-      if (!empty($input)) {
-        if ($this->isAlphaNumeric($input) == TRUE) {
-          $this->application_id = $input;
+      do {
+        $input = $this->getInput("Input a Application ID: (current: {$this->application_id})");
+        if (!empty($input)) {
+          if ($this->isAlphaNumeric($input)) {
+            $this->application_id = $input;
+            break;
+          }
+        } else {
+          break;
         }
-      }
-      $input = $this->getInput("Input a API Key: (current: {$this->api_key})");
-      if (!empty($input)) {
-        if ($this->isAlphaNumeric($input) == TRUE) {
-          $this->api_key = $input;
+      } while (1);
+      do {
+        $input = $this->getInput("Input a API Key: (current: {$this->api_key})");
+        if (!empty($input)) {
+          if ($this->isAlphaNumeric($input)) {
+            $this->api_key = $input;
+            break;
+          }
+        } elseif (empty($input) && $this->api_key == "some-key") {
+          $this->span("Generating a API Key...", 'info');
+          $this->api_key = strtoupper(bin2hex(openssl_random_pseudo_bytes(16)));
+          $this->span("The generated API Key is {$this->api_key}", 'info');
+          break;
+        } else {
+          $this->span("The already configured API Key is {$this->api_key}", 'info');
+          break;
         }
-      } elseif (empty($input) && $this->api_key == "some-key") {
-        $this->span("Generating a API Key...", 'info');
-        $this->api_key = strtoupper(bin2hex(openssl_random_pseudo_bytes(16)));
-        $this->span("The generated API Key is {$this->api_key}", 'info');
-      }
+      } while (1);
       do {
         $input = $this->getInput("Input a data path: (current: {$this->data_folder})");
         if (!empty($input)) {
-          if ($this->isPath(rtrim($input, '/')) == TRUE) {
-            $this->data_folder = rtrim($input, '/');
+          if ($this->isPath($input)) {
+            $this->data_folder = $this->getPath($input);
             break;
           }
         } else {
@@ -320,8 +753,8 @@
       do {
         $input = $this->getInput("Input a logging path: (current: {$this->logging_folder})");
         if (!empty($input)) {
-          if ($this->isPath(rtrim($input, '/')) == TRUE) {
-            $this->logging_folder = rtrim($input, '/');
+          if ($this->isPath($input)) {
+            $this->logging_folder = $this->getPath($input);
             break;
           }
         } else {
@@ -336,7 +769,10 @@
       do {
         $input = $this->getInput("Input a version: (current: " . ($this->osf_web_services_version == 'master' ? 'dev' : $this->osf_web_services_version) . ", valid: dev or <version>)");
         if (!empty($input)) {
-          if ($this->isVersion($input) == TRUE || $input == 'dev') {
+          if (strtolower($input) == 'dev' || strtolower($input) == 'master') {
+            $this->osf_web_services_version = 'dev';
+            break;
+          } elseif ($this->isVersion($input)) {
             $this->osf_web_services_version = $input;
             break;
           }
@@ -347,8 +783,8 @@
       do {
         $input = $this->getInput("Input a path: (current: {$this->osf_web_services_folder})");
         if (!empty($input)) {
-          if ($this->isPath(rtrim($input, '/')) == TRUE) {
-            $this->osf_web_services_folder = rtrim($input, '/');
+          if ($this->isPath($input)) {
+            $this->osf_web_services_folder = $this->getPath($input);
             break;
           }
         } else {
@@ -358,7 +794,7 @@
       do {
         $input = $this->getInput("Input a domain: (current: {$this->osf_web_services_domain})");
         if (!empty($input)) {
-          if ($this->isDomain($input) == TRUE) {
+          if ($this->isDomain($input)) {
             $this->osf_web_services_domain = $input;
             break;
           }
@@ -374,7 +810,10 @@
       do {
         $input = $this->getInput("Input a version: (current: " . ($this->osf_ws_php_api_version == 'master' ? 'dev' : $this->osf_ws_php_api_version) . ", valid: dev or <version>)");
         if (!empty($input)) {
-          if ($this->isVersion($input) == TRUE || $input == 'dev') {
+          if (strtolower($input) == 'dev' || strtolower($input) == 'master') {
+            $this->osf_ws_php_api_version = 'dev';
+            break;
+          } elseif ($this->isVersion($input)) {
             $this->osf_ws_php_api_version = $input;
             break;
           }
@@ -385,8 +824,8 @@
       do {
         $input = $this->getInput("Input a path: (current: {$this->osf_ws_php_api_folder})");
         if (!empty($input)) {
-          if ($this->isPath(rtrim($input, '/'), FALSE) == TRUE) {
-            $this->osf_ws_php_api_folder = rtrim($input, '/');
+          if ($this->isPath($input, FALSE)) {
+            $this->osf_ws_php_api_folder = $this->getPath($input);
             break;
           }
         } else {
@@ -401,7 +840,10 @@
       do {
         $input = $this->getInput("Input a version: (current: " . ($this->osf_tests_suites_version == 'master' ? 'dev' : $this->osf_tests_suites_version) . ", valid: dev or <version>)");
         if (!empty($input)) {
-          if ($this->isVersion($input) == TRUE || $input == 'dev') {
+          if (strtolower($input) == 'dev' || strtolower($input) == 'master') {
+            $this->osf_tests_suites_version = 'dev';
+            break;
+          } elseif ($this->isVersion($input)) {
             $this->osf_tests_suites_version = $input;
             break;
           }
@@ -412,8 +854,8 @@
       do {
         $input = $this->getInput("Input a path: (current: {$this->osf_tests_suites_folder})");
         if (!empty($input)) {
-          if ($this->isPath(rtrim($input, '/'), FALSE) == TRUE) {
-            $this->osf_tests_suites_folder = rtrim($input, '/');
+          if ($this->isPath($input, FALSE)) {
+            $this->osf_tests_suites_folder = $this->getPath($input);
             break;
           }
         } else {
@@ -428,7 +870,10 @@
       do {
         $input = $this->getInput("Input a version: (current: " . ($this->data_validator_tool_version == 'master' ? 'dev' : $this->data_validator_tool_version) . ", valid: dev or <version>)");
         if (!empty($input)) {
-          if ($this->isVersion($input) == TRUE || $input == 'dev') {
+          if (strtolower($input) == 'dev' || strtolower($input) == 'master') {
+            $this->data_validator_tool_version = 'dev';
+            break;
+          } elseif ($this->isVersion($input)) {
             $this->data_validator_tool_version = $input;
             break;
           }
@@ -439,8 +884,8 @@
       do {
         $input = $this->getInput("Input a path: (current: {$this->data_validator_tool_folder})");
         if (!empty($input)) {
-          if ($this->isPath(rtrim($input, '/'), FALSE) == TRUE) {
-            $this->data_validator_tool_folder = rtrim($input, '/');
+          if ($this->isPath($input, FALSE)) {
+            $this->data_validator_tool_folder = $this->getPath($input);
             break;
           }
         } else {
@@ -455,7 +900,10 @@
       do {
         $input = $this->getInput("Input a version: (current: " . ($this->permissions_management_tool_version == 'master' ? 'dev' : $this->permissions_management_tool_version) . ", valid: dev or <version>)");
         if (!empty($input)) {
-          if ($this->isVersion($input) == TRUE || $input == 'dev') {
+          if (strtolower($input) == 'dev' || strtolower($input) == 'master') {
+            $this->permissions_management_tool_version = 'dev';
+            break;
+          } elseif ($this->isVersion($input)) {
             $this->permissions_management_tool_version = $input;
             break;
           }
@@ -466,8 +914,8 @@
       do {
         $input = $this->getInput("Input a path: (current: {$this->permissions_management_tool_folder})");
         if (!empty($input)) {
-          if ($this->isPath(rtrim($input, '/')) == TRUE) {
-            $this->permissions_management_tool_folder = rtrim($input, '/');
+          if ($this->isPath($input)) {
+            $this->permissions_management_tool_folder = $this->getPath($input);
             break;
           }
         } else {
@@ -482,7 +930,10 @@
       do {
         $input = $this->getInput("Input a version: (current: " . ($this->datasets_management_tool_version == 'master' ? 'dev' : $this->datasets_management_tool_version) . ", valid: dev or <version>)");
         if (!empty($input)) {
-          if ($this->isVersion($input) == TRUE || $input == 'dev') {
+          if (strtolower($input) == 'dev' || strtolower($input) == 'master') {
+            $this->datasets_management_tool_version = 'dev';
+            break;
+          } elseif ($this->isVersion($input)) {
             $this->datasets_management_tool_version = $input;
             break;
           }
@@ -493,8 +944,8 @@
       do {
         $input = $this->getInput("Input a path: (current: {$this->datasets_management_tool_folder})");
         if (!empty($input)) {
-          if ($this->isPath(rtrim($input, '/')) == TRUE) {
-            $this->datasets_management_tool_folder = rtrim($input, '/');
+          if ($this->isPath($input)) {
+            $this->datasets_management_tool_folder = $this->getPath($input);
             break;
           }
         } else {
@@ -509,7 +960,10 @@
       do {
         $input = $this->getInput("Input a version: (current: " . ($this->ontologies_management_tool_version == 'master' ? 'dev' : $this->ontologies_management_tool_version) . ", valid: dev or <version>)");
         if (!empty($input)) {
-          if ($this->isVersion($input) == TRUE || $input == 'dev') {
+          if (strtolower($input) == 'dev' || strtolower($input) == 'master') {
+            $this->ontologies_management_tool_version = 'dev';
+            break;
+          } elseif ($this->isVersion($input)) {
             $this->ontologies_management_tool_version = $input;
             break;
           }
@@ -520,8 +974,319 @@
       do {
         $input = $this->getInput("Input a path: (current: {$this->ontologies_management_tool_folder})");
         if (!empty($input)) {
-          if ($this->isPath(rtrim($input, '/')) == TRUE) {
-            $this->ontologies_management_tool_folder = rtrim($input, '/');
+          if ($this->isPath($input)) {
+            $this->ontologies_management_tool_folder = $this->getPath($input);
+            break;
+          }
+        } else {
+          break;
+        }
+      } while (1);
+
+      /**
+       *  SPARQL dependency
+       */
+      $this->h3("SPARQL dependency configuration");
+      do {
+        $input = $this->getInput("Input if dependency should be configured: (current: {$this->sparql_enabled}, valid: true or false)");
+        if (!empty($input)) {
+          if ($this->isBoolean($input)) {
+            $this->sparql_enabled = $this->getBoolean($input);
+            break;
+          }
+        } else {
+          break;
+        }
+      } while (1);
+      do {
+        $input = $this->getInput("Input a server type: (current: {$this->sparql_server}, valid: virtuoso)");
+        if (!empty($input)) {
+          if ($input == 'virtuoso') {
+            $this->sparql_server = $input;
+            break;
+          }
+        } else {
+          break;
+        }
+      } while (1);
+      do {
+        $input = $this->getInput("Input a communication channel: (current: {$this->sparql_channel}, valid: odbc or http)");
+        if (!empty($input)) {
+          if ($input == 'odbc' || $input == 'http') {
+            $this->sparql_channel = $input;
+            break;
+          }
+        } else {
+          break;
+        }
+      } while (1);
+      do {
+        $input = $this->getInput("Input a DSN: (current: {$this->sparql_dsn}, valid: <dsn>)");
+        if (!empty($input)) {
+          if ($this->isAlphaNumeric($input)) {
+            $this->sparql_dsn = $input;
+            break;
+          }
+        } else {
+          break;
+        }
+      } while (1);
+      do {
+        $input = $this->getInput("Input a host: (current: {$this->sparql_host}, valid: <host>)");
+        if (!empty($input)) {
+          if ($this->isIP($input) || $this->isDomain($input)) {
+            $this->sparql_host = $input;
+            break;
+          }
+        } else {
+          break;
+        }
+      } while (1);
+      do {
+        $input = $this->getInput("Input a port: (current: {$this->sparql_port}, valid: <port>)");
+        if (!empty($input)) {
+          if ($this->isPort($input)) {
+            $this->sparql_port = $input;
+            break;
+          }
+        } else {
+          break;
+        }
+      } while (1);
+      do {
+        $input = $this->getInput("Input a url: (current: {$this->sparql_url}, valid: <url>)");
+        if (!empty($input)) {
+          if ($this->isPath($input)) {
+            $this->sparql_url = $input;
+            break;
+          }
+        } else {
+          break;
+        }
+      } while (1);
+      do {
+        $input = $this->getInput("Input a url for graphs: (current: {$this->sparql_graph_url}, valid: <url>)");
+        if (!empty($input)) {
+          if ($this->isPath($input)) {
+            $this->sparql_graph_url = $input;
+            break;
+          }
+        } else {
+          break;
+        }
+      } while (1);
+      do {
+        $input = $this->getInput("Input a username: (current: {$this->sparql_username}, valid: <username>)");
+        if (!empty($input)) {
+          if ($this->isAlphaNumeric($input)) {
+            $this->sparql_username = $input;
+            break;
+          }
+        } else {
+          break;
+        }
+      } while (1);
+      do {
+        $input = $this->getInput("Input a password: (current: {$this->sparql_password}, valid: <password>)");
+        if (!empty($input)) {
+          if ($this->isAlphaNumeric($input)) {
+            $this->sparql_password = $input;
+            break;
+          }
+        } else {
+          break;
+        }
+      } while (1);
+
+      /**
+       *  Keycache dependency
+       */
+      $this->h3("Keycache dependency configuration");
+      do {
+        $input = $this->getInput("Input if dependency should be configured: (current: {$this->keycache_enabled}, valid: true or false)");
+        if (!empty($input)) {
+          if ($this->isBoolean($input)) {
+            $this->keycache_enabled = $this->getBoolean($input);
+            break;
+          }
+        } else {
+          break;
+        }
+      } while (1);
+      do {
+        $input = $this->getInput("Input a server type: (current: {$this->keycache_server}, valid: memcached)");
+        if (!empty($input)) {
+          if ($input == 'memcached') {
+            $this->keycache_server = $input;
+            break;
+          }
+        } else {
+          break;
+        }
+      } while (1);
+      do {
+        $input = $this->getInput("Input a host: (current: {$this->keycache_host}, valid: <host>)");
+        if (!empty($input)) {
+          if ($this->isIP($input) || $this->isDomain($input)) {
+            $this->keycache_host = $input;
+            break;
+          }
+        } else {
+          break;
+        }
+      } while (1);
+      do {
+        $input = $this->getInput("Input a port: (current: {$this->keycache_port}, valid: <port>)");
+        if (!empty($input)) {
+          if ($this->isPort($input)) {
+            $this->keycache_port = $input;
+            break;
+          }
+        } else {
+          break;
+        }
+      } while (1);
+
+      /**
+       *  Solr dependency
+       */
+      $this->h3("Solr dependency configuration");
+      do {
+        $input = $this->getInput("Input if dependency should be configured: (current: {$this->solr_enabled}, valid: true or false)");
+        if (!empty($input)) {
+          if ($this->isBoolean($input)) {
+            $this->solr_enabled = $this->getBoolean($input);
+            break;
+          }
+        } else {
+          break;
+        }
+      } while (1);
+      do {
+        $input = $this->getInput("Input a host: (current: {$this->solr_host}, valid: <host>)");
+        if (!empty($input)) {
+          if ($this->isIP($input) || $this->isDomain($input)) {
+            $this->solr_host = $input;
+            break;
+          }
+        } else {
+          break;
+        }
+      } while (1);
+      do {
+        $input = $this->getInput("Input a port: (current: {$this->solr_port}, valid: <port>)");
+        if (!empty($input)) {
+          if ($this->isPort($input)) {
+            $this->solr_port = $input;
+            break;
+          }
+        } else {
+          break;
+        }
+      } while (1);
+      do {
+        $input = $this->getInput("Input a core: (current: {$this->solr_core}, valid: <core>)");
+        if (!empty($input)) {
+          if ($this->isAlphaNumeric($input)) {
+            $this->solr_core = $input;
+            break;
+          }
+        } else {
+          break;
+        }
+      } while (1);
+
+      /**
+       *  OWL dependency
+       */
+      $this->h3("OWL dependency configuration");
+      do {
+        $input = $this->getInput("Input if dependency should be configured: (current: {$this->owl_enabled}, valid: true or false)");
+        if (!empty($input)) {
+          if ($this->isBoolean($input)) {
+            $this->owl_enabled = $this->getBoolean($input);
+            break;
+          }
+        } else {
+          break;
+        }
+      } while (1);
+      do {
+        $input = $this->getInput("Input a host: (current: {$this->owl_host}, valid: <host>)");
+        if (!empty($input)) {
+          if ($this->isIP($input) || $this->isDomain($input)) {
+            $this->owl_host = $input;
+            break;
+          }
+        } else {
+          break;
+        }
+      } while (1);
+      do {
+        $input = $this->getInput("Input a port: (current: {$this->owl_port}, valid: <port>)");
+        if (!empty($input)) {
+          if ($this->isPort($input)) {
+            $this->owl_port = $input;
+            break;
+          }
+        } else {
+          break;
+        }
+      } while (1);
+      do {
+        $input = $this->getInput("Input a url (without the protocol): (current: {$this->owl_url}, valid: <url>)");
+        if (!empty($input)) {
+          if ($this->isPath($input)) {
+            $this->owl_url = $this->getPath($input);
+            break;
+          }
+        } else {
+          break;
+        }
+      } while (1);
+
+      /**
+       *  Scones dependency
+       */
+      $this->h3("Scones dependency configuration");
+      do {
+        $input = $this->getInput("Input if dependency should be configured: (current: {$this->scones_enabled}, valid: true or false)");
+        if (!empty($input)) {
+          if ($this->isBoolean($input)) {
+            $this->scones_enabled = $this->getBoolean($input);
+            break;
+          }
+        } else {
+          break;
+        }
+      } while (1);
+      do {
+        $input = $this->getInput("Input a host: (current: {$this->scones_host}, valid: <host>)");
+        if (!empty($input)) {
+          if ($this->isIP($input) || $this->isDomain($input)) {
+            $this->scones_host = $input;
+            break;
+          }
+        } else {
+          break;
+        }
+      } while (1);
+      do {
+        $input = $this->getInput("Input a port: (current: {$this->scones_port}, valid: <port>)");
+        if (!empty($input)) {
+          if ($this->isPort($input)) {
+            $this->scones_port = $input;
+            break;
+          }
+        } else {
+          break;
+        }
+      } while (1);
+      do {
+        $input = $this->getInput("Input a url (without the protocol): (current: {$this->scones_url}, valid: <url>)");
+        if (!empty($input)) {
+          if ($this->isPath($input)) {
+            $this->scones_url = $this->getPath($input);
             break;
           }
         } else {
@@ -553,7 +1318,10 @@
       do {
         $input = $this->getInput("Input a version: (current: " . ($this->drupal_version == 'master' ? 'dev' : $this->drupal_version) . ", valid: dev or <version>)");
         if (!empty($input)) {
-          if ($this->isVersion($input) == TRUE || $input == 'dev') {
+          if (strtolower($input) == 'dev' || strtolower($input) == 'master') {
+            $this->drupal_version = 'dev';
+            break;
+          } elseif ($this->isVersion($input)) {
             $this->drupal_version = $input;
             break;
           }
@@ -564,8 +1332,8 @@
       do {
         $input = $this->getInput("Input a path: (current: {$this->drupal_folder})");
         if (!empty($input)) {
-          if ($this->isPath(rtrim($input, '/')) == TRUE) {
-            $this->drupal_folder = rtrim($input, '/');
+          if ($this->isPath($input)) {
+            $this->drupal_folder = $this->getPath($input);
             break;
           }
         } else {
@@ -575,8 +1343,134 @@
       do {
         $input = $this->getInput("Input a domain: (current: {$this->drupal_domain})");
         if (!empty($input)) {
-          if ($this->isDomain($input) == TRUE) {
+          if ($this->isDomain($input)) {
             $this->drupal_domain = $input;
+            break;
+          }
+        } else {
+          break;
+        }
+      } while (1);
+
+      /**
+       *  SQL dependency
+       */
+      $this->h3("SQL dependency configuration");
+      do {
+        $input = $this->getInput("Input if dependency should be configured: (current: {$this->sql_enabled}, valid: true or false)");
+        if (!empty($input)) {
+          if ($this->isBoolean($input)) {
+            $this->sql_enabled = $this->getBoolean($input);
+            break;
+          }
+        } else {
+          break;
+        }
+      } while (1);
+      do {
+        $input = $this->getInput("Input a server type: (current: {$this->sql_server}, valid: mysql)");
+        if (!empty($input)) {
+          if ($input == 'mysql') {
+            $this->sql_server = $input;
+            break;
+          }
+        } else {
+          break;
+        }
+      } while (1);
+      do {
+        $input = $this->getInput("Input a host: (current: {$this->sql_host}, valid: <host>)");
+        if (!empty($input)) {
+          if ($this->isIP($input) || $this->isDomain($input)) {
+            $this->sql_host = $input;
+            break;
+          }
+        } else {
+          break;
+        }
+      } while (1);
+      do {
+        $input = $this->getInput("Input a port: (current: {$this->sql_port}, valid: <port>)");
+        if (!empty($input)) {
+          if ($this->isPort($input)) {
+            $this->sql_port = $input;
+            break;
+          }
+        } else {
+          break;
+        }
+      } while (1);
+      do {
+        $input = $this->getInput("Input a root username: (current: {$this->sql_root_username}, valid: <username>)");
+        if (!empty($input)) {
+          if ($this->isAlphaNumeric($input)) {
+            $this->sql_root_username = $input;
+            break;
+          }
+        } else {
+          break;
+        }
+      } while (1);
+      do {
+        $input = $this->getInput("Input a root password: (current: {$this->sql_root_password}, valid: <password>)");
+        if (!empty($input)) {
+          if ($this->isAlphaNumeric($input)) {
+            $this->sql_root_password = $input;
+            break;
+          }
+        } else {
+          break;
+        }
+      } while (1);
+      do {
+        $input = $this->getInput("Input a application username: (current: {$this->sql_app_username}, valid: <username>)");
+        if (!empty($input)) {
+          if ($this->isAlphaNumeric($input)) {
+            $this->sql_app_username = $input;
+            break;
+          }
+        } else {
+          break;
+        }
+      } while (1);
+      do {
+        $input = $this->getInput("Input a application password: (current: {$this->sql_app_password}, valid: <password>)");
+        if (!empty($input)) {
+          if ($this->isAlphaNumeric($input)) {
+            $this->sql_app_password = $input;
+            break;
+          }
+        } else {
+          break;
+        }
+      } while (1);
+      do {
+        $input = $this->getInput("Input a application database: (current: {$this->sql_app_database}, valid: <database>)");
+        if (!empty($input)) {
+          if ($this->isAlphaNumeric($input)) {
+            $this->sql_app_database = $input;
+            break;
+          }
+        } else {
+          break;
+        }
+      } while (1);
+      do {
+        $input = $this->getInput("Input a application engine: (current: {$this->sql_app_engine}, valid: innodb or xtradb)");
+        if (!empty($input)) {
+          if ($input == 'innodb' || $input == 'xtradb') {
+            $this->sql_app_engine = $input;
+            break;
+          }
+        } else {
+          break;
+        }
+      } while (1);
+      do {
+        $input = $this->getInput("Input a application colation: (current: {$this->sql_app_collation}, valid: utf8_general_ci)");
+        if (!empty($input)) {
+          if ($input == 'utf8_general_ci') {
+            $this->sql_app_collation = $input;
             break;
           }
         } else {
@@ -633,6 +1527,55 @@
       $ini .= "drupal-folder = \"{$this->drupal_folder}\"\n";
       $ini .= "drupal-domain = \"{$this->drupal_domain}\"\n";
       $ini .= "\n";
+      $ini .= "[sql]\n";
+      $ini .= "sql-enabled = \"{$this->sql_enabled}\"\n";
+      $ini .= "sql-server = \"{$this->sql_server}\"\n";
+      $ini .= "sql-host = \"{$this->sql_host}\"\n";
+      $ini .= "sql-port = \"{$this->sql_port}\"\n";
+      $ini .= "sql-root-username = \"{$this->sql_root_username}\"\n";
+      $ini .= "sql-root-password = \"{$this->sql_root_password}\"\n";
+      $ini .= "sql-app-username = \"{$this->sql_app_username}\"\n";
+      $ini .= "sql-app-password = \"{$this->sql_app_password}\"\n";
+      $ini .= "sql-app-database = \"{$this->sql_app_database}\"\n";
+      $ini .= "sql-app-engine = \"{$this->sql_app_engine}\"\n";
+      $ini .= "sql-app-collation = \"{$this->sql_app_collation}\"\n";
+      $ini .= "\n";
+      $ini .= "[sparql]\n";
+      $ini .= "sparql-enabled = \"{$this->sparql_enabled}\"\n";
+      $ini .= "sparql-server = \"{$this->sparql_server}\"\n";
+      $ini .= "sparql-channel = \"{$this->sparql_channel}\"\n";
+      $ini .= "sparql-dsn = \"{$this->sparql_dsn}\"\n";
+      $ini .= "sparql-host = \"{$this->sparql_host}\"\n";
+      $ini .= "sparql-port = \"{$this->sparql_port}\"\n";
+      $ini .= "sparql-url = \"{$this->sparql_url}\"\n";
+      $ini .= "sparql-graph-url = \"{$this->sparql_graph_url}\"\n";
+      $ini .= "sparql-username = \"{$this->sparql_username}\"\n";
+      $ini .= "sparql-password = \"{$this->sparql_password}\"\n";
+      $ini .= "\n";
+      $ini .= "[keycache]\n";
+      $ini .= "keycache-enabled = \"{$this->keycache_enabled}\"\n";
+      $ini .= "keycache-server = \"{$this->keycache_server}\"\n";
+      $ini .= "keycache-host = \"{$this->keycache_host}\"\n";
+      $ini .= "keycache-port = \"{$this->keycache_port}\"\n";
+      $ini .= "\n";
+      $ini .= "[solr]\n";
+      $ini .= "solr-enabled = \"{$this->solr_enabled}\"\n";
+      $ini .= "solr-host = \"{$this->solr_host}\"\n";
+      $ini .= "solr-port = \"{$this->solr_port}\"\n";
+      $ini .= "solr-core = \"{$this->solr_core}\"\n";
+      $ini .= "\n";
+      $ini .= "[owl]\n";
+      $ini .= "owl-enabled = \"{$this->owl_enabled}\"\n";
+      $ini .= "owl-host = \"{$this->owl_host}\"\n";
+      $ini .= "owl-port = \"{$this->owl_port}\"\n";
+      $ini .= "owl-url = \"{$this->owl_url}\"\n";
+      $ini .= "\n";
+      $ini .= "[scones]\n";
+      $ini .= "scones-enabled = \"{$this->scones_enabled}\"\n";
+      $ini .= "scones-host = \"{$this->scones_host}\"\n";
+      $ini .= "scones-port = \"{$this->scones_port}\"\n";
+      $ini .= "scones-url = \"{$this->scones_url}\"\n";
+      $ini .= "\n";
 
       file_put_contents('installer.ini', $ini);
     }
@@ -687,6 +1630,55 @@
       $this->span("drupal-version = \"{$this->drupal_version}\"", 'info');
       $this->span("drupal-folder = \"{$this->drupal_folder}\"", 'info');
       $this->span("drupal-domain = \"{$this->drupal_domain}\"", 'info');
+
+      $this->h3("SQL dependency configuration");
+      $this->span("sql-enabled = \"{$this->sql_enabled}\"", 'info');
+      $this->span("sql-server = \"{$this->sql_server}\"", 'info');
+      $this->span("sql-host = \"{$this->sql_host}\"", 'info');
+      $this->span("sql-port = \"{$this->sql_port}\"", 'info');
+      $this->span("sql-root-username = \"{$this->sql_root_username}\"", 'info');
+      $this->span("sql-root-password = \"{$this->sql_root_password}\"", 'info');
+      $this->span("sql-app-username = \"{$this->sql_app_username}\"", 'info');
+      $this->span("sql-app-password = \"{$this->sql_app_password}\"", 'info');
+      $this->span("sql-app-database = \"{$this->sql_app_database}\"", 'info');
+      $this->span("sql-app-engine = \"{$this->sql_app_engine}\"", 'info');
+      $this->span("sql-app-collation = \"{$this->sql_app_collation}\"", 'info');
+
+      $this->h3("SPARQL dependency configuration");
+      $this->span("sparql-enabled = \"{$this->sparql_enabled}\"", 'info');
+      $this->span("sparql-server = \"{$this->sparql_server}\"", 'info');
+      $this->span("sparql-channel = \"{$this->sparql_channel}\"", 'info');
+      $this->span("sparql-dsn = \"{$this->sparql_dsn}\"", 'info');
+      $this->span("sparql-host = \"{$this->sparql_host}\"", 'info');
+      $this->span("sparql-port = \"{$this->sparql_port}\"", 'info');
+      $this->span("sparql-url = \"{$this->sparql_url}\"", 'info');
+      $this->span("sparql-graph-url = \"{$this->sparql_graph_url}\"", 'info');
+      $this->span("sparql-username = \"{$this->sparql_username}\"", 'info');
+      $this->span("sparql-password = \"{$this->sparql_password}\"", 'info');
+
+      $this->h3("Keycache dependency configuration");
+      $this->span("keycache-enabled = \"{$this->keycache_enabled}\"", 'info');
+      $this->span("keycache-server = \"{$this->keycache_server}\"", 'info');
+      $this->span("keycache-host = \"{$this->keycache_host}\"", 'info');
+      $this->span("keycache-port = \"{$this->keycache_port}\"", 'info');
+
+      $this->h3("Solr dependency configuration");
+      $this->span("solr-enabled = \"{$this->solr_enabled}\"", 'info');
+      $this->span("solr-host = \"{$this->solr_host}\"", 'info');
+      $this->span("solr-port = \"{$this->solr_port}\"", 'info');
+      $this->span("solr-core = \"{$this->solr_core}\"", 'info');
+
+      $this->h3("OWL dependency configuration");
+      $this->span("owl-enabled = \"{$this->owl_enabled}\"", 'info');
+      $this->span("owl-host = \"{$this->owl_host}\"", 'info');
+      $this->span("owl-port = \"{$this->owl_port}\"", 'info');
+      $this->span("owl-url = \"{$this->owl_url}\"", 'info');
+
+      $this->h3("Scones dependency configuration");
+      $this->span("scones-enabled = \"{$this->scones_enabled}\"", 'info');
+      $this->span("scones-host = \"{$this->scones_host}\"", 'info');
+      $this->span("scones-port = \"{$this->scones_port}\"", 'info');
+      $this->span("scones-url = \"{$this->scones_url}\"", 'info');
     }
 
   }
