@@ -67,7 +67,7 @@
     /**
     * Install OSF for Drupal
     */
-    public function installOSFDrupal()
+    public function install_OSF_Drupal()
     {
       $this->cecho("Option not supported for this Linux distribution and version.\n", 'RED');
     }    

@@ -52,7 +52,7 @@
     * Install the entire OSF stack. Running this command installs the full stack on the server
     * according to the settings specified in the installer.ini file.
     */
-    public function installOSF()
+    public function install_OSF()
     {
       $this->cecho("You are about to install the Open Semantic Framework.\n", 'WHITE');
       $this->cecho("This installation process installs all the software components that are part of the OSF stack. It will take 10 minutes of your time, but the process will go on for a few hours because of the many pieces of software that get compiled.\n\n", 'WHITE');
@@ -84,28 +84,37 @@
       
       $this->cecho("Installing required general packages...\n", 'WHITE');
       $this->exec('apt-get -y install curl gcc libssl-dev openssl gawk vim default-jdk ftp-upload');        
-            
+
       // Dependency chain:
       // PHP5 depends on MySQL
       // Virtuoso depends on PHP5
 
       $this->installPhp5();
-     
-      $this->installApache2();  
-
+      $this->installApache2();
       $this->installVirtuoso();
-      
       $this->installSolr();
-      
       $this->installMemcached();
-      
-      $this->switchWSPHPAPI('install');
-      $this->switchPermissionsManagementTool('install');
-      $this->switchDatasetsManagementTool('install');
-      $this->switchOntologiesManagementTool('install');
 
-      $this->installOSFWebServices();      
-      
+      $this->switch_OSF_PermissionsManagementTool('install');
+      $this->switch_OSF_DatasetsManagementTool('install');
+      $this->switch_OSF_OntologiesManagementTool('install');
+      $this->switch_OSF_DataValidatorTool('install');
+      $this->switch_OSF_TestsSuites('install');
+      $this->switch_OSF_WSPHPAPI('install');
+      $this->switch_OSF_WebServices('install');
+
+      $this->install_OSF_vhost();
+      $this->setupSolr();
+      $this->installARC2();
+      $this->installOWLAPI();
+      $this->setupVirtuoso();
+      $this->load_OSF_OntologiesManagementTool();
+
+      $this->exec('/etc/init.d/apache2 restart');
+
+      $this->installPHPUnit();
+      $this->runOSFTestsSuites($this->osf_web_services_folder);
+
       $this->cecho("Now that the OSF instance is installed, you can install OSF for Drupal on the same server using this command:\n\n", 'CYAN');
       $this->cecho("    ./osf-installer --install-osf-drupal\n\n", 'CYAN');
     }
@@ -113,7 +122,7 @@
     /**
     * Install Drupal and the OSF Drupal modules
     */
-    abstract public function installOSFDrupal();
+    abstract public function install_OSF_Drupal();
 
     public function runOSFTestsSuites($installationFolder = '')
     {
@@ -134,308 +143,204 @@
     }
 
     /**
-    * Install OSF Web Services
-    */
-    public function installOSFWebServices($version='')
+     * Switch for OSF Web Services
+     */
+    public function switch_OSF_WebServices($op = 'install', $pkgVersion = '')
     {
-      if($version == '')
-      {
-        $version = $this->osf_web_services_version;
+      // Get package info
+      $pkgName = "OSF Web Services";
+      switch ($pkgVersion) {
+        case 'dev':
+          $pkgVersion = 'master';
+          break;
+        default:
+          $pkgVersion = $this->osf_web_services_version;
+          break;
       }
-      elseif($version == 'dev')
-      {
-        $version = 'master';
+      $installPath = "{$this->osf_web_services_folder}/{$this->osf_web_services_ns}";
+
+      // Check operation mode
+      switch ($op) {
+        case 'install':
+          $this->h2("Installing {$pkgName} {$pkgVersion}");
+          // Check if is installed
+          if (is_dir("{$installPath}/")) {
+            $this->span("The package is already installed. Consider upgrading it with the option: --upgrade-osf-web-services", 'warn');
+            return;
+          }
+          $this->install_OSF_WebServices($pkgVersion);
+          $this->config_OSF_WebServices();
+          break;
+        case 'upgrade':
+          $this->h2("Upgrading {$pkgName} {$pkgVersion}");
+          // Check if is not installed
+          if (!is_dir("{$installPath}/")) {
+            $this->span("The package is not installed. Consider installing it with the option: --install-osf-web-services", 'warn');
+            return;
+          }
+          $this->upgrade_OSF_WebServices($pkgVersion);
+          break;
+        case 'uninstall':
+          $this->h2("Uninstalling {$pkgName} {$pkgVersion}");
+          // Check if is not installed
+          if (!is_dir("{$installPath}/")) {
+            $this->span("The package is not installed. Nothing to do.", 'warn');
+            return;
+          }
+          $this->uninstall_OSF_WebServices($pkgVersion);
+          break;
+        case 'configure':
+          $this->h2("Configuring {$pkgName} {$pkgVersion}");
+          // Check if is not installed
+          if (!is_dir("{$installPath}/")) {
+            $this->span("The package is not installed. Consider installing it with the option: --install-osf-web-services", 'warn');
+            return;
+          }
+          $this->config_OSF_WebServices($pkgVersion);
+          break;
+        default:
+          $this->h2("{$pkgName} {$pkgVersion}");
+          $this->span("Wrong operation. Nothing to do.", 'warn');
+          return;
+          break;
       }
-      
-      $this->cecho("\n\n", 'WHITE');
-      $this->cecho("---------------------------------\n", 'WHITE');
-      $this->cecho(" Installing the OSF Web Services \n", 'WHITE');
-      $this->cecho("---------------------------------\n", 'WHITE');
-      $this->cecho("\n\n", 'WHITE');          
-  
-      if(is_dir($this->osf_web_services_folder.'/StructuredDynamics/osf/ws/'))                
-      {
-        $this->cecho("The OSF Web Services are already installed. Consider upgrading it with the option: --upgrade-osf-web-services\n", 'YELLOW');
-        
-        return;
-      } 
-      
-      $this->cecho("Preparing installation...\n", 'WHITE');
-      $this->exec('mkdir -p /tmp/osf-web-services-install');
+    }
 
-      $this->cecho("Downloading the OSF Web Services...\n", 'WHITE');
-      $this->wget('https://github.com/structureddynamics/OSF-Web-Services/archive/'.$version.'.zip', '/tmp/osf-web-services-install');
-
-      $this->cecho("Installing the OSF Web Services...\n", 'WHITE');
-      $this->exec('unzip -o /tmp/osf-web-services-install/'.$version.'.zip -d /tmp/osf-web-services-install/');      
-      
-      $this->exec('mkdir -p '.$this->osf_web_services_folder.'/');      
-      
-      $this->exec('cp -af /tmp/osf-web-services-install/OSF-Web-Services-'.$version.'/* '.$this->osf_web_services_folder.'/');
-
-      $this->cecho("Configuring the OSF Web Services...\n", 'WHITE');
-      
-      //$this->cecho("Fixing the index.php file to refer to the proper SID folder...\n", 'WHITE');
-
-      //$this->exec('sed -i \'s>$sidDirectory = "";>$sidDirectory = "/osf-web-services/tmp/";>\' "'.$this->osf_web_services_folder.'/index.php"');
-
-      $this->cecho("Configure Apache2 for the OSF Web Services...\n", 'WHITE');
-      
-      $this->exec('cp resources/osf-web-services/osf-web-services /etc/apache2/sites-available/osf-web-services.conf');
-
-      $this->exec('sudo ln -s /etc/apache2/sites-available/osf-web-services.conf /etc/apache2/sites-enabled/osf-web-services.conf');
-      
-      // Fix the OSF Web Services path in the apache config file
-      $this->exec('sudo sed -i "s>/usr/share/osf>'.$this->osf_web_services_folder.$this->osf_web_services_ns.'>" "/etc/apache2/sites-available/osf-web-services.conf"');
-      
-      $this->cecho("Restarting Apache2...\n", 'WHITE');
-      
-      $this->exec('/etc/init.d/apache2 restart');
-      
-      $this->cecho("Configure the osf.ini configuration file...\n", 'WHITE');
-
-      $this->cecho("Make sure the OSF Web Services are aware of themselves by changing the hosts file...\n", 'WHITE');
-      
-      if(stripos(file_get_contents('/etc/hosts'), 'OSF-Installer') == FALSE)
-      {
-        file_put_contents('/etc/hosts', "\n\n# Added by the OSF-Installer to make the OSF Web Services are aware of themselves\n127.0.0.1 ".$this->osf_web_services_domain, FILE_APPEND);
-      }       
-      
-      
-            
-
-
-      // fix password
-      $this->exec('sudo sed -i "s>password = \"dba\">password = \"'.$this->dbaPassword.'\">" "'.$this->osf_web_services_folder.$this->osf_web_services_ns.'/osf.ini"');
-
-      // fix host
-      $this->exec('sudo sed -i "s>host = \"localhost\">host = \"'.$this->osf_web_services_domain.'\">" "'.$this->osf_web_services_folder.$this->osf_web_services_ns.'/osf.ini"');
-      $this->exec('sudo sed -i "s>solr_host = \"localhost\">solr_host = \"'.$this->osf_web_services_domain.'\">" "'.$this->osf_web_services_folder.$this->osf_web_services_ns.'/osf.ini"');
-
-
-      
-
-
-      $this->cecho("Create the OSF Web Services tmp folder...\n", 'WHITE');
-      
-      $this->exec('mkdir -p '.$this->data_folder.'/osf-web-services/tmp/');
-      $this->exec('mkdir -p '.$this->data_folder.'/osf-web-services/configs/');
-
-      // Always geo-enable an instance
-      $this->exec('sudo sed -i "s>geoenabled = \"false\">geoenabled = \"true\">" "'.$this->osf_web_services_folder.$this->osf_web_services_ns.'/osf.ini"');
-      
-
-      
-      $this->exec('chown -R www-data:www-data '.$this->data_folder.'/osf-web-services/');
-      $this->exec('chmod -R 500 '.$this->data_folder.'/osf-web-services/');      
-      $this->exec('chmod -R 700 '.$this->data_folder.'/osf-web-services/tmp/');      
-      
-      $this->cecho("Configure the WebService.php file...\n", 'WHITE');
-
-      $this->exec('sed -i \'s>public static $osf_ini = "/usr/share/osf/StructuredDynamics/osf/ws/";>public static $osf_ini = "'.$this->data_folder.'/osf-web-services/configs/";>\' "'.$this->osf_web_services_folder.$this->osf_web_services_ns.'/framework/WebService.php"');
-      $this->exec('sed -i \'s>public static $keys_ini = "/usr/share/osf/StructuredDynamics/osf/ws/";>public static $keys_ini = "'.$this->data_folder.'/osf-web-services/configs/";>\' "'.$this->osf_web_services_folder.$this->osf_web_services_ns.'/framework/WebService.php"');      
-      
-      $this->cecho("Install the Solr schema for the OSF Web Services...\n", 'WHITE');
-      
-      if(!file_exists('/usr/share/solr/osf-web-services/solr/conf/schema.xml'))
-      {
-        $this->cecho("Solr is not yet installed. Install Solr using this --install-solr option and then properly configure its schema by hand.\n", 'WHITE');
-      }
-      else
-      {
-        $this->exec('cp -f '.$this->osf_web_services_folder.$this->osf_web_services_ns.'/framework/solr_schema_v1_3_2.xml /usr/share/solr/osf-web-services/solr/conf/schema.xml');
-        
-        $this->cecho("Restarting Solr...\n", 'WHITE');
-        $this->exec('/etc/init.d/solr stop');
-        $this->exec('/etc/init.d/solr start');
-      }
-      
-      $this->cecho("Installing ARC2...\n", 'WHITE');
-      
-      $this->chdir($this->osf_web_services_folder.$this->osf_web_services_ns.'/framework/arc2/');
-      
-      $this->wget('https://github.com/semsol/arc2/archive/v2.1.1.zip');
-      
-      $this->exec('unzip v2.1.1.zip');
-      
-      $this->chdir($this->osf_web_services_folder.$this->osf_web_services_ns.'/framework/arc2/arc2-2.1.1/');
-      
-      $this->exec('mv * ../');
-      
-      $this->chdir($this->osf_web_services_folder.$this->osf_web_services_ns.'/framework/arc2/');
-      
-      $this->exec('rm -rf arc2-2.1.1');
-      
-      $this->exec('rm v*.zip*');
-      
-      $this->chdir($this->currentWorkingDirectory);
-      
-      
-      $this->cecho("Installing OWLAPI requirements...", 'WHITE');
-      
-      $this->exec('apt-get -y install tomcat6');
-      
-      $this->exec('/etc/init.d/tomcat6 stop');
-      
-      $this->cecho("Downloading OWLAPI...\n", 'WHITE');
-      
-      $this->chdir('/var/lib/tomcat6/webapps/');
-      
-      $this->wget('http://wiki.opensemanticframework.org/files/OWLAPI.war');
-      
-      $this->cecho("Starting Tomcat6 to install the OWLAPI war installation file...\n", 'WHITE');
-      
-      $this->exec('/etc/init.d/tomcat6 start');
-      
-      // wait 20 secs to make sure Tomcat6 had the time to install the OWLAPI webapp
-      sleep(20);
-      
-      $this->cecho("Configuring PHP for the OWLAPI...\n", 'WHITE');
-      
-      $this->exec('sed -i "s/allow_url_include = Off/allow_url_include = On/" /etc/php5/apache2/php.ini'); 
-      $this->exec('sed -i "s/allow_url_include = Off/allow_url_include = On/" /etc/php5/cli/php.ini'); 
-
-      $this->exec(' sed -i "s/allow_call_time_pass_reference = Off/allow_call_time_pass_reference = On/" /etc/php5/apache2/php.ini');
-      $this->exec(' sed -i "s/allow_call_time_pass_reference = Off/allow_call_time_pass_reference = On/" /etc/php5/cli/php.ini');
-
-      $this->cecho("Restart Apache2...\n", 'WHITE');
-      $this->exec('/etc/init.d/apache2 restart');
-
-      $this->cecho("Create the WSF Network...\n", 'WHITE');
-      
-      $this->chdir($this->currentWorkingDirectory);
-      
-      $this->exec('sed -i \'s>server_address = "">server_address = "http://'.$this->osf_web_services_domain.'">\' "resources/virtuoso/initialize_osf_web_services_network.php"');
-      $this->exec('sed -i \'s>appID = "administer">appID = "'.$this->application_id.'">\' "resources/virtuoso/initialize_osf_web_services_network.php"');
-      
-      $errors = shell_exec('php resources/virtuoso/initialize_osf_web_services_network.php');
-      
-      if(!$this->init_osf($this->dbaPassword))
-      {
-        $this->cecho("\n\nThe OSF Web Services Network couldn't be created. Major Error.\n", 'RED');
-      }        
-      
-      $this->cecho("Commit transactions to Virtuoso...\n", 'WHITE');      
-
-      if(!$this->commit($this->dbaPassword))
-      {
-        $this->cecho("Couldn't commit triples to the Virtuoso triples store...\n", 'YELLOW');
-      }
-      
-      $this->cecho("Create Data & Ontologies folders...\n", 'WHITE');
-      
-      $this->exec('mkdir -p "'.$this->data_folder.'/ontologies/files/"');
-      $this->exec('mkdir -p "'.$this->data_folder.'/ontologies/structure/"');
-
-      $this->cecho("Download the core OSF ontologies files...\n", 'WHITE');
-
-      $this->chdir($this->data_folder.'/ontologies/files');
-            
-      $this->wget('https://raw.github.com/structureddynamics/Ontologies-Open-Semantic-Framework/master/aggr/aggr.owl');      
-      $this->wget('https://raw.github.com/structureddynamics/Ontologies-Open-Semantic-Framework/master/iron/iron.owl');
-      $this->wget('https://raw.github.com/structureddynamics/Ontologies-Open-Semantic-Framework/master/owl/owl.rdf');
-      $this->wget('https://raw.github.com/structureddynamics/Ontologies-Open-Semantic-Framework/master/rdf/rdf.xml');
-      $this->wget('https://raw.github.com/structureddynamics/Ontologies-Open-Semantic-Framework/master/rdf/rdfs.xml');
-      $this->wget('https://raw.github.com/structureddynamics/Ontologies-Open-Semantic-Framework/master/sco/sco.owl');
-      $this->wget('https://raw.github.com/structureddynamics/Ontologies-Open-Semantic-Framework/master/wgs84/wgs84.owl');
-      $this->wget('https://raw.github.com/structureddynamics/Ontologies-Open-Semantic-Framework/master/wsf/wsf.owl');
-      $this->wget('https://raw.github.com/structureddynamics/Ontologies-Open-Semantic-Framework/master/drupal/drupal.owl');
-      
-      // Need to setup the initial classes & properties hierarchies serialization files
-      $this->chdir($this->data_folder.'/ontologies/structure/');
-
-      $this->exec('cp '.rtrim($this->currentWorkingDirectory, '/').'/resources/osf-web-services/classHierarchySerialized.srz classHierarchySerialized.srz');      
-      $this->exec('cp '.rtrim($this->currentWorkingDirectory, '/').'/resources/osf-web-services/propertyHierarchySerialized.srz propertyHierarchySerialized.srz');      
-      
-      $this->cecho("Load ontologies...\n", 'WHITE');
-      
-      $this->chdir($this->ontologies_management_tool_folder);
-
-      
-      $this->exec('sudo sed -i "s>file://localhost/data>file://localhost'.rtrim($this->data_folder, '/').'>g" "'.rtrim($this->currentWorkingDirectory, '/').'/resources/osf-web-services/ontologies.lst"');
-      
-      $this->exec('omt --load-advanced-index="true" --load-all --load-list="'.rtrim($this->currentWorkingDirectory, '/').'/resources/osf-web-services/ontologies.lst" --osf-web-services="http://'.$this->osf_web_services_domain.'/ws/"');
-
-      $this->cecho("Create underlying ontological structures...\n", 'WHITE');
-      
-      $this->exec('omt --generate-structures="'.$this->data_folder.'/ontologies/structure/" --osf-web-services="http://'.$this->osf_web_services_domain.'/ws/"');
-
-      $this->switchTestsSuites();
-
-      $this->chdir($this->currentWorkingDirectory);
-
-      
-      $this->cecho("Set files owner permissions...\n", 'WHITE');
-      
-      $this->exec('chown -R www-data:www-data '.$this->osf_web_services_folder.$this->osf_web_services_ns.'/');
-      $this->exec('chmod -R 755 '.$this->osf_web_services_folder.$this->osf_web_services_ns.'/');
-      
-      $this->exec('/etc/init.d/apache2 restart');
-      
-      $this->cecho("Cleaning installation folder...\n", 'WHITE');
-      $this->exec('rm -rf /tmp/osf-web-services-install/');  
-      
-      //PHPUnit
-      // Get name, version and paths
-      $pkgName = "PHPUnit";
-      $installPath = "/usr/local/bin";
-      $tmpPath = "/tmp/osf/phpunit";
+    /**
+     * Install OSF Web Services
+     */
+    private function install_OSF_WebServices($pkgVersion = '')
+    {
+      // Get package info
+      $installPath = "{$this->osf_web_services_folder}";
+      $tmpPath = "/tmp/osf/web-services";
 
       // Download
       $this->span("Downloading...", 'info');
       $this->mkdir("{$tmpPath}/");
-      $this->wget("https://phar.phpunit.de/phpunit.phar", "{$tmpPath}/");
+      $this->wget("https://github.com/structureddynamics/OSF-Web-Services/archive/${pkgVersion}.zip", "{$tmpPath}/");
 
       // Install
       $this->span("Installing...", 'info');
-      $this->cp("{$tmpPath}/phpunit.phar", "{$installPath}/phpunit", FALSE);
-      $this->chmod("{$installPath}/phpunit", "+x");
+      $this->unzip("{$tmpPath}/{$pkgVersion}.zip", "{$tmpPath}/");
+      $this->mkdir("{$installPath}/");
+      $this->cp("{$tmpPath}/OSF-Web-Services-{$pkgVersion}/.", "{$installPath}/", TRUE);
+      $this->chown("{$installPath}/", "www-data");
+      $this->chgrp("{$installPath}/", "www-data");
+      $this->chmod("{$installPath}/", "755");
+      $this->mkdir("{$this->data_folder}/osf-web-services/tmp/");
+      $this->mkdir("{$this->data_folder}/osf-web-services/configs/");
+      $this->chown("{$this->data_folder}/osf-web-services/", "www-data");
+      $this->chgrp("{$this->data_folder}/osf-web-services/", "www-data");
+      $this->chmod("{$this->data_folder}/osf-web-services/", "500");
+      $this->chmod("{$this->data_folder}/osf-web-services/tmp/", "700");
 
       // Cleanup
       $this->span("Cleaning...", 'info');
       $this->rm("{$tmpPath}/", TRUE);
-      
-      $this->runOSFTestsSuites($this->osf_web_services_folder);
     }
 
+    /**
+     * Upgrade OSF Web Services
+     */
+    private function upgrade_OSF_WebServices($pkgVersion = '')
+    {
+      // Get package info
+      $installPath = "{$this->osf_web_services_folder}/{$this->osf_web_services_ns}";
+      $bckPath = "/tmp/osf/web-services-" . date('Y-m-d_H-i-s');
+
+      // Backup
+      $this->span("Making backup...", 'info');
+      $this->mkdir("{$bckPath}/");
+      $this->mv("{$installPath}/.", "{$bckPath}/.");
+
+      // Install
+      $this->install_OSF_WebServices($pkgVersion);
+
+      // Restore
+      $this->span("Restoring backup...", 'info');
+      $this->mv("{$bckPath}/osf.ini", "{$installPath}/");
+      $this->mv("{$bckPath}/keys.ini", "{$installPath}/");
+
+      // Cleanup
+      $this->span("Cleaning backup...", 'info');
+      $this->rm("{$bckPath}/", TRUE);
+    }
 
     /**
-    * Configure OSF Web Services
-    */
-    private function configWebServices()
+     * Uninstall OSF Web Services
+     */
+    private function uninstall_OSF_WebServices()
     {
       // Get package info
       $installPath = "{$this->osf_web_services_folder}/{$this->osf_web_services_ns}";
 
-      // Configure
-      $this->span("Configuring...", 'info');
-      $this->mv("{$this->osf_web_services_folder}/{$this->osf_web_services_ns}/keys.ini", "{$installPath}/osf-web-services/configs/keys.ini");
-      $this->mv("{$this->osf_web_services_folder}/{$this->osf_web_services_ns}/osf.ini", "{$installPath}/osf-web-services/configs/osf.ini");
-      // Web Service credentials
-      $this->exec('echo "{$this->application_id} = \"{$this->api_key}\"" >> "{$this->osf_web_services_folder}/{$installPath}/keys.ini"');
-      // Web Service paths
-      $this->sed("wsf_base_url = \".*\"", "wsf_base_url = \"http://{$this->osf_web_services_domain}\"", "{$installPath}/osf.ini");
-      $this->sed("wsf_base_path = \".*\"", "wsf_base_path = \"{$installPath}/\"", "{$installPath}/osf.ini");
-      // Data paths
-      $this->sed("wsf_graph = \".*\"", "wsf_graph = \"http://{$this->osf_web_services_domain}/wsf/\"", "{$installPath}/osf.ini");
-      $this->sed("dtd_base = \".*\"", "dtd_base = \"http://{$this->osf_web_services_domain}/ws/dtd/\"", "{$installPath}/osf.ini");
-      $this->sed("ontologies_files_folder = \".*\"", "ontologies_files_folder = \"{$this->data_folder}/ontologies/files/\"", "{$installPath}/osf.ini");
-      $this->sed("ontological_structure_folder = \".*\"", "ontological_structure_folder = \"{$this->data_folder}/ontologies/structure/\"", "{$installPath}/osf.ini");
-      $this->sed("fields_index_folder = \"/.*/\"", "fields_index_folder = \"{$this->data_folder}/osf-web-services/tmp/\"", "{$installPath}/osf.ini");
-      // RDF engine
-      $this->sed("channel = \".*\"", "channel = \"{$this->channel}\"", "{$installPath}/osf.ini");
-      if ($this->channel == 'http') {
-        $this->sed("sparql-insert = \".*\"", "sparql-insert = \"insert\"", "{$installPath}/osf.ini");
-      }
+      // Uninstall
+      $this->span("Uninstalling...", 'info');
+      $this->rm("{$installPath}/", TRUE);
     }
 
     /**
-    * Switch for WS-PHP-API
-    */
-    public function switchWSPHPAPI($op = 'install', $pkgVersion = '')
+     * Configure OSF Web Services
+     */
+    private function config_OSF_WebServices()
     {
       // Get package info
-      $pkgName = "WS-PHP-API Library";
+      $installPath = "{$this->osf_web_services_folder}/{$this->osf_web_services_ns}";
+      $configPath = "{$this->data_folder}/osf-web-services/configs";
+
+      // Configure
+      $this->span("Configuring...", 'info');
+      $this->cp("{$installPath}/keys.ini", "{$configPath}/keys.ini");
+      $this->cp("{$installPath}/osf.ini", "{$configPath}/osf.ini");
+      // OSF Web Service scripts
+      //$this->sed("\$sidDirectory = \".*\";", "\$sidDirectory = \"/osf-web-services/tmp/\";", "{$installPath}/index.php");
+      $this->sed("public static \$osf_ini = \".*\";", "public static \$osf_ini = \"{$configPath}/\";", "{$installPath}/framework/WebService.php");
+      $this->sed("public static \$keys_ini = \".*\";", "public static \$keys_ini = \"{$configPath}/\";", "{$installPath}/framework/WebService.php");
+      // OSF Web Service credentials
+      $this->append("\n{$this->application_id} = \"{$this->api_key}\"", "{$configPath}/keys.ini");
+      // OSF Web Service paths
+      $this->SetIni("network", "wsf_base_url", "\"http://{$this->osf_web_services_domain}\"", "{$configPath}/osf.ini");
+      $this->SetIni("network", "wsf_base_path", "\"http://{$this->osf_web_services_domain}/wsf/\"", "{$configPath}/osf.ini");
+      // OSF Tools paths
+      $this->SetIni("datasets", "wsf_graph", "\"{$installPath}/\"", "{$configPath}/osf.ini");
+      $this->SetIni("datasets", "dtd_base", "\"http://{$this->osf_web_services_domain}/ws/dtd/\"", "{$configPath}/osf.ini");
+      $this->SetIni("ontologies", "ontologies_files_folder", "\"{$this->data_folder}/ontologies/files/\"", "{$configPath}/osf.ini");
+      $this->SetIni("ontologies", "ontological_structure_folder", "\"{$this->data_folder}/ontologies/structure/\"", "{$configPath}/osf.ini");
+      // SPARQL dependency
+      $this->SetIni("triplestore", "channel", "\"{$this->sparql_channel}\"", "{$configPath}/osf.ini");
+      $this->SetIni("triplestore", "dsn", "\"{$this->sparql_dsn}\"", "{$configPath}/osf.ini");
+      $this->SetIni("triplestore", "host", "\"{$this->sparql_host}\"", "{$configPath}/osf.ini");
+      $this->SetIni("triplestore", "port", "\"{$this->sparql_port}\"", "{$configPath}/osf.ini");
+      $this->SetIni("triplestore", "sparql", "\"{$this->sparql_url}\"", "{$configPath}/osf.ini");
+      $this->SetIni("triplestore", "sparql-graph", "\"{$this->sparql_graph_url}\"", "{$configPath}/osf.ini");
+      if ($this->sparql_channel == 'http') {
+        $this->SetIni("triplestore", "sparql-insert", "\"insert\"", "{$configPath}/osf.ini");
+      }
+      $this->SetIni("triplestore", "username", "\"{$this->sparql_username}\"", "{$configPath}/osf.ini");
+      $this->SetIni("triplestore", "password", "\"{$this->sparql_password}\"", "{$configPath}/osf.ini");
+      // Keycache dependency
+      $this->SetIni("memcached", "memcached_enabled", "\"{$this->keycache_enabled}\"", "{$configPath}/osf.ini");
+      $this->SetIni("memcached", "memcached_host", "\"{$this->keycache_host}\"", "{$configPath}/osf.ini");
+      $this->SetIni("memcached", "memcached_port", "\"{$this->keycache_port}\"", "{$configPath}/osf.ini");
+      // Solr dependency
+      $this->SetIni("solr", "solr_host", "\"{$this->solr_host}\"", "{$configPath}/osf.ini");
+      $this->SetIni("solr", "solr_port", "\"{$this->solr_port}\"", "{$configPath}/osf.ini");
+      $this->SetIni("solr", "solr_core", "\"{$this->solr_core}\"", "{$configPath}/osf.ini");
+      $this->SetIni("solr", "fields_index_folder", "\"{$this->data_folder}/osf-web-services/tmp/\"", "{$configPath}/osf.ini");
+      // OWL dependency
+      $this->SetIni("scones", "endpoint", "\"http://{$this->scones_host}:{$this->scones_port}/{$this->scones_url}/\"", "{$configPath}/osf.ini");
+      // Other
+      $this->SetIni("geo", "geoenabled", "\"true\"", "{$configPath}/osf.ini");
+    }
+
+    /**
+     * Switch for OSF WS-PHP-API
+     */
+    public function switch_OSF_WSPHPAPI($op = 'install', $pkgVersion = '')
+    {
+      // Get package info
+      $pkgName = "OSF WS-PHP-API Library";
       switch ($pkgVersion) {
         case 'dev':
           $pkgVersion = 'master';
@@ -455,7 +360,7 @@
             $this->span("The package is already installed. Consider upgrading it with the option: --upgrade-osf-ws-php-api", 'warn');
             return;
           }
-          $this->installWSPHPAPI($pkgVersion);
+          $this->install_OSF_WSPHPAPI($pkgVersion);
           break;
         case 'upgrade':
           $this->h2("Upgrading {$pkgName} {$pkgVersion}");
@@ -464,7 +369,7 @@
             $this->span("The package is not installed. Consider installing it with the option: --install-osf-ws-php-api", 'warn');
             return;
           }
-          $this->upgradeWSPHPAPI($pkgVersion);
+          $this->upgrade_OSF_WSPHPAPI($pkgVersion);
           break;
         case 'uninstall':
           $this->h2("Uninstalling {$pkgName} {$pkgVersion}");
@@ -473,7 +378,7 @@
             $this->span("The package is not installed. Nothing to do.", 'warn');
             return;
           }
-          $this->uninstallWSPHPAPI($pkgVersion);
+          $this->uninstall_OSF_WSPHPAPI($pkgVersion);
           break;
         default:
           $this->h2("{$pkgName} {$pkgVersion}");
@@ -484,9 +389,9 @@
     }
 
     /**
-    * Install WS-PHP-API
-    */
-    private function installWSPHPAPI($pkgVersion = '')
+     * Install OSF WS-PHP-API
+     */
+    private function install_OSF_WSPHPAPI($pkgVersion = '')
     {
       // Get package info
       $installPath = "{$this->osf_web_services_folder}/{$this->osf_ws_php_api_folder}";
@@ -509,18 +414,18 @@
     }
 
     /**
-    * Upgrade WS-PHP-API
-    */
-    private function upgradeWSPHPAPI($pkgVersion = '')
+     * Upgrade OSF WS-PHP-API
+     */
+    private function upgrade_OSF_WSPHPAPI($pkgVersion = '')
     {
       // Install
-      $this->installWSPHPAPI($pkgVersion);
+      $this->install_OSF_WSPHPAPI($pkgVersion);
     }
 
     /**
-    * Uninstall WS-PHP-API
-    */
-    private function uninstallWSPHPAPI()
+     * Uninstall OSF WS-PHP-API
+     */
+    private function uninstall_OSF_WSPHPAPI()
     {
       // Get package info
       $installPath = "{$this->osf_web_services_folder}/{$this->osf_ws_php_api_folder}";
@@ -531,12 +436,12 @@
     }
 
     /**
-    * Switch for Tests suites
-    */
-    public function switchTestsSuites($op = 'install', $pkgVersion = '')
+     * Switch for OSF Tests suites
+     */
+    public function switch_OSF_TestsSuites($op = 'install', $pkgVersion = '')
     {
       // Get package info
-      $pkgName = "Tests suites";
+      $pkgName = "OSF Tests suites";
       switch ($pkgVersion) {
         case 'dev':
           $pkgVersion = 'master';
@@ -556,8 +461,8 @@
             $this->span("The package is already installed. Consider upgrading it with the option: --upgrade-osf-tests-suites", 'warn');
             return;
           }
-          $this->installTestsSuites($pkgVersion);
-          $this->configTestsSuites();
+          $this->install_OSF_TestsSuites($pkgVersion);
+          $this->config_OSF_TestsSuites();
           break;
         case 'upgrade':
           $this->h2("Upgrading {$pkgName} {$pkgVersion}");
@@ -566,7 +471,7 @@
             $this->span("The package is not installed. Consider installing it with the option: --install-osf-tests-suites", 'warn');
             return;
           }
-          $this->upgradeTestsSuites($pkgVersion);
+          $this->upgrade_OSF_TestsSuites($pkgVersion);
           break;
         case 'uninstall':
           $this->h2("Uninstalling {$pkgName} {$pkgVersion}");
@@ -575,7 +480,7 @@
             $this->span("The package is not installed. Nothing to do.", 'warn');
             return;
           }
-          $this->uninstallTestsSuites($pkgVersion);
+          $this->uninstall_OSF_TestsSuites($pkgVersion);
           break;
         case 'configure':
           $this->h2("Configuring {$pkgName} {$pkgVersion}");
@@ -584,7 +489,7 @@
             $this->span("The package is not installed. Consider installing it with the option: --install-osf-tests-suites", 'warn');
             return;
           }
-          $this->configTestsSuites($pkgVersion);
+          $this->config_OSF_TestsSuites($pkgVersion);
           break;
         default:
           $this->h2("{$pkgName} {$pkgVersion}");
@@ -595,9 +500,9 @@
     }
 
     /**
-    * Install Tests suites
-    */
-    private function installTestsSuites($pkgVersion = '')
+     * Install OSF Tests suites
+     */
+    private function install_OSF_TestsSuites($pkgVersion = '')
     {
       // Get package info
       $installPath = "{$this->osf_web_services_folder}/{$this->osf_tests_suites_folder}";
@@ -620,9 +525,9 @@
     }
 
     /**
-    * Upgrade Tests suites
-    */
-    private function upgradeTestsSuites($pkgVersion = '')
+     * Upgrade OSF Tests suites
+     */
+    private function upgrade_OSF_TestsSuites($pkgVersion = '')
     {
       // Get package info
       $installPath = "{$this->osf_web_services_folder}/{$this->osf_tests_suites_folder}";
@@ -634,7 +539,7 @@
       $this->mv("{$installPath}/.", "{$bckPath}/.");
 
       // Install
-      $this->installTestsSuites($pkgVersion);
+      $this->install_OSF_TestsSuites($pkgVersion);
 
       // Restore
       $this->span("Restoring backup...", 'info');
@@ -647,9 +552,9 @@
     }
 
     /**
-    * Uninstall Tests suites
-    */
-    private function uninstallTestsSuites()
+     * Uninstall OSF Tests suites
+     */
+    private function uninstall_OSF_TestsSuites()
     {
       // Get package info
       $installPath = "{$this->osf_web_services_folder}/{$this->osf_tests_suites_folder}";
@@ -660,9 +565,9 @@
     }
 
     /**
-    * Configure Tests suites
-    */
-    private function configTestsSuites()
+     * Configure OSF Tests suites
+     */
+    private function config_OSF_TestsSuites()
     {
       // Get package info
       $installPath = "{$this->osf_web_services_folder}/{$this->osf_tests_suites_folder}";
@@ -684,12 +589,12 @@
     }
 
     /**
-    * Switch for Data Validator Tool
-    */
-    public function switchDataValidatorTool($op = 'install', $pkgVersion = '')
+     * Switch for OSF Data Validator Tool
+     */
+    public function switch_OSF_DataValidatorTool($op = 'install', $pkgVersion = '')
     {
       // Get package info
-      $pkgName = "Data Validator Tool";
+      $pkgName = "OSF Data Validator Tool";
       switch ($pkgVersion) {
         case 'dev':
           $pkgVersion = 'master';
@@ -709,8 +614,8 @@
             $this->span("The package is already installed. Consider upgrading it with the option: --upgrade-data-validator-tool", 'warn');
             return;
           }
-          $this->installDataValidatorTool($pkgVersion);
-          $this->configDataValidatorTool();
+          $this->install_OSF_DataValidatorTool($pkgVersion);
+          $this->config_OSF_DataValidatorTool();
           break;
         case 'upgrade':
           $this->h2("Upgrading {$pkgName} {$pkgVersion}");
@@ -719,7 +624,7 @@
             $this->span("The package is not installed. Consider installing it with the option: --install-data-validator-tool", 'warn');
             return;
           }
-          $this->upgradeDataValidatorTool($pkgVersion);
+          $this->upgrade_OSF_DataValidatorTool($pkgVersion);
           break;
         case 'uninstall':
           $this->h2("Uninstalling {$pkgName} {$pkgVersion}");
@@ -728,7 +633,7 @@
             $this->span("The package is not installed. Nothing to do.", 'warn');
             return;
           }
-          $this->uninstallDataValidatorTool($pkgVersion);
+          $this->uninstall_OSF_DataValidatorTool($pkgVersion);
           break;
         case 'configure':
           $this->h2("Configuring {$pkgName} {$pkgVersion}");
@@ -737,7 +642,7 @@
             $this->span("The package is not installed. Consider installing it with the option: --install-data-validator-tool", 'warn');
             return;
           }
-          $this->configDataValidatorTool($pkgVersion);
+          $this->config_OSF_DataValidatorTool($pkgVersion);
           break;
         default:
           $this->h2("{$pkgName} {$pkgVersion}");
@@ -748,9 +653,9 @@
     }
 
     /**
-    * Install Data Validator Tool
-    */
-    private function installDataValidatorTool($pkgVersion = '')
+     * Install OSF Data Validator Tool
+     */
+    private function install_OSF_DataValidatorTool($pkgVersion = '')
     {
       // Get package info
       $installPath = "{$this->osf_web_services_folder}/{$this->data_validator_tool_folder}";
@@ -775,9 +680,9 @@
     }
 
     /**
-    * Upgrade Data Validator Tool
-    */
-    private function upgradeDataValidatorTool($pkgVersion = '')
+     * Upgrade OSF Data Validator Tool
+     */
+    private function upgrade_OSF_DataValidatorTool($pkgVersion = '')
     {
       // Get package info
       $installPath = "{$this->osf_web_services_folder}/{$this->data_validator_tool_folder}";
@@ -789,7 +694,7 @@
       $this->mv("{$installPath}/.", "{$bckPath}/.");
 
       // Install
-      $this->installDataValidatorTool($pkgVersion);
+      $this->install_OSF_DataValidatorTool($pkgVersion);
 
       // Restore
       $this->span("Restoring backup...", 'info');
@@ -801,9 +706,9 @@
     }
 
     /**
-    * Uninstall Data Validator Tool
-    */
-    private function uninstallDataValidatorTool()
+     * Uninstall OSF Data Validator Tool
+     */
+    private function uninstall_OSF_DataValidatorTool()
     {
       // Get package info
       $installPath = "{$this->osf_web_services_folder}/{$this->data_validator_tool_folder}";
@@ -815,9 +720,9 @@
     }
 
     /**
-    * Configure Data Validator Tool
-    */
-    private function configDataValidatorTool()
+     * Configure OSF Data Validator Tool
+     */
+    private function config_OSF_DataValidatorTool()
     {
       // Get package info
       $installPath = "{$this->osf_web_services_folder}/{$this->data_validator_tool_folder}";
@@ -834,12 +739,12 @@
     }
 
     /**
-    * Switch for Permissions Management Tool
-    */
-    public function switchPermissionsManagementTool($op = 'install', $pkgVersion = '')
+     * Switch for OSF Permissions Management Tool
+     */
+    public function switch_OSF_PermissionsManagementTool($op = 'install', $pkgVersion = '')
     {
       // Get package info
-      $pkgName = "Permissions Management Tool";
+      $pkgName = "OSF Permissions Management Tool";
       switch ($pkgVersion) {
         case 'dev':
           $pkgVersion = 'master';
@@ -848,7 +753,7 @@
           $pkgVersion = $this->permissions_management_tool_version;
           break;
       }
-      $installPath = $this->permissions_management_tool_folder;
+      $installPath = "{$this->permissions_management_tool_folder}";
 
       // Check operation mode
       switch ($op) {
@@ -859,8 +764,8 @@
             $this->span("The package is already installed. Consider upgrading it with the option: --upgrade-permissions-management-tool", 'warn');
             return;
           }
-          $this->installPermissionsManagementTool($pkgVersion);
-          $this->configPermissionsManagementTool();
+          $this->install_OSF_PermissionsManagementTool($pkgVersion);
+          $this->config_OSF_PermissionsManagementTool();
           break;
         case 'upgrade':
           $this->h2("Upgrading {$pkgName} {$pkgVersion}");
@@ -869,7 +774,7 @@
             $this->span("The package is not installed. Consider installing it with the option: --install-permissions-management-tool", 'warn');
             return;
           }
-          $this->upgradePermissionsManagementTool($pkgVersion);
+          $this->upgrade_OSF_PermissionsManagementTool($pkgVersion);
           break;
         case 'uninstall':
           $this->h2("Uninstalling {$pkgName} {$pkgVersion}");
@@ -878,7 +783,7 @@
             $this->span("The package is not installed. Nothing to do.", 'warn');
             return;
           }
-          $this->uninstallPermissionsManagementTool($pkgVersion);
+          $this->uninstall_OSF_PermissionsManagementTool($pkgVersion);
           break;
         case 'configure':
           $this->h2("Configuring {$pkgName} {$pkgVersion}");
@@ -887,7 +792,7 @@
             $this->span("The package is not installed. Consider installing it with the option: --install-permissions-management-tool", 'warn');
             return;
           }
-          $this->configPermissionsManagementTool($pkgVersion);
+          $this->config_OSF_PermissionsManagementTool($pkgVersion);
           break;
         default:
           $this->h2("{$pkgName} {$pkgVersion}");
@@ -898,12 +803,12 @@
     }
 
     /**
-    * Install Permissions Management Tool
-    */
-    private function installPermissionsManagementTool($pkgVersion = '')
+     * Install OSF Permissions Management Tool
+     */
+    private function install_OSF_PermissionsManagementTool($pkgVersion = '')
     {
       // Get package info
-      $installPath = $this->permissions_management_tool_folder;
+      $installPath = "{$this->permissions_management_tool_folder}";
       $tmpPath = "/tmp/osf/pmt";
 
       // Download
@@ -925,12 +830,12 @@
     }
 
     /**
-    * Upgrade Permissions Management Tool
-    */
-    private function upgradePermissionsManagementTool($pkgVersion = '')
+     * Upgrade OSF Permissions Management Tool
+     */
+    private function upgrade_OSF_PermissionsManagementTool($pkgVersion = '')
     {
       // Get package info
-      $installPath = $this->permissions_management_tool_folder;
+      $installPath = "{$this->permissions_management_tool_folder}";
       $bckPath = "/tmp/osf/pmt-" . date('Y-m-d_H-i-s');
 
       // Backup
@@ -939,7 +844,7 @@
       $this->mv("{$installPath}/.", "{$bckPath}/.");
 
       // Install
-      $this->installPermissionsManagementTool($pkgVersion);
+      $this->install_OSF_PermissionsManagementTool($pkgVersion);
 
       // Restore
       $this->span("Restoring backup...", 'info');
@@ -951,12 +856,12 @@
     }
 
     /**
-    * Uninstall Permissions Management Tool
-    */
-    private function uninstallPermissionsManagementTool()
+     * Uninstall OSF Permissions Management Tool
+     */
+    private function uninstall_OSF_PermissionsManagementTool()
     {
       // Get package info
-      $installPath = $this->permissions_management_tool_folder;
+      $installPath = "{$this->permissions_management_tool_folder}";
 
       // Uninstall
       $this->span("Uninstalling...", 'info');
@@ -965,12 +870,12 @@
     }
 
     /**
-    * Configure Permissions Management Tool
-    */
-    private function configPermissionsManagementTool()
+     * Configure OSF Permissions Management Tool
+     */
+    private function config_OSF_PermissionsManagementTool()
     {
       // Get package info
-      $installPath = $this->permissions_management_tool_folder;
+      $installPath = "{$this->permissions_management_tool_folder}";
 
       // Configure
       $this->span("Configuring...", 'info');
@@ -984,12 +889,12 @@
     }
 
     /**
-    * Switch for Datasets Management Tool
-    */
-    public function switchDatasetsManagementTool($op = 'install', $pkgVersion = '')
+     * Switch for Datasets Management Tool
+     */
+    public function switch_OSF_DatasetsManagementTool($op = 'install', $pkgVersion = '')
     {
       // Get package info
-      $pkgName = "Datasets Management Tool";
+      $pkgName = "OSF Datasets Management Tool";
       switch ($pkgVersion) {
         case 'dev':
           $pkgVersion = 'master';
@@ -998,7 +903,7 @@
           $pkgVersion = $this->datasets_management_tool_version;
           break;
       }
-      $installPath = $this->datasets_management_tool_folder;
+      $installPath = "{$this->datasets_management_tool_folder}";
 
       // Check operation mode
       switch ($op) {
@@ -1009,8 +914,8 @@
             $this->span("The package is already installed. Consider upgrading it with the option: --upgrade-datasets-management-tool", 'warn');
             return;
           }
-          $this->installDatasetsManagementTool($pkgVersion);
-          $this->configDatasetsManagementTool();
+          $this->install_OSF_DatasetsManagementTool($pkgVersion);
+          $this->config_OSF_DatasetsManagementTool();
           break;
         case 'upgrade':
           $this->h2("Upgrading {$pkgName} {$pkgVersion}");
@@ -1019,7 +924,7 @@
             $this->span("The package is not installed. Consider installing it with the option: --install-datasets-management-tool", 'warn');
             return;
           }
-          $this->upgradeDatasetsManagementTool($pkgVersion);
+          $this->upgrade_OSF_DatasetsManagementTool($pkgVersion);
           break;
         case 'uninstall':
           $this->h2("Uninstalling {$pkgName} {$pkgVersion}");
@@ -1028,7 +933,7 @@
             $this->span("The package is not installed. Nothing to do.", 'warn');
             return;
           }
-          $this->uninstallDatasetsManagementTool($pkgVersion);
+          $this->uninstall_OSF_DatasetsManagementTool($pkgVersion);
           break;
         case 'configure':
           $this->h2("Configuring {$pkgName} {$pkgVersion}");
@@ -1037,7 +942,7 @@
             $this->span("The package is not installed. Consider installing it with the option: --install-datasets-management-tool", 'warn');
             return;
           }
-          $this->configDatasetsManagementTool($pkgVersion);
+          $this->config_OSF_DatasetsManagementTool($pkgVersion);
           break;
         default:
           $this->h2("{$pkgName} {$pkgVersion}");
@@ -1048,12 +953,12 @@
     }
 
     /**
-    * Install Datasets Management Tool
-    */
-    private function installDatasetsManagementTool($pkgVersion = '')
+     * Install OSF Datasets Management Tool
+     */
+    private function install_OSF_DatasetsManagementTool($pkgVersion = '')
     {
       // Get package info
-      $installPath = $this->datasets_management_tool_folder;
+      $installPath = "{$this->datasets_management_tool_folder}";
       $tmpPath = "/tmp/osf/dmt";
 
       // Download
@@ -1075,12 +980,12 @@
     }
 
     /**
-    * Upgrade Datasets Management Tool
-    */
-    private function upgradeDatasetsManagementTool($pkgVersion = '')
+     * Upgrade OSF Datasets Management Tool
+     */
+    private function upgrade_OSF_DatasetsManagementTool($pkgVersion = '')
     {
       // Get package info
-      $installPath = $this->datasets_management_tool_folder;
+      $installPath = "{$this->datasets_management_tool_folder}";
       $bckPath = "/tmp/osf/dmt-" . date('Y-m-d_H-i-s');
 
       // Backup
@@ -1089,7 +994,7 @@
       $this->mv("{$installPath}/.", "{$bckPath}/.");
 
       // Install
-      $this->installDatasetsManagementTool($pkgVersion);
+      $this->install_OSF_DatasetsManagementTool($pkgVersion);
 
       // Restore
       $this->span("Restoring backup...", 'info');
@@ -1101,12 +1006,12 @@
     }
 
     /**
-    * Uninstall Datasets Management Tool
-    */
-    private function uninstallDatasetsManagementTool()
+     * Uninstall OSF Datasets Management Tool
+     */
+    private function uninstall_OSF_DatasetsManagementTool()
     {
       // Get package info
-      $installPath = $this->datasets_management_tool_folder;
+      $installPath = "{$this->datasets_management_tool_folder}";
 
       // Uninstall
       $this->span("Uninstalling...", 'info');
@@ -1115,12 +1020,12 @@
     }
 
     /**
-    * Configure Datasets Management Tool
-    */
-    private function configDatasetsManagementTool()
+     * Configure OSF Datasets Management Tool
+     */
+    private function config_OSF_DatasetsManagementTool()
     {
       // Get package info
-      $installPath = $this->datasets_management_tool_folder;
+      $installPath = "{$this->datasets_management_tool_folder}";
 
       // Configure
       $this->span("Configuring...", 'info');
@@ -1137,12 +1042,12 @@
     }
 
     /**
-    * Switch for Ontologies Management Tool
-    */
-    public function switchOntologiesManagementTool($op = 'install', $pkgVersion = '')
+     * Switch for OSF Ontologies Management Tool
+     */
+    public function switch_OSF_OntologiesManagementTool($op = 'install', $pkgVersion = '')
     {
       // Get package info
-      $pkgName = "Ontologies Management Tool";
+      $pkgName = "OSF Ontologies Management Tool";
       switch ($pkgVersion) {
         case 'dev':
           $pkgVersion = 'master';
@@ -1151,7 +1056,7 @@
           $pkgVersion = $this->ontologies_management_tool_version;
           break;
       }
-      $installPath = $this->ontologies_management_tool_folder;
+      $installPath = "{$this->ontologies_management_tool_folder}";
 
       // Check operation mode
       switch ($op) {
@@ -1162,8 +1067,8 @@
             $this->span("The package is already installed. Consider upgrading it with the option: --upgrade-ontologies-management-tool", 'warn');
             return;
           }
-          $this->installOntologiesManagementTool($pkgVersion);
-          $this->configOntologiesManagementTool();
+          $this->install_OSF_OntologiesManagementTool($pkgVersion);
+          $this->config_OSF_OntologiesManagementTool();
           break;
         case 'upgrade':
           $this->h2("Upgrading {$pkgName} {$pkgVersion}");
@@ -1172,7 +1077,7 @@
             $this->span("The package is not installed. Consider installing it with the option: --install-ontologies-management-tool", 'warn');
             return;
           }
-          $this->upgradeOntologiesManagementTool($pkgVersion);
+          $this->upgrade_OSF_OntologiesManagementTool($pkgVersion);
           break;
         case 'uninstall':
           $this->h2("Uninstalling {$pkgName} {$pkgVersion}");
@@ -1181,7 +1086,7 @@
             $this->span("The package is not installed. Nothing to do.", 'warn');
             return;
           }
-          $this->uninstallOntologiesManagementTool($pkgVersion);
+          $this->uninstall_OSF_OntologiesManagementTool($pkgVersion);
           break;
         case 'configure':
           $this->h2("Configuring {$pkgName} {$pkgVersion}");
@@ -1190,7 +1095,16 @@
             $this->span("The package is not installed. Consider installing it with the option: --install-ontologies-management-tool", 'warn');
             return;
           }
-          $this->configOntologiesManagementTool($pkgVersion);
+          $this->config_OSF_OntologiesManagementTool($pkgVersion);
+          break;
+        case 'load':
+          $this->h2("Loading {$pkgName} {$pkgVersion}");
+          // Check if is not installed
+          if (!is_dir("{$installPath}/")) {
+            $this->span("The package is not installed. Consider installing it with the option: --install-ontologies-management-tool", 'warn');
+            return;
+          }
+          $this->load_OSF_OntologiesManagementTool($pkgVersion);
           break;
         default:
           $this->h2("{$pkgName} {$pkgVersion}");
@@ -1201,12 +1115,12 @@
     }
 
     /**
-    * Install Ontologies Management Tool
-    */
-    private function installOntologiesManagementTool($pkgVersion = '')
+     * Install OSF Ontologies Management Tool
+     */
+    private function install_OSF_OntologiesManagementTool($pkgVersion = '')
     {
       // Get package info
-      $installPath = $this->ontologies_management_tool_folder;
+      $installPath = "{$this->ontologies_management_tool_folder}";
       $tmpPath = "/tmp/osf/omt";
 
       // Download
@@ -1221,6 +1135,8 @@
       $this->cp("{$tmpPath}/OSF-Ontologies-Management-Tool-{$pkgVersion}/.", "{$installPath}/", TRUE);
       $this->chmod("{$installPath}/omt", 755);
       $this->ln("{$installPath}/omt", "/usr/bin/omt");
+      $this->mkdir("{$this->data_folder}/ontologies/files/");
+      $this->mkdir("{$this->data_folder}/ontologies/structure/");
 
       // Cleanup
       $this->span("Cleaning...", 'info');
@@ -1228,12 +1144,12 @@
     }
 
     /**
-    * Upgrade Ontologies Management Tool
-    */
-    private function upgradeOntologiesManagementTool($pkgVersion = '')
+     * Upgrade OSF Ontologies Management Tool
+     */
+    private function upgrade_OSF_OntologiesManagementTool($pkgVersion = '')
     {
       // Get package info
-      $installPath = $this->ontologies_management_tool_folder;
+      $installPath = "{$this->ontologies_management_tool_folder}";
       $bckPath = "/tmp/osf/omt-" . date('Y-m-d_H-i-s');
 
       // Backup
@@ -1242,7 +1158,7 @@
       $this->mv("{$installPath}/.", "{$bckPath}/.");
 
       // Install
-      $this->installOntologiesManagementTool($pkgVersion);
+      $this->install_OSF_OntologiesManagementTool($pkgVersion);
 
       // Restore
       $this->span("Restoring backup...", 'info');
@@ -1254,12 +1170,12 @@
     }
 
     /**
-    * Uninstall Ontologies Management Tool
-    */
-    private function uninstallOntologiesManagementTool()
+     * Uninstall OSF Ontologies Management Tool
+     */
+    private function uninstall_OSF_OntologiesManagementTool()
     {
       // Get package info
-      $installPath = $this->ontologies_management_tool_folder;
+      $installPath = "{$this->ontologies_management_tool_folder}";
 
       // Uninstall
       $this->span("Uninstalling...", 'info');
@@ -1268,12 +1184,12 @@
     }
 
     /**
-    * Configure Ontologies Management Tool
-    */
-    private function configOntologiesManagementTool()
+     * Configure OSF Ontologies Management Tool
+     */
+    private function config_OSF_OntologiesManagementTool()
     {
       // Get package info
-      $installPath = $this->ontologies_management_tool_folder;
+      $installPath = "{$this->ontologies_management_tool_folder}";
 
       // Configure
       $this->span("Configuring...", 'info');
@@ -1284,6 +1200,44 @@
       $this->sed("api-key = \".*\"", "api-key = \"{$this->api_key}\"", "{$installPath}/omt.ini");
       $this->sed("user = \".*\"", "user = \"http://{$this->osf_web_services_domain}/wsf/users/admin\"", "{$installPath}/omt.ini");
       $this->sed("group = \".*\"", "group = \"http://{$this->osf_web_services_domain}/wsf/groups/administrators\"", "{$installPath}/omt.ini");
+    }
+
+    /**
+     * Load OSF Ontologies Management Tool
+     */
+    private function load_OSF_OntologiesManagementTool()
+    {
+      // Get package info
+      $cwdPath = rtrim($this->currentWorkingDirectory, '/');
+      $tmpPath = "/tmp/osf/omt";
+
+      // Download
+      $this->span("Downloading the core OSF ontologies...", 'info');
+      $this->mkdir("{$tmpPath}/");
+      $this->wget("https://raw.github.com/structureddynamics/Ontologies-Open-Semantic-Framework/master/aggr/aggr.owl", "{$tmpPath}/");
+      $this->wget("https://raw.github.com/structureddynamics/Ontologies-Open-Semantic-Framework/master/iron/iron.owl", "{$tmpPath}/");
+      $this->wget("https://raw.github.com/structureddynamics/Ontologies-Open-Semantic-Framework/master/owl/owl.rdf", "{$tmpPath}/");
+      $this->wget("https://raw.github.com/structureddynamics/Ontologies-Open-Semantic-Framework/master/rdf/rdf.xml", "{$tmpPath}/");
+      $this->wget("https://raw.github.com/structureddynamics/Ontologies-Open-Semantic-Framework/master/rdf/rdfs.xml", "{$tmpPath}/");
+      $this->wget("https://raw.github.com/structureddynamics/Ontologies-Open-Semantic-Framework/master/sco/sco.owl", "{$tmpPath}/");
+      $this->wget("https://raw.github.com/structureddynamics/Ontologies-Open-Semantic-Framework/master/wgs84/wgs84.owl", "{$tmpPath}/");
+      $this->wget("https://raw.github.com/structureddynamics/Ontologies-Open-Semantic-Framework/master/wsf/wsf.owl", "{$tmpPath}/");
+      $this->wget("https://raw.github.com/structureddynamics/Ontologies-Open-Semantic-Framework/master/drupal/drupal.owl", "{$tmpPath}/");
+
+      // Install
+      $this->span("Installing the core OSF ontologies...", 'info');
+      $this->cp("{$tmpPath}/.", "{$this->data_folder}/ontologies/files/", TRUE);
+      $this->cp("{$cwdPath}/resources/osf-web-services/classHierarchySerialized.srz", "{$this->data_folder}/ontologies/structure/classHierarchySerialized.srz");
+      $this->cp("{$cwdPath}/resources/osf-web-services/propertyHierarchySerialized.srz", "{$this->data_folder}/ontologies/structure/propertyHierarchySerialized.srz");
+      $this->sed("file://localhost/data", "file://localhost/{$this->data_folder}/", "{$cwdPath}/resources/osf-web-services/ontologies.lst");
+      $this->span("Loading the core OSF ontologies...", 'info');
+      $this->exec("omt --load-advanced-index=\"true\" --load-all --load-list=\"{$cwdPath}/resources/osf-web-services/ontologies.lst\" --osf-web-services=\"http://{$this->osf_web_services_domain}/ws/\"");
+      $this->span("Creating underlying ontological structures...", 'info');
+      $this->exec("omt --generate-structures=\"{$this->data_folder}/ontologies/structure/\" --osf-web-services=\"http://{$this->osf_web_services_domain}/ws/\"");
+
+      // Cleanup
+      $this->span("Cleaning...", 'info');
+      $this->rm("{$tmpPath}/", TRUE);  
     }
 
     protected function commit($password)

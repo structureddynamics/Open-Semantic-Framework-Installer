@@ -385,6 +385,8 @@
         return(FALSE);
       }
 
+      // Validate with regex
+      // https://stackoverflow.com/questions/336210/regular-expression-for-alphanumeric-and-underscores
       $validation = preg_match('/^[a-zA-Z0-9]*$/', $input);
 
       if ($validation == FALSE) {
@@ -406,6 +408,7 @@
         return(FALSE);
       }
 
+      // Validate with regex
       $validation = preg_match('/^(0|[1-9]\d*)(\.(0|[1-9]\d*)){0,2}(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?(?:\+([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?$/', $input);
 
       if ($validation == FALSE) {
@@ -428,6 +431,7 @@
         return(FALSE);
       }
 
+      // Validate with regex
       if ($absolute = TRUE) {
         $validation = preg_match('#^(/[^/]+)+$#', rtrim($input, '/'));
       } else {
@@ -470,6 +474,8 @@
         return(FALSE);
       }
 
+      // Validate with regex
+      // https://stackoverflow.com/questions/3026957/how-to-validate-a-domain-name-using-regex-php
       $validation = preg_match('^(?!\-)(?:[a-zA-Z\d\-]{0,62}[a-zA-Z\d]\.){1,126}(?!\d+)[a-zA-Z\d]{1,63}$^', $input);
 
       if ($validation == FALSE) {
@@ -491,6 +497,7 @@
         return(FALSE);
       }
 
+      // Validate with filter
       $validation = filter_var($input, FILTER_VALIDATE_IP);
 
       if ($validation == FALSE) {
@@ -513,6 +520,7 @@
         return(FALSE);
       }
 
+      // Validate with filter
       $options = array(
         'options' => array(
           'min_range' => 1,
@@ -542,6 +550,53 @@
 
       // Build command
       $command = "sed -i \"s>{$find}>{$replace}>\" \"{$file}\"";
+
+      exec($command, $output, $return);
+      $this->log($output);
+
+      if ($return > 0) {
+        $this->cecho("Failed updating file: $file...\n", 'RED');
+      }
+
+      return(TRUE);
+    }
+
+    /**
+     * Append data to a file
+     * 
+     * @param string  $data       Data to append
+     * @param string  $file       File to update
+     */
+    public function append($data, $file)
+    {
+      // Run command
+      $return = file_put_contents($file, $data, FILE_APPEND);
+
+      if ($return == FALSE) {
+        $this->cecho("Failed updating file: $file...\n", 'RED');
+      }
+
+      return(TRUE);
+    }
+
+    /**
+     * Sets an option in a ini file
+     * 
+     * @param string  $section    Section to find
+     * @param string  $option     Option to change
+     * @param string  $value      Value to set
+     * @param string  $file       File to update
+     */
+    public function SetIni($section, $option, $value, $file)
+    {
+      $output = array();
+      $this->log(array($section, $option, $value, $file), TRUE);
+
+      // Build command
+      // https://stackoverflow.com/questions/10040255/edit-file-in-unix-using-sed
+      // sed -ie '/^\[Section B\]/,/^\[.*\]/s/^\(\$param2[ \t]*=[ \t]*\).*$/\1new_value/' foo.txt
+      $value = str_replace("/", "\/", $value);
+      $command = "sed -i -e '/^\[{$section}\]/,/^\[.*\]/s/^\({$option}[ \\t]*=[ \\t]*\).*$/\\1{$value}/' \"{$file}\"";
 
       exec($command, $output, $return);
       $this->log($output);
@@ -721,7 +776,7 @@
       $this->log($output);
 
       if ($return > 0) {
-        $this->cecho("Failed unzipping the archive: $arch to destination: $dest...\n", 'RED');
+        $this->cecho("Failed linking the file: $src to destination: $dest...\n", 'RED');
       }
 
       return(TRUE);

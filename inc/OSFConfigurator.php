@@ -20,7 +20,7 @@
     protected $logging_folder = "/tmp";
 
     /* Namespace extension of the OSF Web Services folder. This is where the code resides */
-    protected $osf_web_services_ns = "/StructuredDynamics/osf/ws";
+    protected $osf_web_services_ns = "StructuredDynamics/osf/ws";
 
     /* OSF Web Services */
     protected $osf_web_services_version = "3.3.0";
