@@ -55,6 +55,8 @@
     protected $drupal_version = "7.23";
     protected $drupal_folder = "/usr/share/drupal";
     protected $drupal_domain = "localhost";
+    protected $drupal_admin_username = "admin";
+    protected $drupal_admin_password = "admin";
 
     /* SQL dependency */
     protected $sql_enabled = "true";
@@ -368,6 +370,22 @@
         if (!empty($input)) {
           if ($this->isIP($input) || $this->isDomain($input)) {
             $this->drupal_domain = $input;
+          }
+        }
+      }
+      if (isset($this->config['osf-drupal']['drupal-admin-username'])) {
+        $input = $this->config['osf-drupal']['drupal-admin-username'];
+        if (!empty($input)) {
+          if ($this->isAlphaNumeric($input)) {
+            $this->drupal_admin_username = $input;
+          }
+        }
+      }
+      if (isset($this->config['osf-drupal']['drupal-admin-password'])) {
+        $input = $this->config['osf-drupal']['drupal-admin-password'];
+        if (!empty($input)) {
+          if ($this->isAlphaNumeric($input)) {
+            $this->drupal_admin_password = $input;
           }
         }
       }
@@ -1351,6 +1369,28 @@
           break;
         }
       } while (1);
+      do {
+        $input = $this->getInput("Input a admin username: (current: {$this->drupal_admin_username})");
+        if (!empty($input)) {
+          if ($this->isAlphaNumeric($input)) {
+            $this->drupal_admin_username = $input;
+            break;
+          }
+        } else {
+          break;
+        }
+      } while (1);
+      do {
+        $input = $this->getInput("Input a admin password: (current: {$this->drupal_admin_password})");
+        if (!empty($input)) {
+          if ($this->isAlphaNumeric($input)) {
+            $this->drupal_admin_password = $input;
+            break;
+          }
+        } else {
+          break;
+        }
+      } while (1);
 
       /**
        *  SQL dependency
@@ -1526,6 +1566,8 @@
       $ini .= "drupal-version = \"{$this->drupal_version}\"\n";
       $ini .= "drupal-folder = \"{$this->drupal_folder}\"\n";
       $ini .= "drupal-domain = \"{$this->drupal_domain}\"\n";
+      $ini .= "drupal-admin-username = \"{$this->drupal_admin_username}\"\n";
+      $ini .= "drupal-admin-password = \"{$this->drupal_admin_password}\"\n";
       $ini .= "\n";
       $ini .= "[sql]\n";
       $ini .= "sql-enabled = \"{$this->sql_enabled}\"\n";
@@ -1630,6 +1672,8 @@
       $this->span("drupal-version = \"{$this->drupal_version}\"", 'info');
       $this->span("drupal-folder = \"{$this->drupal_folder}\"", 'info');
       $this->span("drupal-domain = \"{$this->drupal_domain}\"", 'info');
+      $this->span("drupal-admin-username = \"{$this->drupal_admin_username}\"", 'info');
+      $this->span("drupal-admin-password = \"{$this->drupal_admin_password}\"", 'info');
 
       $this->h3("SQL dependency configuration");
       $this->span("sql-enabled = \"{$this->sql_enabled}\"", 'info');

@@ -65,6 +65,7 @@
     'upgrade-osf-permissions-management-tool::',
     'uninstall-osf-permissions-management-tool::',
     'configure-osf-permissions-management-tool::',
+    'load-osf-permissions-management-tool::',
     // OSF Datasets Management Tool
     'install-osf-datasets-management-tool::',
     'upgrade-osf-datasets-management-tool::',
@@ -136,6 +137,7 @@
     $installer->cecho("--upgrade-osf-permissions-management-tool=\"[VERSION]\"   Upgrade OSF Permissions Management Tool\n", 'WHITE');
     $installer->cecho("--uninstall-osf-permissions-management-tool             Uninstall OSF Permissions Management Tool\n", 'WHITE');
     $installer->cecho("--configure-osf-permissions-management-tool             Configure OSF Permissions Management Tool\n", 'WHITE');
+    $installer->cecho("--load-osf-permissions-management-tool                  Load OSF Permissions Management Tool\n", 'WHITE');
     $installer->cecho("\n", 'WHITE');
     $installer->cecho("--install-osf-datasets-management-tool=\"[VERSION]\"      Install OSF Datasets Management Tool\n", 'WHITE');
     $installer->cecho("--upgrade-osf-datasets-management-tool=\"[VERSION]\"      Upgrade OSF Datasets Management Tool\n", 'WHITE');
@@ -146,7 +148,7 @@
     $installer->cecho("--upgrade-osf-ontologies-management-tool=\"[VERSION]\"    Upgrade OSF Ontologies Management Tool\n", 'WHITE');
     $installer->cecho("--uninstall-osf-ontologies-management-tool              Uninstall OSF Ontologies Management Tool\n", 'WHITE');
     $installer->cecho("--configure-osf-ontologies-management-tool              Configure OSF Ontologies Management Tool\n", 'WHITE');
-    $installer->cecho("--load-osf-ontologies-management-tool              Load OSF Ontologies Management Tool\n", 'WHITE');
+    $installer->cecho("--load-osf-ontologies-management-tool                   Load OSF Ontologies Management Tool\n", 'WHITE');
     $installer->cecho("\n\n", 'WHITE');
     die;
   }
@@ -286,6 +288,9 @@
   }
   if (isset($arguments['configure-osf-permissions-management-tool'])) {
     $installer->switch_OSF_PermissionsManagementTool('configure');
+  }
+  if (isset($arguments['load-osf-permissions-management-tool'])) {
+    $installer->switch_OSF_PermissionsManagementTool('load');
   }
 
   /**
