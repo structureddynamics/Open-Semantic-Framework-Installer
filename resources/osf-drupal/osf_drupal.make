@@ -3,7 +3,7 @@
 api = 2
 core = 7.x
 projects[drupal][type] = core
-projects[drupal][version] = 7.37
+projects[drupal][version] = 7.39
 
 ; OSF for Drupal
 
@@ -18,7 +18,7 @@ projects[osf][download][branch] = 7.x-3.x
 ; Standard contributions
 
 projects[ctools][subdir] = contrib
-projects[ctools][version] = 1.7
+projects[ctools][version] = 1.9
 
 projects[devel][subdir] = contrib
 projects[devel][version] = 1.5
@@ -33,7 +33,7 @@ projects[features][subdir] = facetapi
 projects[features][version] = 1.5
 
 projects[features][subdir] = contrib
-projects[features][version] = 2.5
+projects[features][version] = 2.6
 
 projects[libraries][type] = module
 projects[libraries][subdir] = contrib
@@ -45,11 +45,11 @@ projects[jquery_colorpicker][version] = 1.1
 
 projects[search_api][type] = module
 projects[search_api][subdir] = contrib
-projects[search_api][version] = 1.14
+projects[search_api][version] = 1.15
 
 projects[search_api_page][type] = module
 projects[search_api_page][subdir] = contrib
-projects[search_api_page][version] = 1.1
+projects[search_api_page][version] = 1.2
 
 projects[views][subdir] = contrib
 projects[views][version] = 3.11
@@ -70,7 +70,7 @@ projects[boxes][subdir] = contrib
 projects[boxes][version] = 1.2
 
 projects[xautoload][subdir] = contrib
-projects[xautoload][version] = 5.1
+projects[xautoload][version] = 5.2
 
 ; OSF-WS-PHP-API
 
