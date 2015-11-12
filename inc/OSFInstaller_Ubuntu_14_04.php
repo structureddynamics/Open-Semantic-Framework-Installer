@@ -31,11 +31,11 @@
       // Download
       $this->span("Downloading...");
       $this->mkdir("{$tmpPath}/");
-      $this->wget("https://phar.phpunit.de/phpunit.phar", "{$tmpPath}/");
+      $this->wget("https://phar.phpunit.de/phpunit-old.phar", "{$tmpPath}/");
 
       // Install
       $this->span("Installing...");
-      $this->cp("{$tmpPath}/phpunit.phar", "{$installPath}/phpunit", FALSE);
+      $this->cp("{$tmpPath}/phpunit-old.phar", "{$installPath}/phpunit", FALSE);
       $this->chmod("{$installPath}/phpunit", "+x");
 
       // Cleanup
