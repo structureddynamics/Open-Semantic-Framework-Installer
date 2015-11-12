@@ -814,7 +814,14 @@
         $command .= " -R";
       }
       // Build command
-      $command .= " \"{$src}\" \"{$dest}\"";
+      if(strpos($srv, '*') == -1)
+      {
+        $command .= " {$src} \"{$dest}\"";
+      }                     
+      else
+      {     
+        $command .= " \"{$src}\" \"{$dest}\"";
+      }
 
       exec($command, $output, $return);
       $this->log($output);
