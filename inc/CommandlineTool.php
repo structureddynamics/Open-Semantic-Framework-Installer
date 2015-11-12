@@ -587,7 +587,7 @@
      * @param string  $value      Value to set
      * @param string  $file       File to update
      */
-    public function SetIni($section, $option, $value, $file)
+    public function setIni($section, $option, $value, $file)
     {
       $output = array();
       $this->log(array($section, $option, $value, $file), TRUE);

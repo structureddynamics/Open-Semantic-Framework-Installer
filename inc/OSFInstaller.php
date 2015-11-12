@@ -303,61 +303,61 @@
       $this->append("\n{$this->application_id} = \"{$this->api_key}\"",
         "{$dataPath}/keys.ini");
       // OSF Web Service paths
-      $this->SetIni("network", "wsf_base_url", "\"http://{$this->osf_web_services_domain}\"",
+      $this->setIni("network", "wsf_base_url", "\"http://{$this->osf_web_services_domain}\"",
         "{$dataPath}/osf.ini");
-      $this->SetIni("network", "wsf_base_path", "\"{$this->osf_web_services_folder}/{$this->osf_web_services_ns}/\"",
+      $this->setIni("network", "wsf_base_path", "\"{$this->osf_web_services_folder}/{$this->osf_web_services_ns}/\"",
         "{$dataPath}/osf.ini");
       // OSF Tools paths
-      $this->SetIni("datasets", "wsf_graph", "\"{$this->osf_web_services_domain}/wsf/\"",
+      $this->setIni("datasets", "wsf_graph", "\"{$this->osf_web_services_domain}/wsf/\"",
         "{$dataPath}/osf.ini");
-      $this->SetIni("datasets", "dtd_base", "\"http://{$this->osf_web_services_domain}/ws/dtd/\"",
+      $this->setIni("datasets", "dtd_base", "\"http://{$this->osf_web_services_domain}/ws/dtd/\"",
         "{$dataPath}/osf.ini");
-      $this->SetIni("ontologies", "ontologies_files_folder", "\"{$this->data_folder}/ontologies/files/\"",
+      $this->setIni("ontologies", "ontologies_files_folder", "\"{$this->data_folder}/ontologies/files/\"",
         "{$dataPath}/osf.ini");
-      $this->SetIni("ontologies", "ontological_structure_folder", "\"{$this->data_folder}/ontologies/structure/\"",
+      $this->setIni("ontologies", "ontological_structure_folder", "\"{$this->data_folder}/ontologies/structure/\"",
         "{$dataPath}/osf.ini");
       // SPARQL dependency
-      $this->SetIni("triplestore", "channel", "\"{$this->sparql_channel}\"",
+      $this->setIni("triplestore", "channel", "\"{$this->sparql_channel}\"",
         "{$dataPath}/osf.ini");
-      $this->SetIni("triplestore", "dsn", "\"{$this->sparql_dsn}\"",
+      $this->setIni("triplestore", "dsn", "\"{$this->sparql_dsn}\"",
         "{$dataPath}/osf.ini");
-      $this->SetIni("triplestore", "host", "\"{$this->sparql_host}\"",
+      $this->setIni("triplestore", "host", "\"{$this->sparql_host}\"",
         "{$dataPath}/osf.ini");
-      $this->SetIni("triplestore", "port", "\"{$this->sparql_port}\"",
+      $this->setIni("triplestore", "port", "\"{$this->sparql_port}\"",
         "{$dataPath}/osf.ini");
-      $this->SetIni("triplestore", "sparql", "\"{$this->sparql_url}\"",
+      $this->setIni("triplestore", "sparql", "\"{$this->sparql_url}\"",
         "{$dataPath}/osf.ini");
-      $this->SetIni("triplestore", "sparql-graph", "\"{$this->sparql_graph_url}\"",
+      $this->setIni("triplestore", "sparql-graph", "\"{$this->sparql_graph_url}\"",
         "{$dataPath}/osf.ini");
       if ($this->sparql_channel == 'http') {
-        $this->SetIni("triplestore", "sparql-insert", "\"insert\"",
+        $this->setIni("triplestore", "sparql-insert", "\"insert\"",
           "{$dataPath}/osf.ini");
       }
-      $this->SetIni("triplestore", "username", "\"{$this->sparql_username}\"",
+      $this->setIni("triplestore", "username", "\"{$this->sparql_username}\"",
         "{$dataPath}/osf.ini");
-      $this->SetIni("triplestore", "password", "\"{$this->sparql_password}\"",
+      $this->setIni("triplestore", "password", "\"{$this->sparql_password}\"",
         "{$dataPath}/osf.ini");
       // Keycache dependency
-      $this->SetIni("memcached", "memcached_enabled", "\"{$this->keycache_enabled}\"",
+      $this->setIni("memcached", "memcached_enabled", "\"{$this->keycache_enabled}\"",
         "{$dataPath}/osf.ini");
-      $this->SetIni("memcached", "memcached_host", "\"{$this->keycache_host}\"",
+      $this->setIni("memcached", "memcached_host", "\"{$this->keycache_host}\"",
         "{$dataPath}/osf.ini");
-      $this->SetIni("memcached", "memcached_port", "\"{$this->keycache_port}\"",
+      $this->setIni("memcached", "memcached_port", "\"{$this->keycache_port}\"",
         "{$dataPath}/osf.ini");
       // Solr dependency
-      $this->SetIni("solr", "solr_host", "\"{$this->solr_host}\"",
+      $this->setIni("solr", "solr_host", "\"{$this->solr_host}\"",
         "{$dataPath}/osf.ini");
-      $this->SetIni("solr", "solr_port", "\"{$this->solr_port}\"",
+      $this->setIni("solr", "solr_port", "\"{$this->solr_port}\"",
         "{$dataPath}/osf.ini");
-      $this->SetIni("solr", "solr_core", "\"{$this->solr_core}\"",
+      $this->setIni("solr", "solr_core", "\"{$this->solr_core}\"",
         "{$dataPath}/osf.ini");
-      $this->SetIni("solr", "fields_index_folder", "\"{$this->data_folder}/osf-web-services/tmp/\"",
+      $this->setIni("solr", "fields_index_folder", "\"{$this->data_folder}/osf-web-services/tmp/\"",
         "{$dataPath}/osf.ini");
       // OWL dependency
-      $this->SetIni("scones", "endpoint", "\"http://{$this->scones_host}:{$this->scones_port}/{$this->scones_url}/\"",
+      $this->setIni("scones", "endpoint", "\"http://{$this->scones_host}:{$this->scones_port}/{$this->scones_url}/\"",
         "{$dataPath}/osf.ini");
       // Other
-      $this->SetIni("geo", "geoenabled", "\"true\"",
+      $this->setIni("geo", "geoenabled", "\"true\"",
         "{$dataPath}/osf.ini");
     }
 
@@ -767,16 +767,16 @@
       // Configure
       $this->span("Configuring...", 'info');
       // OSF Web Service paths
-      $this->SetIni("OSF-WS-PHP-API", "folder", "\"{$this->osf_web_services_folder}\"",
+      $this->setIni("OSF-WS-PHP-API", "folder", "\"{$this->osf_web_services_folder}\"",
         "{$configPath}/dvt.ini");
-      $this->SetIni("osf", "network", "\"http://{$this->osf_web_services_domain}/ws/\"",
+      $this->setIni("osf", "network", "\"http://{$this->osf_web_services_domain}/ws/\"",
         "{$configPath}/dvt.ini");
       // OSF Web Service credentials
-      $this->SetIni("credentials", "application-id", "\"{$this->application_id}\"",
+      $this->setIni("credentials", "application-id", "\"{$this->application_id}\"",
         "{$configPath}/dvt.ini");
-      $this->SetIni("credentials", "api-key", "\"{$this->api_key}\"",
+      $this->setIni("credentials", "api-key", "\"{$this->api_key}\"",
         "{$configPath}/dvt.ini");
-      $this->SetIni("credentials", "user", "\"http://{$this->osf_web_services_domain}/wsf/users/admin\"",
+      $this->setIni("credentials", "user", "\"http://{$this->osf_web_services_domain}/wsf/users/admin\"",
         "{$configPath}/dvt.ini");
     }
 
@@ -931,16 +931,16 @@
       // Configure
       $this->span("Configuring...", 'info');
       // OSF Web Service paths
-      $this->SetIni("config", "osfWebServicesFolder", "\"{$this->osf_web_services_folder}\"",
+      $this->setIni("config", "osfWebServicesFolder", "\"{$this->osf_web_services_folder}\"",
         "{$configPath}/pmt.ini");
-      $this->SetIni("config", "osfWebServicesEndpointsUrl", "\"http://{$this->osf_web_services_domain}/ws/\"",
+      $this->setIni("config", "osfWebServicesEndpointsUrl", "\"http://{$this->osf_web_services_domain}/ws/\"",
         "{$configPath}/pmt.ini");
       // OSF Web Service credentials
-      $this->SetIni("credentials", "application-id", "\"{$this->application_id}\"",
+      $this->setIni("credentials", "application-id", "\"{$this->application_id}\"",
         "{$configPath}/pmt.ini");
-      $this->SetIni("credentials", "api-key", "\"{$this->api_key}\"",
+      $this->setIni("credentials", "api-key", "\"{$this->api_key}\"",
         "{$configPath}/pmt.ini");
-      $this->SetIni("credentials", "user", "\"http://{$this->osf_web_services_domain}/wsf/users/admin\"",
+      $this->setIni("credentials", "user", "\"http://{$this->osf_web_services_domain}/wsf/users/admin\"",
         "{$configPath}/pmt.ini");
     }
 
@@ -1122,20 +1122,20 @@
       // Configure
       $this->span("Configuring...", 'info');
       // OSF Web Service paths
-      $this->SetIni("config", "osfWebServicesFolder", "\"{$this->osf_web_services_folder}\"",
+      $this->setIni("config", "osfWebServicesFolder", "\"{$this->osf_web_services_folder}\"",
         "{$configPath}/dmt.ini");
-      $this->SetIni("config", "indexesFolder", "\"{$dataPath}/datasets/datasetIndexes/\"",
+      $this->setIni("config", "indexesFolder", "\"{$dataPath}/datasets/datasetIndexes/\"",
         "{$configPath}/dmt.ini");
-      $this->SetIni("config", "ontologiesStructureFiles", "\"{$dataPath}/ontologies/structure/\"",
+      $this->setIni("config", "ontologiesStructureFiles", "\"{$dataPath}/ontologies/structure/\"",
         "{$configPath}/dmt.ini");
-      $this->SetIni("config", "missingVocabulary", "\"{$dataPath}/datasets/missing/\"",
+      $this->setIni("config", "missingVocabulary", "\"{$dataPath}/datasets/missing/\"",
         "{$configPath}/dmt.ini");
       // OSF Web Service credentials
-      $this->SetIni("credentials", "application-id", "\"{$this->application_id}\"",
+      $this->setIni("credentials", "application-id", "\"{$this->application_id}\"",
         "{$configPath}/dmt.ini");
-      $this->SetIni("credentials", "api-key", "\"{$this->api_key}\"",
+      $this->setIni("credentials", "api-key", "\"{$this->api_key}\"",
         "{$configPath}/dmt.ini");
-      $this->SetIni("credentials", "user", "\"http://{$this->osf_web_services_domain}/wsf/users/admin\"",
+      $this->setIni("credentials", "user", "\"http://{$this->osf_web_services_domain}/wsf/users/admin\"",
         "{$configPath}/dmt.ini");
     }
 
@@ -1293,16 +1293,16 @@
       // Configure
       $this->span("Configuring...", 'info');
       // OSF Web Service paths
-      $this->SetIni("config", "osfWebServicesFolder", "\"{$this->osf_web_services_folder}\"",
+      $this->setIni("config", "osfWebServicesFolder", "\"{$this->osf_web_services_folder}\"",
         "{$configPath}/omt.ini");
       // OSF Web Service credentials
-      $this->SetIni("credentials", "application-id", "\"{$this->application_id}\"",
+      $this->setIni("credentials", "application-id", "\"{$this->application_id}\"",
         "{$configPath}/omt.ini");
-      $this->SetIni("credentials", "api-key", "\"{$this->api_key}\"",
+      $this->setIni("credentials", "api-key", "\"{$this->api_key}\"",
         "{$configPath}/omt.ini");
-      $this->SetIni("credentials", "user", "\"http://{$this->osf_web_services_domain}/wsf/users/admin\"",
+      $this->setIni("credentials", "user", "\"http://{$this->osf_web_services_domain}/wsf/users/admin\"",
         "{$configPath}/omt.ini");
-      $this->SetIni("credentials", "group", "\"http://{$this->osf_web_services_domain}/wsf/groups/administrators\"",
+      $this->setIni("credentials", "group", "\"http://{$this->osf_web_services_domain}/wsf/groups/administrators\"",
         "{$configPath}/omt.ini");
     }
 
