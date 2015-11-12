@@ -52,17 +52,17 @@
 
       $this->span("Installing ARC2...");
       
-      $this->chdir($this->osf_web_services_folder.$this->osf_web_services_ns.'/framework/arc2/');
+      $this->chdir("{$this->osf_web_services_folder}/{$this->osf_web_services_ns}/framework/arc2/");
       
       $this->wget('https://github.com/semsol/arc2/archive/v2.1.1.zip');
       
       $this->exec('unzip v2.1.1.zip');
       
-      $this->chdir($this->osf_web_services_folder.$this->osf_web_services_ns.'/framework/arc2/arc2-2.1.1/');
+      $this->chdir("{$this->osf_web_services_folder}/{$this->osf_web_services_ns}/framework/arc2/arc2-2.1.1/");
       
       $this->mv('*', '../');
       
-      $this->chdir($this->osf_web_services_folder.$this->osf_web_services_ns.'/framework/arc2/');
+      $this->chdir("{$this->osf_web_services_folder}/{$this->osf_web_services_ns}/framework/arc2/");
       
       $this->rm('arc2-2.1.1', TRUE);
       
@@ -310,7 +310,7 @@
       }
       else
       {
-        $this->cp($this->osf_web_services_folder.$this->osf_web_services_ns.'/framework/solr_schema_v1_3_2.xml', '/usr/share/solr/osf-web-services/solr/conf/schema.xml');
+        $this->cp("{$this->osf_web_services_folder}/{$this->osf_web_services_ns}/framework/solr_schema_v1_3_2.xml", '/usr/share/solr/osf-web-services/solr/conf/schema.xml');
         
         $this->span("Restarting Solr...");
         $this->exec('/etc/init.d/solr stop');
