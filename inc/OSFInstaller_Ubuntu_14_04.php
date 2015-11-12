@@ -217,8 +217,8 @@
       
       $this->chdir($this->currentWorkingDirectory);
       
-      $this->sed('server_address = ""', "server_address = \"http://{$this->osf_web_services_domain}\"", 'resources/virtuoso/initialize_osf_web_services_network.php');
-      $this->sed('appID = "administer"', "appID = \"{$this->application_id}\"", 'resources/virtuoso/initialize_osf_web_services_network.php');
+      $this->sed("server_address = \"\"", "server_address = \"http://{$this->osf_web_services_domain}\"", 'resources/virtuoso/initialize_osf_web_services_network.php');
+      $this->sed("appID = \"administer\"", "appID = \"{$this->application_id}\"", 'resources/virtuoso/initialize_osf_web_services_network.php');
       
       $errors = shell_exec('php resources/virtuoso/initialize_osf_web_services_network.php');
       
