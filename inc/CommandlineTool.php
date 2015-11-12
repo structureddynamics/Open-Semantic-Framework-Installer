@@ -814,7 +814,7 @@
         $command .= " -R";
       }
       // Build command
-      if(strpos($srv, '*') == -1)
+      if(strpos($src, '*') == -1)
       {
         $command .= " {$src} \"{$dest}\"";
       }                     
