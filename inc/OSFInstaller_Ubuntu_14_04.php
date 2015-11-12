@@ -19,7 +19,146 @@
 
       $this->chdir($this->currentWorkingDirectory);
     }    
-    
+
+    /**
+    * Install PHPUnit as required by OSF
+    */
+    public function installPHPUnit()
+    {
+      $this->cecho("\n\n", 'WHITE');
+      $this->cecho("--------------------\n", 'WHITE');
+      $this->cecho(" Installing PHPUnit \n", 'WHITE');
+      $this->cecho("--------------------\n", 'WHITE');
+      $this->cecho("\n\n", 'WHITE');
+      
+      // Get name, version and paths
+      $pkgName = "PHPUnit";
+      $installPath = "/usr/local/bin";
+      $tmpPath = "/tmp/osf/phpunit";
+
+      // Download
+      $this->span("Downloading...", 'info');
+      $this->mkdir("{$tmpPath}/");
+      $this->wget("https://phar.phpunit.de/phpunit.phar", "{$tmpPath}/");
+
+      // Install
+      $this->span("Installing...", 'info');
+      $this->cp("{$tmpPath}/phpunit.phar", "{$installPath}/phpunit", FALSE);
+      $this->chmod("{$installPath}/phpunit", "+x");
+
+      // Cleanup
+      $this->span("Cleaning...", 'info');
+      $this->rm("{$tmpPath}/", TRUE);
+    }
+
+    /**
+    * Install ARC2 as required by OSF
+    */
+    public function installARC2()
+    {
+      $this->cecho("\n\n", 'WHITE');
+      $this->cecho("-----------------\n", 'WHITE');
+      $this->cecho(" Installing ARC2 \n", 'WHITE');
+      $this->cecho("-----------------\n", 'WHITE');
+      $this->cecho("\n\n", 'WHITE');
+
+      $this->cecho("Installing ARC2...\n", 'WHITE');
+      
+      $this->chdir($this->osf_web_services_folder.$this->osf_web_services_ns.'/framework/arc2/');
+      
+      $this->wget('https://github.com/semsol/arc2/archive/v2.1.1.zip');
+      
+      $this->exec('unzip v2.1.1.zip');
+      
+      $this->chdir($this->osf_web_services_folder.$this->osf_web_services_ns.'/framework/arc2/arc2-2.1.1/');
+      
+      $this->exec('mv * ../');
+      
+      $this->chdir($this->osf_web_services_folder.$this->osf_web_services_ns.'/framework/arc2/');
+      
+      $this->exec('rm -rf arc2-2.1.1');
+      
+      $this->exec('rm v*.zip*');
+      
+      $this->chdir($this->currentWorkingDirectory);
+    }   
+
+    /**
+    * Install OWLAPI as required by OSF
+    */
+    public function installOWLAPI()
+    {
+      $this->cecho("\n\n", 'WHITE');
+      $this->cecho("--------------------\n", 'WHITE');
+      $this->cecho(" Installing OWLAPI \n", 'WHITE');
+      $this->cecho("--------------------\n", 'WHITE');
+      $this->cecho("\n\n", 'WHITE');
+      
+      $this->cecho("Installing OWLAPI requirements...", 'WHITE');
+      
+      $this->exec('apt-get -y install tomcat6');
+      
+      $this->exec('/etc/init.d/tomcat6 stop');
+      
+      $this->cecho("Downloading OWLAPI...\n", 'WHITE');
+      
+      $this->chdir('/var/lib/tomcat6/webapps/');
+      
+      $this->wget('http://wiki.opensemanticframework.org/files/OWLAPI.war');
+      
+      $this->cecho("Starting Tomcat6 to install the OWLAPI war installation file...\n", 'WHITE');
+      
+      $this->exec('/etc/init.d/tomcat6 start');
+      
+      // wait 20 secs to make sure Tomcat6 had the time to install the OWLAPI webapp
+      sleep(20);
+      
+      $this->cecho("Configuring PHP for the OWLAPI...\n", 'WHITE');
+      
+      $this->exec('sed -i "s/allow_url_include = Off/allow_url_include = On/" /etc/php5/apache2/php.ini'); 
+      $this->exec('sed -i "s/allow_url_include = Off/allow_url_include = On/" /etc/php5/cli/php.ini'); 
+
+      $this->exec(' sed -i "s/allow_call_time_pass_reference = Off/allow_call_time_pass_reference = On/" /etc/php5/apache2/php.ini');
+      $this->exec(' sed -i "s/allow_call_time_pass_reference = Off/allow_call_time_pass_reference = On/" /etc/php5/cli/php.ini');
+
+      $this->cecho("Restart Apache2...\n", 'WHITE');
+      $this->exec('/etc/init.d/apache2 restart');
+    }
+
+    /**
+    * Install OSFvhost as required by OSF
+    */
+    public function install_OSF_vhost()
+    {
+      $this->cecho("\n\n", 'WHITE');
+      $this->cecho("--------------------\n", 'WHITE');
+      $this->cecho(" Installing OSFvhost \n", 'WHITE');
+      $this->cecho("--------------------\n", 'WHITE');
+      $this->cecho("\n\n", 'WHITE');
+      
+      $this->cecho("Configure Apache2 for the OSF Web Services...\n", 'WHITE');
+      
+      $this->exec('cp resources/osf-web-services/osf-web-services /etc/apache2/sites-available/osf-web-services.conf');
+
+      $this->exec('sudo ln -s /etc/apache2/sites-available/osf-web-services.conf /etc/apache2/sites-enabled/osf-web-services.conf');
+      
+      // Fix the OSF Web Services path in the apache config file
+      $this->exec("sudo sed -i \"s>/usr/share/osf>{$this->osf_web_services_folder}/{$this->osf_web_services_ns}>\" \"/etc/apache2/sites-available/osf-web-services.conf\"");
+      
+      $this->cecho("Restarting Apache2...\n", 'WHITE');
+      
+      $this->exec('/etc/init.d/apache2 restart');
+      
+      $this->cecho("Configure the osf.ini configuration file...\n", 'WHITE');
+
+      $this->cecho("Make sure the OSF Web Services are aware of themselves by changing the hosts file...\n", 'WHITE');
+      
+      if(stripos(file_get_contents('/etc/hosts'), 'OSF-Installer') == FALSE)
+      {
+        file_put_contents('/etc/hosts', "\n\n# Added by the OSF-Installer to make the OSF Web Services are aware of themselves\n127.0.0.1 ".$this->osf_web_services_domain, FILE_APPEND);
+      }
+    }
+
     /**
     * Install Virtuoso as required by OSF
     */
@@ -61,17 +200,15 @@
         $this->cecho("Register Virtuoso to automatically start at the system's startup...\n", 'WHITE');
         $this->exec('sudo update-rc.d virtuoso defaults');
 
-        $this->dbaPassword = $this->getInput("Enter a password to use with the Virtuoso administrator DBA & DAV users");
-	
-        if(!$this->change_password($this->dbaPassword))
+        if(!$this->change_password($this->sparql_password))
         {
-          $this->dbaPassword = 'dba';
+          $this->sparql_password = 'dba';
           $this->cecho("\n\nThe Virtuoso admin password was not changed. Use the default and change it after this installation process...\n", 'YELLOW');
         }        
         
         $this->cecho("Grant the SPARQL_UPDATE role to the SPARQL user...\n", 'WHITE');
 
-        if(!$this->update_sparql_roles($this->dbaPassword))
+        if(!$this->update_sparql_roles($this->sparql_password))
         {
           $this->cecho("\n\nCouldn't grant the SPARQL_UPDATE role to the SPARQL user automcatilly. Log into Conductor to add that role to that user otherwise the OSF instance won't be operational...\n", 'RED');
         }                
@@ -92,7 +229,40 @@
             
       $this->cecho("You can start Virtuoso using this command: /etc/init.d/virtuoso start\n", 'LIGHT_BLUE');
     }
-    
+
+    /**
+    * Setup Virtuoso as required by OSF
+    */
+    public function setupVirtuoso()
+    {
+      $this->cecho("\n\n", 'WHITE');
+      $this->cecho("-----------------\n", 'WHITE');
+      $this->cecho(" Setting up Virtuoso \n", 'WHITE');
+      $this->cecho("-----------------\n", 'WHITE');
+      $this->cecho("\n\n", 'WHITE');
+
+      $this->cecho("Create the WSF Network...\n", 'WHITE');
+      
+      $this->chdir($this->currentWorkingDirectory);
+      
+      $this->exec('sed -i \'s>server_address = "">server_address = "http://'.$this->osf_web_services_domain.'">\' "resources/virtuoso/initialize_osf_web_services_network.php"');
+      $this->exec('sed -i \'s>appID = "administer">appID = "'.$this->application_id.'">\' "resources/virtuoso/initialize_osf_web_services_network.php"');
+      
+      $errors = shell_exec('php resources/virtuoso/initialize_osf_web_services_network.php');
+      
+      if(!$this->init_osf($this->sparql_password))
+      {
+        $this->cecho("\n\nThe OSF Web Services Network couldn't be created. Major Error.\n", 'RED');
+      }        
+      
+      $this->cecho("Commit transactions to Virtuoso...\n", 'WHITE');      
+
+      if(!$this->commit($this->sparql_password))
+      {
+        $this->cecho("Couldn't commit triples to the Virtuoso triples store...\n", 'YELLOW');
+      }
+    }
+
     /**
     * Install Solr as required by OSF
     */
@@ -156,6 +326,33 @@
       
       $this->cecho("You can start Solr using this command: /etc/init.d/solr start\n", 'LIGHT_BLUE');      
     }    
+
+    /**
+    * Setup Solr as required by OSF
+    */
+    public function setupSolr()
+    {
+      $this->cecho("\n\n", 'WHITE');
+      $this->cecho("-----------------\n", 'WHITE');
+      $this->cecho(" Setting up Solr \n", 'WHITE');
+      $this->cecho("-----------------\n", 'WHITE');
+      $this->cecho("\n\n", 'WHITE');
+
+      $this->cecho("Install the Solr schema for the OSF Web Services...\n", 'WHITE');
+      
+      if(!file_exists('/usr/share/solr/osf-web-services/solr/conf/schema.xml'))
+      {
+        $this->cecho("Solr is not yet installed. Install Solr using this --install-solr option and then properly configure its schema by hand.\n", 'WHITE');
+      }
+      else
+      {
+        $this->exec('cp -f '.$this->osf_web_services_folder.$this->osf_web_services_ns.'/framework/solr_schema_v1_3_2.xml /usr/share/solr/osf-web-services/solr/conf/schema.xml');
+        
+        $this->cecho("Restarting Solr...\n", 'WHITE');
+        $this->exec('/etc/init.d/solr stop');
+        $this->exec('/etc/init.d/solr start');
+      }
+    }
 
     /**
     * Install Apache2 as required by OSF
@@ -300,7 +497,7 @@
       $this->exec('/etc/init.d/apache2 restart');      
     }       
     
-    public function installOSFDrupal()
+    public function install_OSF_Drupal()
     {
       // Install MySQL & PHPMyAdmin requirements
       
@@ -366,61 +563,13 @@
       }
       
       $this->exec('drush make --prepare-install resources/osf-drupal/osf_drupal.make '.$this->drupal_folder, 'error');
-      
-      // Configure/install Drupal   
-      $mysqlUsername = 'root';     
-      
-      $return = $this->getInput("What is the username that Drupal should use connect to MySQL (default: $mysqlUsername)");
-
-      if($return != '')
-      {
-        $mysqlUsername = $return;
-      }  
-      
-      $mysqlPassword = 'root';     
-      
-      $return = $this->getInput("What is the password of the $mysqlUsername user to connect to MySQL (default: $mysqlPassword)");
-
-      if($return != '')
-      {
-        $mysqlPassword = $return;
-      }
-      
-      $mysqlDatabaseName = 'drupal7';     
-      
-      $return = $this->getInput("What is the name of the database to use to install Drupal in MySQL (default: $mysqlDatabaseName)");
-
-      if($return != '')
-      {
-        $mysqlDatabaseName = $return;
-      }      
-      
-      $drupalUsername = 'admin';     
-      
-      $return = $this->getInput("What is the username to use to connect to Drupal (default: $drupalUsername)");
-
-      if($return != '')
-      {
-        $drupalUsername = $return;
-      }  
-      
-      $drupalPassword = 'admin';     
-      
-      $return = $this->getInput("What is the password of the $drupalUsername user to connect to Drupal (default: $drupalPassword)");
-
-      if($return != '')
-      {
-        $drupalPassword = $return;
-      } 
-      
+            
       $this->chdir($this->drupal_folder);     
       
-      passthru("drush site-install standard --account-name=$drupalUsername --account-pass=$drupalPassword --db-url=mysql://$mysqlUsername:$mysqlPassword@localhost/$mysqlDatabaseName -y");
+      passthru("drush site-install standard --account-name={$this->drupal_admin_username} --account-pass={$this->drupal_admin_password} --db-url=mysql://{$this->sql_app_username}:{$this->sql_app_password}@localhost/{$this->sql_app_database} -y");
       
       $this->cecho("\n", 'WHITE');
-      
-      $domainName = $this->getInput("What is the domain name where this Drupal portal will be accessible? (examples: mydomain.com, www.mydomain.com)");      
-      
+          
       $this->chdir($this->currentWorkingDirectory);
       
       // Configuring Apache2 for Drupal      
@@ -461,38 +610,7 @@
       
       $this->exec('rm colorpicker.zip');
 
-      // Creating OSF core Groups, Users and Permissions
-      $this->cecho("Creating core Groups, Users and Permissions for Drupal in OSF...\n", 'WHITE');
-
-      $appID = 'administer';
-      
-      $return = $this->getInput("What is the APP ID of the OSF Web Services network you want to use for this Drupal instance (default: ".$appID.")");
-      
-      if($return != '')
-      {
-        $appID = $return;
-      }  
-      
-      // Create Drupal administrators group
-      passthru('pmt --create-group="http://'.$domainName.'/role/3/administrator" --app-id="'.$appID.'"');
-      
-      // Create the Drupal administrator user
-      passthru('pmt --register-user="http://'.$domainName.'/user/1" --register-user-group="http://'.$domainName.'/role/3/administrator"');
-      
-      // Create the permissions to the core datasets
-      passthru('pmt --create-access --access-dataset="http://'.$this->osf_web_services_domain.'/wsf/" --access-group="http://'.$domainName.'/role/3/administrator" --access-perm-create="true"  --access-perm-read="true"  --access-perm-update="true"  --access-perm-delete="true" --access-all-ws');
-      passthru('pmt --create-access --access-dataset="http://'.$this->osf_web_services_domain.'/wsf/datasets/" --access-group="http://'.$domainName.'/role/3/administrator" --access-perm-create="true"  --access-perm-read="true"  --access-perm-update="true"  --access-perm-delete="true" --access-all-ws');
-      passthru('pmt --create-access --access-dataset="http://'.$this->osf_web_services_domain.'/wsf/ontologies/" --access-group="http://'.$domainName.'/role/3/administrator" --access-perm-create="true"  --access-perm-read="true"  --access-perm-update="true"  --access-perm-delete="true" --access-all-ws');
-      
-      // Create accesses to all loaded ontologies      
-      $loadedOntologies = file_get_contents(rtrim($this->currentWorkingDirectory, '/').'/resources/osf-web-services/ontologies.lst');
-      
-      $loadedOntologies = explode(' ', $loadedOntologies);
-      
-      foreach($loadedOntologies as $loadedOntology)
-      {
-        passthru('pmt --create-access --access-dataset="'.$loadedOntology.'" --access-group="http://'.$domainName.'/role/3/administrator" --access-perm-create="true"  --access-perm-read="true"  --access-perm-update="true"  --access-perm-delete="true" --access-all-ws');
-      }
+      $this->load_OSF_PermissionsManagementTool();
       
       // Enable OSF Drupal modules      
       $this->chdir($this->drupal_folder);     
