@@ -655,7 +655,7 @@
         $command .= " -R";
       }
       // Build command
-      if(strpos($path, '*') == -1)
+      if(strpos($path, '*') === FALSE)
       {
         $command .= " {$path}";
       }
@@ -814,7 +814,7 @@
         $command .= " -R";
       }
       // Build command
-      if(strpos($src, '*') == -1)
+      if(strpos($src, '*') === FALSE)
       {
         $command .= " {$src} \"{$dest}\"";
       }                     
