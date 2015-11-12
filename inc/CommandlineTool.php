@@ -40,15 +40,15 @@
       if ($return > 0) {
         switch (strtolower($errorLevel)) {
           case 'notice':
-            $this->cecho("An occured but the script continue its process. Check the log to see what was the error: {$this->log_file}\n", 'LIGHT_CYAN');
+            $this->span("An occured but the script continue its process. Check the log to see what was the error: {$this->log_file}", 'notice');
           break;
 
           case 'warning':
-            $this->cecho("An occured but the script continue its process. Check the log to see what was the error: {$this->log_file}\n", 'YELLOW');
+            $this->span("An occured but the script continue its process. Check the log to see what was the error: {$this->log_file}", 'warn');
           break;
 
           case 'error':
-            $this->cecho("A non-recoverable error happened. Check the log to see what was the error: {$this->log_file}\n", 'RED');
+            $this->span("A non-recoverable error happened. Check the log to see what was the error: {$this->log_file}", 'error');
 
             $yes = $this->isYes($this->getInput("Do you want to continue the execution. If yes, then try to fix this error by hands before continuing, otherwise errors may occurs later in the process? (yes/no)\n"));
             if (!$yes) {
@@ -86,15 +86,15 @@
       if (!$success) {
         switch (strtolower($errorLevel)) {
           case 'notice':
-            $this->cecho("An occured but the script continue its process. Check the log to see what was the error: {$this->log_file}\n", 'LIGHT_CYAN');
+            $this->span("An occured but the script continue its process. Check the log to see what was the error: {$this->log_file}", 'notice');
           break;
 
           case 'warning':
-            $this->cecho("An occured but the script continue its process. Check the log to see what was the error: {$this->log_file}\n", 'YELLOW');
+            $this->span("An occured but the script continue its process. Check the log to see what was the error: {$this->log_file}", 'warn');
           break;
 
           case 'error':
-            $this->cecho("A non-recoverable error happened. Check the log to see what was the error: {$this->log_file}\n", 'RED');
+            $this->span("A non-recoverable error happened. Check the log to see what was the error: {$this->log_file}", 'error');
 
             $yes = $this->isYes($this->getInput("Do you want to continue the execution. If yes, then try to fix this error by hands before continuing, otherwise errors may occurs later in the process? (yes/no)\n"));             
             if (!$yes) {
@@ -210,6 +210,9 @@
         case 'info':
           $color = 'WHITE';
           break;
+        case 'notice':
+          $color = 'CYAN';
+          break;
         case 'debug':
           $color = 'BLUE';
           break;
@@ -218,6 +221,9 @@
           break;
         case 'error':
           $color = 'RED';
+          break;
+        case 'good':
+          $color = 'GREEN';
           break;
         default:
           $color = 'WHITE';
@@ -238,7 +244,7 @@
       foreach($lines as $line) {
         file_put_contents($this->log_file, $line."\n", FILE_APPEND);
         if($this->verbose && !$forceSilence) {
-          $this->cecho($line."\n", 'BLUE');
+          $this->span($line, 'debug');
         }
       }
     }
@@ -555,7 +561,7 @@
       $this->log($output);
 
       if ($return > 0) {
-        $this->cecho("Failed updating file: $file...\n", 'RED');
+        $this->span("Failed updating file: $file...", 'error');
       }
 
       return(TRUE);
@@ -573,7 +579,7 @@
       $return = file_put_contents($file, $data, FILE_APPEND);
 
       if ($return == FALSE) {
-        $this->cecho("Failed updating file: $file...\n", 'RED');
+        $this->span("Failed updating file: $file...", 'error');
       }
 
       return(TRUE);
@@ -602,7 +608,7 @@
       $this->log($output);
 
       if ($return > 0) {
-        $this->cecho("Failed updating file: $file...\n", 'RED');
+        $this->span("Failed updating file: $file...", 'error');
       }
 
       return(TRUE);
@@ -625,7 +631,7 @@
       $this->log($output);
 
       if ($return > 0) {
-        $this->cecho("Failed creating directory: $path...\n", 'RED');
+        $this->span("Failed creating directory: $path...", 'error');
       }
 
       return(TRUE);
@@ -649,13 +655,20 @@
         $command .= " -R";
       }
       // Build command
-      $command .= " \"{$path}\"";
+      if(strpos($path, '*') == -1)
+      {
+        $command .= " {$path}";
+      }
+      else
+      {
+        $command .= " \"{$path}\"";
+      }
 
       exec($command, $output, $return);
       $this->log($output);
 
       if ($return > 0) {
-        $this->cecho("Failed removing file or directory: $path...\n", 'RED');
+        $this->span("Failed removing file or directory: $path...", 'error');
       }
 
       return(TRUE);
@@ -686,7 +699,7 @@
       $this->log($output);
 
       if ($return > 0) {
-        $this->cecho("Failed changing permissions for the path: $path...\n", 'RED');
+        $this->span("Failed changing permissions for the path: $path...", 'error');
       }
 
       return(TRUE);
@@ -717,7 +730,7 @@
       $this->log($output);
 
       if ($return > 0) {
-        $this->cecho("Failed changing group for the path: $path...\n", 'RED');
+        $this->span("Failed changing group for the path: $path...", 'error');
       }
 
       return(TRUE);
@@ -748,7 +761,7 @@
       $this->log($output);
 
       if ($return > 0) {
-        $this->cecho("Failed changing permissions for the path: $path...\n", 'RED');
+        $this->span("Failed changing permissions for the path: $path...", 'error');
       }
 
       return(TRUE);
@@ -776,7 +789,7 @@
       $this->log($output);
 
       if ($return > 0) {
-        $this->cecho("Failed linking the file: $src to destination: $dest...\n", 'RED');
+        $this->span("Failed linking the file: $src to destination: $dest...", 'error');
       }
 
       return(TRUE);
@@ -807,7 +820,7 @@
       $this->log($output);
 
       if ($return > 0) {
-        $this->cecho("Failed copying the source: $src to destination: $dest...\n", 'RED');
+        $this->span("Failed copying the source: $src to destination: $dest...", 'error');
       }
 
       return(TRUE);
@@ -825,13 +838,23 @@
       $this->log(array($src, $dest), TRUE);
 
       // Build command
-      $command = "mv -f \"{$src}\" \"{$dest}\"";
+      $command = '';
+      
+      if($src == '*')
+      {       
+        $command = "mv -f * \"{$dest}\"";
+      }
+      else
+      {
+        $command = "mv -f \"{$src}\" \"{$dest}\"";
+      }  
+        
 
       exec($command, $output, $return);
       $this->log($output);
 
       if ($return > 0) {
-        $this->cecho("Failed moving the source: $src to destination: $dest...\n", 'RED');
+        $this->span("Failed moving the source: $src to destination: $dest...", 'error');
       }
 
       return(TRUE);
@@ -859,7 +882,7 @@
       $this->log($output);
 
       if ($return > 0) {
-        $this->cecho("Failed unzipping the archive: $arch to destination: $dest...\n", 'RED');
+        $this->span("Failed unzipping the archive: $arch to destination: $dest...", 'error');
       }
 
       return(TRUE);
@@ -894,7 +917,7 @@
         // Remove the file it tries to install
         exec('rm '.$filename);
 
-        $this->cecho("Connection error while downloading the file $filename: retrying...\n", 'YELLOW');
+        $this->span("Connection error while downloading the file $filename: retrying...", 'warn');
 
         $this->wget($url);
       }
@@ -921,10 +944,10 @@
           // Remove the file it tries to install
           exec("rm {$dest}");
 
-          $this->cecho("Connection error downloading file $dest; retrying...\n", 'YELLOW');
+          $this->span("Connection error downloading file $dest; retrying...", 'warn');
         }
         else {
-          $this->cecho("Connection error using Curl; retrying...\n", 'YELLOW');
+          $this->span("Connection error using Curl; retrying...", 'warn');
         }
 
         $this->curl($url, $dest);

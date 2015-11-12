@@ -4,7 +4,7 @@
 
 Open Semantic Framework Installer, an installation application to
 deploy the Open Semantic Framework Stack.
-Copyright 2008-2013. Structured Dynamics LLC.
+Copyright 2008-2015. Structured Dynamics LLC.
 
 The Open Semantic Framework Installer is one of the contributing
 components to the Open Semantic Framework (OSF); 

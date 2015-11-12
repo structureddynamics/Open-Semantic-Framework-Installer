@@ -118,7 +118,7 @@
       $this->config = parse_ini_file($configFile, TRUE);
 
       if (!$this->config) {
-        $this->cecho("An error occured when we tried to parse the {$configFile} file. Make sure it is parseable and try again\n", 'RED');
+        $this->span("An error occured when we tried to parse the {$configFile} file. Make sure it is parseable and try again", 'error');
         exit(1);
       }
 

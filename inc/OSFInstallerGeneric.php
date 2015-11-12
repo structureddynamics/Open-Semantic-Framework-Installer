@@ -13,7 +13,7 @@
     */
     public function installPhp5()
     { 
-      $this->cecho("Option not supported for this Linux distribution and version.\n", 'RED');
+      $this->span("Option not supported for this Linux distribution and version.", 'error');
     }
     
     /**
@@ -21,7 +21,7 @@
     */
     public function installVirtuoso()
     {
-      $this->cecho("Option not supported for this Linux distribution and version.\n", 'RED');
+      $this->span("Option not supported for this Linux distribution and version.", 'error');
     }
     
     /**
@@ -29,7 +29,7 @@
     */
     public function installSolr()
     {
-      $this->cecho("Option not supported for this Linux distribution and version.\n", 'RED');
+      $this->span("Option not supported for this Linux distribution and version.", 'error');
     }
 
     /**
@@ -37,7 +37,7 @@
     */
     public function installApache2()
     {
-      $this->cecho("Option not supported for this Linux distribution and version.\n", 'RED');
+      $this->span("Option not supported for this Linux distribution and version.", 'error');
     }
 
     /**
@@ -45,7 +45,7 @@
     */
     public function installMySQL()
     {
-      $this->cecho("Option not supported for this Linux distribution and version.\n", 'RED');
+      $this->span("Option not supported for this Linux distribution and version.", 'error');
     }
     
     /**
@@ -53,7 +53,7 @@
     */
     public function installPhpMyAdmin()
     {
-      $this->cecho("Option not supported for this Linux distribution and version.\n", 'RED');
+      $this->span("Option not supported for this Linux distribution and version.", 'RerrorED');
     }    
     
     /**
@@ -61,7 +61,7 @@
     */
     public function installMemcached()
     {
-      $this->cecho("Option not supported for this Linux distribution and version.\n", 'RED');
+      $this->span("Option not supported for this Linux distribution and version.", 'error');
     }    
     
     /**
@@ -69,7 +69,7 @@
     */
     public function install_OSF_Drupal()
     {
-      $this->cecho("Option not supported for this Linux distribution and version.\n", 'RED');
+      $this->span("Option not supported for this Linux distribution and version.", 'error');
     }    
   }
 ?>

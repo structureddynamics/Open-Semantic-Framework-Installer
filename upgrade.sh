@@ -48,7 +48,7 @@ while [ $? -ne 0 ]; do
   sudo wget https://github.com/structureddynamics/Open-Semantic-Framework-Installer/archive/3.3.zip
 done
 
-unzip 3.3.zip
+unzip 3.4.zip
 
 cd Open-Semantic-Framework-Installer*
 
@@ -63,7 +63,7 @@ sudo chmod 755 upgrade.sh
 sudo chmod 755 install.sh
 
 sudo rm -rf Open-Semantic-Framework-Installer*
-sudo rm -f 3.3.zip
+sudo rm -f 3.4.zip
 
 cecho "\n\nThe OSD-Installer has been upgraded\n"
 

@@ -4,7 +4,9 @@ If you prefer, you can create a new OSF instance using a pre-packaged Amazon EC2
 
 Requirements
 ------------
-* Ubuntu 14.04
+* Supported Linux Distributions:
+	* CentOS 7
+	* Ubuntu 14.04
 * PHP 5.5 or higher
 * 64 Bit Operating System
 * Access to internet from your server
@@ -20,7 +22,7 @@ mkdir -p /usr/share/osf-installer/
 
 cd /usr/share/osf-installer/
 
-wget https://raw.github.com/structureddynamics/Open-Semantic-Framework-Installer/3.3/install.sh
+wget https://raw.github.com/structureddynamics/Open-Semantic-Framework-Installer/3.4/install.sh
 
 chmod 755 install.sh
 

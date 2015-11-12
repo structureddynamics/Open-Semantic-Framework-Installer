@@ -53,7 +53,7 @@
           break;
           
           default:
-            $this->cecho("You are running an unknown version of the OSF Web Services: ".$this->currentInstalledVersion.". The OSF Web Services cannot be upgraded using this upgrade tool.\n", 'YELLOW');
+            $this->span("You are running an unknown version of the OSF Web Services: ".$this->currentInstalledVersion.". The OSF Web Services cannot be upgraded using this upgrade tool.", 'warn');
           break;
         }
         
@@ -66,48 +66,48 @@
     {
       $backupFolder = '/tmp/osf-web-services-backup-'.$this->currentInstalledVersion.'-'.md5(microtime());  
       
-      $this->cecho("Backuping the current version of the files into: ".$backupFolder."/ ...\n", 'WHITE');
+      $this->span("Backuping the current version of the files into: ".$backupFolder."/ ...");
       
-      $this->exec('mkdir -p '.$backupFolder);
+      $this->mkdir($backupFolder);
       
-      $this->exec('cp -af '.$this->osf_web_services_folder.$this->osf_web_services_ns.'/ '.$backupFolder);      
+      $this->cp($this->osf_web_services_folder.$this->osf_web_services_ns.'/', $backupFolder);
     }   
     
     private function upgradeCodebase($version)
     {
-      $this->cecho("Upgrading codebase...\n", 'WHITE');
+      $this->span("Upgrading codebase...");
       
-      $this->exec('mkdir -p /tmp/osf-web-services-'.$version.'/');
+      $this->mkdir("/tmp/osf-web-services-{$version}/");
       
       $this->chdir('/tmp/osf-web-services-'.$version.'/');
       
-      $this->cecho("Download the OSF Web Services version ".$version."...\n");
+      $this->span("Download the OSF Web Services version {$version}...");
       
-      $this->wget('https://github.com/structureddynamics/OSF-Web-Services/archive/'.$version.'.zip');
+      $this->wget("https://github.com/structureddynamics/OSF-Web-Services/archive/{$version}.zip");
 
-      $this->cecho("Preparing the OSF Web Services version ".$version."...\n");
+      $this->span("Preparing the OSF Web Services version {$version}...");
       
-      $this->exec('unzip '.$version.'.zip');
+      $this->exec("unzip {$version}.zip");
 
       $this->chdir('OSF-Web-Services-'.$version);
 
-      $this->cecho("Remove default settings...\n");
+      $this->span("Remove default settings...");
       
-      $this->exec('rm -rf '.ltrim($this->osf_web_services_ns, '/').'/osf.ini');
-      $this->exec('rm -rf '.ltrim($this->osf_web_services_ns, '/').'/keys.ini');
-      $this->exec('rm -rf '.ltrim($this->osf_web_services_ns, '/').'/framework/WebService.php');
-      $this->exec('rm -rf '.ltrim($this->osf_web_services_ns, '/').'/index.php');
-      $this->exec('rm -rf '.ltrim($this->osf_web_services_ns, '/').'/scones/config.ini');
+      $this->rm(ltrim($this->osf_web_services_ns, '/').'/osf.ini', TRUE);
+      $this->rm(ltrim($this->osf_web_services_ns, '/').'/keys.ini', TRUE);
+      $this->rm(ltrim($this->osf_web_services_ns, '/').'/framework/WebService.php', TRUE);
+      $this->rm(ltrim($this->osf_web_services_ns, '/').'/index.php', TRUE);
+      $this->rm(ltrim($this->osf_web_services_ns, '/').'/scones/config.ini', TRUE);
       
-      $this->cecho("\n\nMove new files to the current OSF Web Services installation folder...\n", 'WHITE');
+      $this->span("\n\nMove new files to the current OSF Web Services installation folder...");
 
-      $this->exec('cp -af * '.rtrim($this->osf_web_services_folder, '/').'/');
+      $this->cp('*', rtrim($this->osf_web_services_folder, '/').'/');
 
       $this->chdir('/tmp/');
-      
-      $this->exec('rm -rf osf-web-services-'.$version.'/');
 
-      $this->cecho("Codebase upgraded...\n", 'GREEN');
+      $this->rm("osf-web-services-{$version}/", TRUE);
+
+      $this->span("Codebase upgraded...", 'good');
     }
     
     /**
@@ -115,11 +115,7 @@
     */
     public function upgradeOSFWebServicesCodeBase()
     {
-      $this->cecho("\n\n", 'WHITE');
-      $this->cecho("------------------------------------------\n", 'WHITE');
-      $this->cecho(" Upgrading OSF Web Services Code Base \n", 'WHITE');
-      $this->cecho("------------------------------------------\n", 'WHITE');
-      $this->cecho("\n\n", 'WHITE'); 
+      $this->h1("Upgrading OSF Web Services Code Base"); 
 
       $yes = $this->isYes($this->getInput("You are about to upgrade your OSF Web Services instance using 
                                            the latest development code base. This installation only upgrade the
@@ -140,7 +136,7 @@
     
     private function latestVersion()
     {                    
-      $this->cecho("Upgrade finished, latest version installed: OSF Web Services ".$this->latestVersion."\n\n", 'WHITE');
+      $this->span("Upgrade finished, latest version installed: OSF Web Services ".$this->latestVersion);
     }    
     
     private function upgradeTo_3_0_1()
@@ -166,7 +162,7 @@
       $keys_ini = $matches[1];
       
       // Replace the WebService.php file with the latest version in 3.1.0
-      $this->exec('rm -f WebService.php');
+      $this->rm('WebService.php');
       
       $this->wget('https://raw.githubusercontent.com/structureddynamics/OSF-Web-Services/3.1/StructuredDynamics/osf/ws/framework/WebService.php');
       
@@ -183,12 +179,12 @@
         
     private function upgradeTo_3_2_0()
     {           
-      $this->cecho("Can't upgrade the OSF codebase version 3.1.0 to 3.2.0 automatically...\n", 'YELLOW');        
+      $this->span("Can't upgrade the OSF codebase version 3.1.0 to 3.2.0 automatically...", 'warn');        
     }    
         
     private function upgradeTo_3_3_0()
     {           
-      $this->cecho("Can't upgrade the OSF codebase version 3.2.0 to 3.3.0 automatically...\n", 'YELLOW');        
+      $this->span("Can't upgrade the OSF codebase version 3.2.0 to 3.3.0 automatically...", 'warn');        
     }    
         
     private function upgradeTo_3_3_1()

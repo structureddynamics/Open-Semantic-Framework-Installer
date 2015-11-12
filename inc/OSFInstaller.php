@@ -53,34 +53,26 @@
      */
     public function install_OSF()
     {
-      $this->cecho("You are about to install the Open Semantic Framework.\n", 'WHITE');
-      $this->cecho("This installation process installs all the software components that are part of the OSF stack. It will take 10 minutes of your time, but the process will go on for a few hours because of the many pieces of software that get compiled.\n\n", 'WHITE');
-      $this->cecho("The log of this installation is available here: ".$this->log_file."\n", 'WHITE');
-      $this->cecho("\n\nCopyright 2008-15. Structured Dynamics LLC. All rights reserved.\n\n", 'WHITE');
+      $this->span("You are about to install the Open Semantic Framework.");
+      $this->span("This installation process installs all the software components that are part of the OSF stack. It will take 10 minutes of your time, but the process will go on for a few hours because of the many pieces of software that get compiled.\n");
+      $this->span("The log of this installation is available here: ".$this->log_file);
+      $this->span("\n\nCopyright 2008-15. Structured Dynamics LLC. All rights reserved.\n\n");
 
-      $this->cecho("\n\n");
-      $this->cecho("---------------------------------\n", 'WHITE');
-      $this->cecho(" General Settings Initialization \n", 'WHITE'); 
-      $this->cecho("---------------------------------\n", 'WHITE'); 
-      $this->cecho("\n\n");
+      $this->h1("General Settings Initialization");
 
-      $this->cecho("\n\n");
-      $this->cecho("------------------------\n", 'WHITE');
-      $this->cecho(" Installing prerequisites \n", 'WHITE');
-      $this->cecho("------------------------\n", 'WHITE');
-      $this->cecho("\n\n");
+      $this->h1("Installing prerequisites");
 
       $yes = $this->isYes($this->getInput("We recommend that you upgrade all software on the server. Would you like to do this right now? (yes/no)"));
 
       if ($yes) {
-        $this->cecho("Updating the package registry...\n", 'WHITE');
+        $this->span("Updating the package registry...");
         $this->exec('apt-get -y update');
 
-        $this->cecho("Upgrading the server...\n", 'WHITE');
+        $this->span("Upgrading the server...");
         $this->exec('apt-get -y upgrade');
       }
 
-      $this->cecho("Installing required general packages...\n", 'WHITE');
+      $this->span("Installing required general packages...");
       $this->exec('apt-get -y install curl gcc libssl-dev openssl gawk vim default-jdk ftp-upload');
 
       // Dependency chain:
@@ -113,8 +105,8 @@
       $this->installPHPUnit();
       $this->runOSFTestsSuites($this->osf_web_services_folder);
 
-      $this->cecho("Now that the OSF instance is installed, you can install OSF for Drupal on the same server using this command:\n\n", 'CYAN');
-      $this->cecho("    ./osf-installer --install-osf-drupal\n\n", 'CYAN');
+      $this->span("Now that the OSF instance is installed, you can install OSF for Drupal on the same server using this command:\n\n", 'notice');
+      $this->span("    ./osf-installer --install-osf-drupal\n\n", 'notice');
     }
 
     /**
@@ -131,7 +123,7 @@
       $this->chdir($installationFolder.'/StructuredDynamics/osf/tests/');
       $this->exec('phpunit --configuration phpunit.xml --filter \'StructuredDynamics\\osf\\tests\\ws\\crud\\read\\CrudReadTest::testLanguageEnglishSpecified\'');
 
-      $this->cecho("Restarting Virtuoso...\n", 'WHITE');
+      $this->span("Restarting Virtuoso...");
       $this->exec('/etc/init.d/virtuoso stop');
       sleep(20);
       $this->exec('/etc/init.d/virtuoso start');

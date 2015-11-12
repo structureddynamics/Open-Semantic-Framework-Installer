@@ -6,15 +6,11 @@
   {
     public function installPhp5()
     {
-      $this->cecho("\n\n", 'WHITE');
-      $this->cecho("-----------------\n", 'WHITE');
-      $this->cecho(" Installing PHP5 \n", 'WHITE');
-      $this->cecho("-----------------\n", 'WHITE');
-      $this->cecho("\n\n", 'WHITE');
+      $this->h1("Installing PHP5");
 
       passthru('apt-get -y install php5 php5-curl unixodbc php5-odbc php5-cgi');      
       
-      $this->cecho("Restarting Apache2...\n", 'WHITE');
+      $this->span("Restarting Apache2...");
       $this->exec('/etc/init.d/apache2 restart');      
 
       $this->chdir($this->currentWorkingDirectory);
@@ -25,11 +21,7 @@
     */
     public function installPHPUnit()
     {
-      $this->cecho("\n\n", 'WHITE');
-      $this->cecho("--------------------\n", 'WHITE');
-      $this->cecho(" Installing PHPUnit \n", 'WHITE');
-      $this->cecho("--------------------\n", 'WHITE');
-      $this->cecho("\n\n", 'WHITE');
+      $this->h1("Installing PHPUnit");
       
       // Get name, version and paths
       $pkgName = "PHPUnit";
@@ -37,17 +29,17 @@
       $tmpPath = "/tmp/osf/phpunit";
 
       // Download
-      $this->span("Downloading...", 'info');
+      $this->span("Downloading...");
       $this->mkdir("{$tmpPath}/");
       $this->wget("https://phar.phpunit.de/phpunit.phar", "{$tmpPath}/");
 
       // Install
-      $this->span("Installing...", 'info');
+      $this->span("Installing...");
       $this->cp("{$tmpPath}/phpunit.phar", "{$installPath}/phpunit", FALSE);
       $this->chmod("{$installPath}/phpunit", "+x");
 
       // Cleanup
-      $this->span("Cleaning...", 'info');
+      $this->span("Cleaning...");
       $this->rm("{$tmpPath}/", TRUE);
     }
 
@@ -56,13 +48,9 @@
     */
     public function installARC2()
     {
-      $this->cecho("\n\n", 'WHITE');
-      $this->cecho("-----------------\n", 'WHITE');
-      $this->cecho(" Installing ARC2 \n", 'WHITE');
-      $this->cecho("-----------------\n", 'WHITE');
-      $this->cecho("\n\n", 'WHITE');
+      $this->h1("Installing ARC2");
 
-      $this->cecho("Installing ARC2...\n", 'WHITE');
+      $this->span("Installing ARC2...");
       
       $this->chdir($this->osf_web_services_folder.$this->osf_web_services_ns.'/framework/arc2/');
       
@@ -72,13 +60,13 @@
       
       $this->chdir($this->osf_web_services_folder.$this->osf_web_services_ns.'/framework/arc2/arc2-2.1.1/');
       
-      $this->exec('mv * ../');
+      $this->mv('*', '../');
       
       $this->chdir($this->osf_web_services_folder.$this->osf_web_services_ns.'/framework/arc2/');
       
-      $this->exec('rm -rf arc2-2.1.1');
+      $this->rm('arc2-2.1.1', TRUE);
       
-      $this->exec('rm v*.zip*');
+      $this->rm('v*.zip*');
       
       $this->chdir($this->currentWorkingDirectory);
     }   
@@ -88,40 +76,36 @@
     */
     public function installOWLAPI()
     {
-      $this->cecho("\n\n", 'WHITE');
-      $this->cecho("--------------------\n", 'WHITE');
-      $this->cecho(" Installing OWLAPI \n", 'WHITE');
-      $this->cecho("--------------------\n", 'WHITE');
-      $this->cecho("\n\n", 'WHITE');
+      $this->h1("Installing OWLAPI");
       
-      $this->cecho("Installing OWLAPI requirements...", 'WHITE');
+      $this->span("Installing OWLAPI requirements...");
       
       $this->exec('apt-get -y install tomcat6');
       
       $this->exec('/etc/init.d/tomcat6 stop');
       
-      $this->cecho("Downloading OWLAPI...\n", 'WHITE');
+      $this->span("Downloading OWLAPI...");
       
       $this->chdir('/var/lib/tomcat6/webapps/');
       
       $this->wget('http://wiki.opensemanticframework.org/files/OWLAPI.war');
       
-      $this->cecho("Starting Tomcat6 to install the OWLAPI war installation file...\n", 'WHITE');
+      $this->span("Starting Tomcat6 to install the OWLAPI war installation file...");
       
       $this->exec('/etc/init.d/tomcat6 start');
       
       // wait 20 secs to make sure Tomcat6 had the time to install the OWLAPI webapp
       sleep(20);
       
-      $this->cecho("Configuring PHP for the OWLAPI...\n", 'WHITE');
+      $this->span("Configuring PHP for the OWLAPI...");
       
-      $this->exec('sed -i "s/allow_url_include = Off/allow_url_include = On/" /etc/php5/apache2/php.ini'); 
-      $this->exec('sed -i "s/allow_url_include = Off/allow_url_include = On/" /etc/php5/cli/php.ini'); 
+      $this->sed('allow_url_include = Off', 'allow_url_include = On', '/etc/php5/apache2/php.ini');
+      $this->sed('allow_url_include = Off', 'allow_url_include = On', '/etc/php5/cli/php.ini');
 
-      $this->exec(' sed -i "s/allow_call_time_pass_reference = Off/allow_call_time_pass_reference = On/" /etc/php5/apache2/php.ini');
-      $this->exec(' sed -i "s/allow_call_time_pass_reference = Off/allow_call_time_pass_reference = On/" /etc/php5/cli/php.ini');
+      $this->sed('allow_call_time_pass_reference = Off', 'allow_call_time_pass_reference = On', '/etc/php5/apache2/php.ini');
+      $this->sed('allow_call_time_pass_reference = Off', 'allow_call_time_pass_reference = On', '/etc/php5/cli/php.ini');
 
-      $this->cecho("Restart Apache2...\n", 'WHITE');
+      $this->span("Restart Apache2...");
       $this->exec('/etc/init.d/apache2 restart');
     }
 
@@ -130,28 +114,24 @@
     */
     public function install_OSF_vhost()
     {
-      $this->cecho("\n\n", 'WHITE');
-      $this->cecho("--------------------\n", 'WHITE');
-      $this->cecho(" Installing OSFvhost \n", 'WHITE');
-      $this->cecho("--------------------\n", 'WHITE');
-      $this->cecho("\n\n", 'WHITE');
+      $this->h1("Installing OSF vhost");
       
-      $this->cecho("Configure Apache2 for the OSF Web Services...\n", 'WHITE');
+      $this->span("Configure Apache2 for the OSF Web Services...");
       
-      $this->exec('cp resources/osf-web-services/osf-web-services /etc/apache2/sites-available/osf-web-services.conf');
+      $this->cp('resources/osf-web-services/osf-web-services', '/etc/apache2/sites-available/osf-web-services.conf');
 
-      $this->exec('sudo ln -s /etc/apache2/sites-available/osf-web-services.conf /etc/apache2/sites-enabled/osf-web-services.conf');
+      $this->ln('/etc/apache2/sites-available/osf-web-services.conf', '/etc/apache2/sites-enabled/osf-web-services.conf');
       
       // Fix the OSF Web Services path in the apache config file
-      $this->exec("sudo sed -i \"s>/usr/share/osf>{$this->osf_web_services_folder}/{$this->osf_web_services_ns}>\" \"/etc/apache2/sites-available/osf-web-services.conf\"");
+      $this->sed('/usr/share/osf', "{$this->osf_web_services_folder}/{$this->osf_web_services_ns}", '/etc/apache2/sites-available/osf-web-services.conf');
       
-      $this->cecho("Restarting Apache2...\n", 'WHITE');
+      $this->span("Restarting Apache2...");
       
       $this->exec('/etc/init.d/apache2 restart');
       
-      $this->cecho("Configure the osf.ini configuration file...\n", 'WHITE');
+      $this->span("Configure the osf.ini configuration file...");
 
-      $this->cecho("Make sure the OSF Web Services are aware of themselves by changing the hosts file...\n", 'WHITE');
+      $this->span("Make sure the OSF Web Services are aware of themselves by changing the hosts file...");
       
       if(stripos(file_get_contents('/etc/hosts'), 'OSF-Installer') == FALSE)
       {
@@ -165,23 +145,19 @@
     public function installVirtuoso()
     {
 
-      $this->cecho("\n\n", 'WHITE');
-      $this->cecho("---------------------\n", 'WHITE');
-      $this->cecho(" Installing Virtuoso 7 from .deb file.... \n", 'WHITE');
-      $this->cecho("---------------------\n", 'WHITE');
-      $this->cecho("\n\n", 'WHITE');   
+      $this->h1("Installing Virtuoso 7 from .deb file....");   
 
       $this->wget('https://github.com/structureddynamics/OSF-Installer-Ext/raw/3.3/virtuoso-opensource/virtuoso-opensource_7.1_amd64.deb');
       $this->exec('dpkg -i virtuoso-opensource_7.1_amd64.deb');     
       
-      $this->exec('mv /etc/init.d/virtuoso-opensource /etc/init.d/virtuoso');
+      $this->mv('/etc/init.d/virtuoso-opensource', '/etc/init.d/virtuoso');
 
-      $this->cecho("Installing odbc.ini and odbcinst.ini files...\n", 'WHITE');
+      $this->span("Installing odbc.ini and odbcinst.ini files...");
       
-      $this->exec('cp -f resources/virtuoso/odbc.ini /etc/odbc.ini');
-      $this->exec('cp -f resources/virtuoso/odbcinst.ini /etc/odbcinst.ini');
+      $this->cp('resources/virtuoso/odbc.ini', '/etc/odbc.ini');
+      $this->cp('resources/virtuoso/odbcinst.ini', '/etc/odbcinst.ini');
 
-      $this->cecho("Test Virtuoso startup...\n", 'WHITE');
+      $this->span("Test Virtuoso startup...");
       
       $this->exec('/etc/init.d/virtuoso stop');
       
@@ -193,33 +169,33 @@
       
       if(strpos($isVirtuosoRunning, '/usr/bin/virtuoso') === FALSE)
       {
-        $this->cecho('Virtuoso is not running. Check the logs, something went wrong.', 'RED');
+        $this->span('Virtuoso is not running. Check the logs, something went wrong.', 'error');
       }
       else
       {
-        $this->cecho("Register Virtuoso to automatically start at the system's startup...\n", 'WHITE');
+        $this->span("Register Virtuoso to automatically start at the system's startup...");
         $this->exec('sudo update-rc.d virtuoso defaults');
 
         if(!$this->change_password($this->sparql_password))
         {
           $this->sparql_password = 'dba';
-          $this->cecho("\n\nThe Virtuoso admin password was not changed. Use the default and change it after this installation process...\n", 'YELLOW');
+          $this->span("\n\nThe Virtuoso admin password was not changed. Use the default and change it after this installation process...\n", 'warn');
         }        
         
-        $this->cecho("Grant the SPARQL_UPDATE role to the SPARQL user...\n", 'WHITE');
+        $this->span("Grant the SPARQL_UPDATE role to the SPARQL user...");
 
         if(!$this->update_sparql_roles($this->sparql_password))
         {
-          $this->cecho("\n\nCouldn't grant the SPARQL_UPDATE role to the SPARQL user automcatilly. Log into Conductor to add that role to that user otherwise the OSF instance won't be operational...\n", 'RED');
+          $this->span("\n\nCouldn't grant the SPARQL_UPDATE role to the SPARQL user automcatilly. Log into Conductor to add that role to that user otherwise the OSF instance won't be operational...\n", 'error');
         }                
       }
       
       // Configuring Virtuoso to be able to access the files from the DMT tool
-      $this->cecho("Configuring virtuoso.ini...\n", 'WHITE');
+      $this->span("Configuring virtuoso.ini...");
       
-      $this->exec('sed -i \'s>DirsAllowed.*= ., /usr/share/virtuoso/vad>DirsAllowed = ., /usr/share/virtuoso/vad, /usr/share/datasets-management-tool/data>\' "/var/lib/virtuoso/db/virtuoso.ini"');
+      $this->sed('DirsAllowed.*= ., /usr/share/virtuoso/vad', 'DirsAllowed = ., /usr/share/virtuoso/vad, /usr/share/datasets-management-tool/data', '/var/lib/virtuoso/db/virtuoso.ini');
       
-      $this->cecho("Restarting Virtuoso...\n", 'WHITE');
+      $this->span("Restarting Virtuoso...");
       
       $this->exec('/etc/init.d/virtuoso stop');
       
@@ -227,7 +203,7 @@
       
       $this->exec('/etc/init.d/virtuoso start');      
             
-      $this->cecho("You can start Virtuoso using this command: /etc/init.d/virtuoso start\n", 'LIGHT_BLUE');
+      $this->span("You can start Virtuoso using this command: /etc/init.d/virtuoso start", 'debug');
     }
 
     /**
@@ -235,31 +211,27 @@
     */
     public function setupVirtuoso()
     {
-      $this->cecho("\n\n", 'WHITE');
-      $this->cecho("-----------------\n", 'WHITE');
-      $this->cecho(" Setting up Virtuoso \n", 'WHITE');
-      $this->cecho("-----------------\n", 'WHITE');
-      $this->cecho("\n\n", 'WHITE');
+      $this->h1("Setting up Virtuoso");
 
-      $this->cecho("Create the WSF Network...\n", 'WHITE');
+      $this->span("Create the WSF Network...");
       
       $this->chdir($this->currentWorkingDirectory);
       
-      $this->exec('sed -i \'s>server_address = "">server_address = "http://'.$this->osf_web_services_domain.'">\' "resources/virtuoso/initialize_osf_web_services_network.php"');
-      $this->exec('sed -i \'s>appID = "administer">appID = "'.$this->application_id.'">\' "resources/virtuoso/initialize_osf_web_services_network.php"');
+      $this->sed('server_address = ""', "server_address = \"http://{$this->osf_web_services_domain}\"", 'resources/virtuoso/initialize_osf_web_services_network.php');
+      $this->sed('appID = "administer"', "appID = \"{$this->application_id}\"", 'resources/virtuoso/initialize_osf_web_services_network.php');
       
       $errors = shell_exec('php resources/virtuoso/initialize_osf_web_services_network.php');
       
       if(!$this->init_osf($this->sparql_password))
       {
-        $this->cecho("\n\nThe OSF Web Services Network couldn't be created. Major Error.\n", 'RED');
+        $this->span("\n\nThe OSF Web Services Network couldn't be created. Major Error.\n", 'error');
       }        
       
-      $this->cecho("Commit transactions to Virtuoso...\n", 'WHITE');      
+      $this->span("Commit transactions to Virtuoso...");      
 
       if(!$this->commit($this->sparql_password))
       {
-        $this->cecho("Couldn't commit triples to the Virtuoso triples store...\n", 'YELLOW');
+        $this->span("Couldn't commit triples to the Virtuoso triples store...", 'warn');
       }
     }
 
@@ -268,63 +240,59 @@
     */
     public function installSolr()
     {
-      $this->cecho("\n\n", 'WHITE');
-      $this->cecho("-----------------\n", 'WHITE');
-      $this->cecho(" Installing Solr \n", 'WHITE');
-      $this->cecho("-----------------\n", 'WHITE');
-      $this->cecho("\n\n", 'WHITE');
+      $this->h1("Installing Solr");
       
-      $this->cecho("Installing prerequirements...\n", 'WHITE');
+      $this->span("Installing prerequirements...");
       
       $this->exec('apt-get -y install openjdk-7-jdk');
       
-      $this->cecho("Preparing installation...\n", 'WHITE');
+      $this->span("Preparing installation...");
 
-      $this->exec('mkdir -p /tmp/solr-install/');
-      
+      $this->mkdir('/tmp/solr-install/');
+
       $this->chdir('/tmp/solr-install/');
       
-      $this->cecho("Downloading Solr...\n", 'WHITE');
+      $this->span("Downloading Solr...");
       
       $this->wget('http://archive.apache.org/dist/lucene/solr/3.6.0/apache-solr-3.6.0.tgz');
       
-      $this->cecho("Installing Solr...\n", 'WHITE');
+      $this->span("Installing Solr...");
 
       $this->exec('tar -xzvf apache-solr-3.6.0.tgz');
 
-      $this->exec('mkdir -p /usr/share/solr');
+      $this->mkdir('/usr/share/solr');
+
+      $this->cp('/tmp/solr-install/apache-solr-3.6.0/*', '/usr/share/solr/');
       
-      $this->exec('cp -af /tmp/solr-install/apache-solr-3.6.0/* /usr/share/solr/');
-      
-      $this->cecho("Configuring Solr...\n", 'WHITE');
+      $this->span("Configuring Solr...");
       
       $this->chdir($this->currentWorkingDirectory);
 
-      $this->exec('cp -f resources/solr/solr /etc/init.d/');
+      $this->cp('resources/solr/solr', '/etc/init.d/');
+
+      $this->chmod('/etc/init.d/solr', '755');
+
+      $this->mv('/usr/share/solr/example/', '/usr/share/solr/osf-web-services/');
       
-      $this->exec('chmod 755 /etc/init.d/solr');
-      
-      $this->exec('mv /usr/share/solr/example/ /usr/share/solr/osf-web-services/');
-      
-      $this->cecho("Installing SOLR-2155...\n", 'WHITE');
+      $this->span("Installing SOLR-2155...");
       
       $this->chdir('/usr/share/solr/dist/');
       
-      $this->exec('wget -q https://github.com/downloads/dsmiley/SOLR-2155/Solr2155-1.0.5.jar');
+      $this->wget('https://github.com/downloads/dsmiley/SOLR-2155/Solr2155-1.0.5.jar');
       
       $this->chdir($this->currentWorkingDirectory);
       
-      $this->exec('cp -af resources/solr/solrconfig.xml /usr/share/solr/osf-web-services/solr/conf/');
+      $this->cp('resources/solr/solrconfig.xml', '/usr/share/solr/osf-web-services/solr/conf/');
 
-      $this->cecho("Starting Solr...\n", 'WHITE');
+      $this->span("Starting Solr...");
 
       $this->exec('/etc/init.d/solr start');
       
-      $this->cecho('Register Solr to automatically start at the system\'s startup...', 'WHITE');
+      $this->span('Register Solr to automatically start at the system\'s startup...');
       
       $this->exec('sudo update-rc.d solr defaults');
       
-      $this->cecho("You can start Solr using this command: /etc/init.d/solr start\n", 'LIGHT_BLUE');      
+      $this->span("You can start Solr using this command: /etc/init.d/solr start", 'notice');      
     }    
 
     /**
@@ -332,23 +300,19 @@
     */
     public function setupSolr()
     {
-      $this->cecho("\n\n", 'WHITE');
-      $this->cecho("-----------------\n", 'WHITE');
-      $this->cecho(" Setting up Solr \n", 'WHITE');
-      $this->cecho("-----------------\n", 'WHITE');
-      $this->cecho("\n\n", 'WHITE');
+      $this->h1("Setting up Solr");
 
-      $this->cecho("Install the Solr schema for the OSF Web Services...\n", 'WHITE');
+      $this->span("Install the Solr schema for the OSF Web Services...");
       
       if(!file_exists('/usr/share/solr/osf-web-services/solr/conf/schema.xml'))
       {
-        $this->cecho("Solr is not yet installed. Install Solr using this --install-solr option and then properly configure its schema by hand.\n", 'WHITE');
+        $this->span("Solr is not yet installed. Install Solr using this --install-solr option and then properly configure its schema by hand.");
       }
       else
       {
-        $this->exec('cp -f '.$this->osf_web_services_folder.$this->osf_web_services_ns.'/framework/solr_schema_v1_3_2.xml /usr/share/solr/osf-web-services/solr/conf/schema.xml');
+        $this->cp($this->osf_web_services_folder.$this->osf_web_services_ns.'/framework/solr_schema_v1_3_2.xml', '/usr/share/solr/osf-web-services/solr/conf/schema.xml');
         
-        $this->cecho("Restarting Solr...\n", 'WHITE');
+        $this->span("Restarting Solr...");
         $this->exec('/etc/init.d/solr stop');
         $this->exec('/etc/init.d/solr start');
       }
@@ -359,27 +323,23 @@
     */
     public function installApache2()
     {
-      $this->cecho("\n\n", 'WHITE');
-      $this->cecho("--------------------\n", 'WHITE');
-      $this->cecho(" Installing Apache2 \n", 'WHITE');
-      $this->cecho("--------------------\n", 'WHITE');
-      $this->cecho("\n\n", 'WHITE');
+      $this->h1("Installing Apache2");
       
-      $this->cecho("Installing Apache2...\n", 'WHITE');
+      $this->span("Installing Apache2...");
       $this->exec('apt-get -y install apache2');
       
-      $this->cecho("Enabling mod-rewrite...\n", 'WHITE');
+      $this->span("Enabling mod-rewrite...");
       $this->exec('a2enmod rewrite');
       
-      $this->cecho("Restarting Apache2...\n", 'WHITE');
+      $this->span("Restarting Apache2...");
       $this->exec('/etc/init.d/apache2 restart');      
 
-      $this->cecho("Performing some tests on the new Apache2 instance...\n", 'WHITE');
-      $this->cecho("Checking if the Apache2 instance is up and running...\n", 'WHITE');
+      $this->span("Performing some tests on the new Apache2 instance...");
+      $this->span("Checking if the Apache2 instance is up and running...");
       
       if(strpos(shell_exec('curl -s http://localhost'), 'It works!') === FALSE)
       {
-        $this->cecho("[Error] Apache2 is not currently running...\n", 'YELLOW');
+        $this->span("[Error] Apache2 is not currently running...", 'warn');
       }
     }
 
@@ -388,31 +348,27 @@
     */
     public function installMySQL()
     {
-      $this->cecho("\n\n", 'WHITE');
-      $this->cecho("------------------\n", 'WHITE');
-      $this->cecho(" Installing MySQL \n", 'WHITE');
-      $this->cecho("------------------\n", 'WHITE');
-      $this->cecho("\n\n", 'WHITE');
+      $this->h1("Installing MySQL");
 
-      $this->cecho("Installing MySQL...\n", 'WHITE');
+      $this->span("Installing MySQL...");
       
       // Need to use passthru because the installer prompts the user
       // with screens requiring input.
       // This command cannot be captured in the log.
       passthru('apt-get -y install mysql-server');
       
-      $this->cecho("Updating php.ini to enable mysql...\n", 'WHITE');
-      $this->exec('sed -r -i "s/; +extension=msql.so/extension=mysql.so/" /etc/php5/apache2/php.ini');
+      $this->span("Updating php.ini to enable mysql...");
+      $this->sed('; +extension=msql.so', 'extension=mysql.so', '/etc/php5/apache2/php.ini');
       
-      $this->cecho("Restarting Apache2...\n", 'WHITE');
+      $this->span("Restarting Apache2...");
       $this->exec('/etc/init.d/apache2 restart');
 
-      $this->cecho("Performing some tests on the new Apache2 instance...\n", 'WHITE');
-      $this->cecho("Checking if the Apache2 instance is up and running...\n", 'WHITE');
+      $this->span("Performing some tests on the new Apache2 instance...");
+      $this->span("Checking if the Apache2 instance is up and running...");
       
       if(strpos(shell_exec('curl -s http://localhost'), 'It works!') === FALSE)
       {
-        $this->cecho("[Error] Apache2 is not currently running...\n", 'YELLOW');
+        $this->span("[Error] Apache2 is not currently running...", 'warn');
       }
     }    
     
@@ -421,13 +377,9 @@
     */
     public function installPhpMyAdmin()
     {
-      $this->cecho("\n\n", 'WHITE');
-      $this->cecho("-----------------------\n", 'WHITE');
-      $this->cecho(" Installing PhpMyAdmin \n", 'WHITE');
-      $this->cecho("-----------------------\n", 'WHITE');
-      $this->cecho("\n\n", 'WHITE');
+      $this->h1("Installing PhpMyAdmin");
 
-      $this->cecho("Installing PhpMyAdmin...\n", 'WHITE');
+      $this->span("Installing PhpMyAdmin...");
       
       // Need to use passthru because the installer prompts the user
       // with screens requiring input.
@@ -440,30 +392,26 @@
     */    
     public function installMemcached()
     {
-      $this->cecho("\n\n", 'WHITE');
-      $this->cecho("----------------------\n", 'WHITE');
-      $this->cecho(" Installing Memcached \n", 'WHITE');
-      $this->cecho("----------------------\n", 'WHITE');
-      $this->cecho("\n\n", 'WHITE');
+      $this->h1("Installing Memcached");
 
-      $this->cecho("Installing Memcached...\n", 'WHITE');
+      $this->span("Installing Memcached...");
       
       $this->exec('apt-get -y install memcached');      
       $this->exec('apt-get -y install php5-memcache');      
       
-      $this->cecho("Restarting Apache2...\n", 'WHITE');
+      $this->span("Restarting Apache2...");
       
       $this->exec('/etc/init.d/apache2 restart');      
       
-      $this->cecho("Starting Memcached...\n", 'WHITE');
+      $this->span("Starting Memcached...");
 
       $this->exec('/etc/init.d/memcached restart');      
    
-      $this->cecho("Installing Memcached User Interface...\n", 'WHITE');
+      $this->span("Installing Memcached User Interface...");
       
       $this->chdir('/usr/share/');
       
-      $this->exec('mkdir -p memcached-ui');      
+      $this->mkdir('memcached-ui');
       
       $this->chdir('/usr/share/memcached-ui/');
       
@@ -471,28 +419,29 @@
       $this->exec('tar -xvf memcache_stats_v0.1.tgz');      
       
       $this->chdir('memcache_stats_v01/');      
-      
-      $this->exec('mv * ../');      
+
+      $this->mv('*', '../');
       
       $this->chdir('/usr/share/memcached-ui/');
+
+      $this->rm('memcache_stats_v01', TRUE);
+      $this->rm('*.tgz', TRUE);      
       
-      $this->exec('rm -rf memcache_stats_v01');      
-      $this->exec('rm -rf *.tgz');      
-      $this->exec('mv memcache.php index.php');      
+      $this->mv('memcache.php', 'index.php');
       
       $adminPassword = $this->getInput("What is the password you want to use to log into the Memcached user interface for the 'admin' user? ");
 
-      $this->exec('sed -i "s>define(\'ADMIN_PASSWORD\',\'pass\');>define(\'ADMIN_PASSWORD\',\''.$adminPassword.'\');>" index.php');
+      $this->sed("define('ADMIN_PASSWORD','pass');", "define('ADMIN_PASSWORD','{$adminPassword}');", 'index.php');
       
-      $this->cecho("Configuring Apache2 for the Memcached User Interface...\n", 'WHITE');
+      $this->span("Configuring Apache2 for the Memcached User Interface...");
       
       $this->chdir($this->currentWorkingDirectory);
       
-      $this->exec('cp resources/memcached/memcached /etc/apache2/sites-available/memcached.conf');
+      $this->cp('resources/memcached/memcached', '/etc/apache2/sites-available/memcached.conf');
 
-      $this->exec('sudo ln -s /etc/apache2/sites-available/memcached.conf /etc/apache2/sites-enabled/memcached.conf');      
+      $this->ln('/etc/apache2/sites-available/memcached.conf', '/etc/apache2/sites-enabled/memcached.conf');
       
-      $this->cecho("Restarting Apache2...\n", 'WHITE');
+      $this->span("Restarting Apache2...");
       
       $this->exec('/etc/init.d/apache2 restart');      
     }       
@@ -510,11 +459,7 @@
       // First check if Pear is installed
       if($this->exec('pear', 'ignore') === FALSE)
       {
-        $this->cecho("\n\n", 'WHITE');
-        $this->cecho("-----------------\n", 'WHITE');
-        $this->cecho(" Installing Pear \n", 'WHITE');
-        $this->cecho("-----------------\n", 'WHITE');
-        $this->cecho("\n\n", 'WHITE');
+        $this->h1("Installing Pear");
 
         $this->chdir('/tmp/');
                  
@@ -528,11 +473,7 @@
       // Check if Drush is installed
       if($this->exec('drush', 'ignore') === FALSE)
       {
-        $this->cecho("\n\n", 'WHITE');
-        $this->cecho("------------------\n", 'WHITE');
-        $this->cecho(" Installing Drush\n", 'WHITE');
-        $this->cecho("------------------\n", 'WHITE');
-        $this->cecho("\n\n", 'WHITE');
+        $this->h1("Installing Drush");
 
         $this->exec('pear upgrade --force Console_Getopt', 'warning');
         $this->exec('pear upgrade --force pear', 'warning');
@@ -544,11 +485,7 @@
       }
       
       // Install Drupal            
-      $this->cecho("\n\n", 'WHITE');
-      $this->cecho("--------------------------------\n", 'WHITE');
-      $this->cecho(" Installing Drupal & OSF Drupal\n", 'WHITE');
-      $this->cecho("--------------------------------\n", 'WHITE');
-      $this->cecho("\n\n", 'WHITE');      
+      $this->h1("Installing Drupal & OSF Drupal");      
       
       $this->chdir($this->currentWorkingDirectory);
       
@@ -573,34 +510,34 @@
       $this->chdir($this->currentWorkingDirectory);
       
       // Configuring Apache2 for Drupal      
-      $this->cecho("Configure Apache2 for Drupal...\n", 'WHITE');
+      $this->span("Configure Apache2 for Drupal...");
       
-      $this->exec('cp resources/osf-drupal/drupal /etc/apache2/sites-available/');
+      $this->cp('resources/osf-drupal/drupal', '/etc/apache2/sites-available/');
 
-      $this->exec('mv /etc/apache2/sites-available/drupal /etc/apache2/sites-available/drupal.conf');
+      $this->mv('/etc/apache2/sites-available/drupal', '/etc/apache2/sites-available/drupal.conf');
 
-      $this->exec('sudo ln -s /etc/apache2/sites-available/drupal.conf /etc/apache2/sites-enabled/drupal.conf');
+      $this->ln('/etc/apache2/sites-available/drupal.conf', '/etc/apache2/sites-enabled/drupal.conf');
       
       // Fix the OSF Web Services path in the apache config file
-      $this->exec('sudo sed -i "s>/usr/share/drupal>'.$this->drupal_folder.'>" "/etc/apache2/sites-available/drupal.conf"');
+      $this->sed('/usr/share/drupal', $this->drupal_folder, '/etc/apache2/sites-available/drupal.conf');
       
       // Delete the default Apache2 enabled site file
       if(file_exists('/etc/apache2/sites-enabled/000-default.conf'))
       {
-        $this->exec('rm /etc/apache2/sites-enabled/000-default.conf', 'warning');
+        $this->rm('/etc/apache2/sites-enabled/000-default.conf', 'warn');
       }
       
-      $this->cecho("Restarting Apache2...\n", 'WHITE');
+      $this->span("Restarting Apache2...");
       
       $this->exec('/etc/init.d/apache2 restart');      
 
       // Install required file for OSF Ontology
-      $this->exec('cp -af resources/osf-drupal/new.owl '.$this->data_folder.'/ontologies/files/new.owl');
+      $this->cp('resources/osf-drupal/new.owl', $this->data_folder.'/ontologies/files/new.owl');
       
       // Install the required files for the colorpicker module
       $this->chdir($this->drupal_folder.'/sites/all/libraries/');
       
-      $this->exec('mkdir -p colorpicker');
+      $this->mkdir('colorpicker');
       
       $this->chdir('colorpicker');
       
@@ -608,14 +545,14 @@
       
       $this->exec('unzip colorpicker.zip');
       
-      $this->exec('rm colorpicker.zip');
+      $this->rm('colorpicker.zip');
 
       $this->load_OSF_PermissionsManagementTool();
       
       // Enable OSF Drupal modules      
       $this->chdir($this->drupal_folder);     
       
-      $this->cecho("Enable OSF Drupal modules...\n", 'WHITE');
+      $this->span("Enable OSF Drupal modules...");
       passthru("drush en devel -y");
       passthru("drush en ctools -y");
       passthru("drush en entity -y");
@@ -637,7 +574,7 @@
       passthru("drush en osf -y");
       passthru("drush en osf_configure -y");
       
-      $this->cecho("You can safely ignore the following 4 errors related to 'illegal choice detected'...\n", 'YELLOW');
+      $this->span("You can safely ignore the following 4 errors related to 'illegal choice detected'...", 'warn');
       passthru("drush en osf_searchapi -y");
       passthru("drush en osf_entities -y");
       passthru("drush en osf_permissions -y");
@@ -651,31 +588,31 @@
       passthru("drush dis overlay -y");
       
       // Create Drupal roles for OSF Drupal
-      $this->cecho("Create Drupal roles for OSF Drupal...\n", 'WHITE');
+      $this->span("Create Drupal roles for OSF Drupal...");
       
       passthru("drush role-create 'contributor' -y");
       passthru("drush role-create 'owner/curator' -y");
       
       // Change the namespaces.csv file permissions on the server
-      $this->exec("chmod 777 ".$this->drupal_folder."/sites/all/libraries/OSF-WS-PHP-API/StructuredDynamics/osf/framework/namespaces.csv", 'warning');
+      $this->chmod($this->drupal_folder.'/sites/all/libraries/OSF-WS-PHP-API/StructuredDynamics/osf/framework/namespaces.csv', '777');
 
       // Setup OSF Ontology settings
-      $this->cecho("Configure error level settings...\n", 'WHITE');
+      $this->span("Configure error level settings...");
       passthru('drush vset error_level 1');
       
       // Setup OSF Ontology settings
-      $this->cecho("Configure OSF Ontology settings...\n", 'WHITE');
+      $this->span("Configure OSF Ontology settings...");
       
       // Create the schemas folder used by OSF Ontology
-      $this->exec('mkdir -p '.$this->drupal_folder.'/schemas/', 'warning');
-      $this->exec('chmod 777 '.$this->drupal_folder.'/schemas/', 'warning');
-      $this->exec('chmod 777 -R '.$this->data_folder.'/ontologies/', 'warning');
+      $this->mkdir($this->drupal_folder.'/schemas/', 'warning');
+      $this->chmod($this->drupal_folder.'/schemas/', '777');
+      $this->chmod($this->data_folder.'/ontologies/', '777', TRUE);
       
       // Configure OSF Entities
-      $this->cecho("Configure OSF Entities settings...\n", 'WHITE');
+      $this->span("Configure OSF Entities settings...");
       
       // Configure OSF SearchAPI settings
-      $this->cecho("Configure OSF Search API settings...\n", 'WHITE');
+      $this->span("Configure OSF Search API settings...");
       
       // Setup default interface
       passthru('drush vset osf_searchapi_settings_interface_name "DefaultSourceInterface"');
@@ -703,8 +640,8 @@
       
       $this->chdir($this->currentWorkingDirectory);
       
-      $this->cecho("Now that OSF for Drupal is installed, the next steps would be to follow the Initial OSF for Drupal Configuration Guide:\n\n", 'CYAN');
-      $this->cecho("    http://wiki.opensemanticframework.org/index.php/Initial_OSF_for_Drupal_Configuration\n\n", 'CYAN');
+      $this->span("Now that OSF for Drupal is installed, the next steps would be to follow the Initial OSF for Drupal Configuration Guide:\n\n", 'notice');
+      $this->span("    http://wiki.opensemanticframework.org/index.php/Initial_OSF_for_Drupal_Configuration\n\n", 'notice');
     }    
         
     
