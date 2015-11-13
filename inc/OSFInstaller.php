@@ -300,7 +300,7 @@
       $this->setIni("network", "wsf_base_path", "\"{$this->osf_web_services_folder}/{$this->osf_web_services_ns}/\"",
         "{$dataPath}/osf.ini");
       // OSF Tools paths
-      $this->setIni("datasets", "wsf_graph", "\"{$this->osf_web_services_domain}/wsf/\"",
+      $this->setIni("datasets", "wsf_graph", "\"http://{$this->osf_web_services_domain}/wsf/\"",
         "{$dataPath}/osf.ini");
       $this->setIni("datasets", "dtd_base", "\"http://{$this->osf_web_services_domain}/ws/dtd/\"",
         "{$dataPath}/osf.ini");
