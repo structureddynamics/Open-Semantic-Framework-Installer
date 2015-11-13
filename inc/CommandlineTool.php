@@ -565,7 +565,6 @@
     public function sed($find, $replace, $file)
     {
       $output = array();
-      $this->log(array($find, $replace, $file), TRUE);
 
       // Escape reserved sed characters
       $find = str_replace(array('"', '$', '>'), array('\"', '\$', '\>'), $find);
@@ -573,6 +572,8 @@
       
       // Build command
       $command = "sed -i \"s>{$find}>{$replace}>\" \"{$file}\"";
+      
+      $this->log(array($command), TRUE);
 
       exec($command, $output, $return);
       $this->log($output);
@@ -588,6 +589,8 @@
      */
     public function append($data, $file)
     {
+      $this->log(array("Append: ", $data, $file), TRUE);
+      
       // Run command
       $return = file_put_contents($file, $data, FILE_APPEND);
 
@@ -627,10 +630,11 @@
     public function mkdir($path)
     {
       $output = array();
-      $this->log(array($path), TRUE);
 
       // Build command
       $command = "mkdir -p \"{$path}\"";
+      
+      $this->log(array($command), TRUE);
 
       exec($command, $output, $return);
       $this->log($output);
@@ -647,7 +651,6 @@
     public function rm($path, $recursion = FALSE)
     {
       $output = array();
-      $this->log(array($path), TRUE);
 
       // Build command
       $command = "rm -f";
@@ -665,6 +668,8 @@
         $command .= " \"{$path}\"";
       }
 
+      $this->log(array($command), TRUE);      
+      
       exec($command, $output, $return);
       $this->log($output);
 
@@ -681,7 +686,6 @@
     public function chown($path, $own, $recursion = FALSE)
     {
       $output = array();
-      $this->log(array($path, $own, $recursion), TRUE);
 
       // Build command
       $command = "chown";
@@ -689,9 +693,12 @@
       if ($recursion == TRUE) {
         $command .= " -R";
       }
+      
       // Build command
       $command .= " \"{$own}\" \"{$path}\"";
 
+      $this->log(array($command), TRUE);
+      
       exec($command, $output, $return);
       $this->log($output);
 
@@ -708,7 +715,6 @@
     public function chgrp($path, $grp, $recursion = FALSE)
     {
       $output = array();
-      $this->log(array($path, $grp, $recursion), TRUE);
 
       // Build command
       $command = "chgrp";
@@ -719,6 +725,8 @@
       // Build command
       $command .= " \"{$grp}\" \"{$path}\"";
 
+      $this->log(array($command), TRUE);
+      
       exec($command, $output, $return);
       $this->log($output);
 
@@ -735,7 +743,6 @@
     public function chmod($path, $mod, $recursion = FALSE)
     {
       $output = array();
-      $this->log(array($path, $mod, $recursion), TRUE);
 
       // Build command
       $command = "chmod";
@@ -743,9 +750,12 @@
       if ($recursion == TRUE) {
         $command .= " -R";
       }
+      
       // Build command
       $command .= " \"{$mod}\" \"{$path}\"";
 
+      $this->log(array($command), TRUE);      
+      
       exec($command, $output, $return);
       $this->log($output);
 
@@ -761,7 +771,6 @@
     public function ln($src, $dest = '')
     {
       $output = array();
-      $this->log(array($src, $dest), TRUE);
 
       // Build command
       $command = "ln -sf \"{$src}\"";
@@ -770,6 +779,8 @@
         $command .= " \"{$dest}\"";
       }
 
+      $this->log(array($command), TRUE);      
+      
       exec($command, $output, $return);
       $this->log($output);
 
@@ -786,7 +797,6 @@
     public function cp($src, $dest, $recursion = FALSE)
     {
       $output = array();
-      $this->log(array($src, $dest, $recursion), TRUE);
 
       // Build command
       $command = "cp -af";
@@ -804,6 +814,8 @@
         $command .= " \"{$src}\" \"{$dest}\"";
       }
 
+      $this->log(array($command), TRUE);      
+      
       exec($command, $output, $return);
       $this->log($output);
 
@@ -819,7 +831,6 @@
     public function mv($src, $dest)
     {
       $output = array();
-      $this->log(array($src, $dest), TRUE);
 
       // Build command
       $command = '';
@@ -833,7 +844,8 @@
         $command = "mv -f \"{$src}\" \"{$dest}\"";
       }  
         
-
+      $this->log(array($command), TRUE);
+      
       exec($command, $output, $return);
       $this->log($output);
 
@@ -849,7 +861,6 @@
     public function unzip($arch, $dest = '')
     {
       $output = array();
-      $this->log(array($arch, $dest), TRUE);
 
       // Build command
       $command = "unzip -o \"{$arch}\"";
@@ -857,6 +868,8 @@
       if (!empty($dest)) {
         $command .= " -d \"{$dest}\"";
       }
+      
+      $this->log(array($command), TRUE);
 
       exec($command, $output, $return);
       $this->log($output);
@@ -873,7 +886,6 @@
     public function wget($url, $dest = '')
     {
       $output = array();
-      $this->log(array($url, $dest), TRUE);
 
       // Build command
       $command = "wget -qN \"{$url}\"";
@@ -882,6 +894,8 @@
         $command .= " -P \"{$dest}\"";
       }
 
+      $this->log(array($command), TRUE);      
+      
       exec($command, $output, $return);
       $this->log($output);
 
@@ -910,9 +924,12 @@
     public function curl($url, $dest = '')
     {
       $output = array();
-      $this->log(array($url, $dest), TRUE);
 
-      exec("curl {$url}", $output, $return);
+      $command = "curl {$url}";
+      
+      $this->log(array($command), TRUE);
+      
+      exec($command, $output, $return);
       $this->log($output);
 
       if ($return > 0) {
