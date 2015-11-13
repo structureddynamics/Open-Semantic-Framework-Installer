@@ -222,16 +222,18 @@
       $this->span("Installing...", 'info');
       $this->unzip("{$tmpPath}/{$pkgVersion}.zip", "{$tmpPath}/");
       $this->mkdir("{$installPath}/");
+      
       $this->cp("{$tmpPath}/OSF-Web-Services-{$pkgVersion}/.", "{$installPath}/", TRUE);
-      $this->chown("{$installPath}/", "www-data");
-      $this->chgrp("{$installPath}/", "www-data");
-      $this->chmod("{$installPath}/", "755");
-      $this->mkdir("{$dataPath}/osf-web-services/tmp/");
+      $this->chown("{$installPath}/", "www-data", TRUE);
+      $this->chgrp("{$installPath}/", "www-data", TRUE);
+      $this->chmod("{$installPath}/", "755", TRUE);
+      
+      $this->mkdir("{$dataPath}/osf-web-services/tmp/");          
       $this->mkdir("{$dataPath}/osf-web-services/configs/");
-      $this->chown("{$dataPath}/osf-web-services/", "www-data");
-      $this->chgrp("{$dataPath}/osf-web-services/", "www-data");
-      $this->chmod("{$dataPath}/osf-web-services/", "500");
-      $this->chmod("{$dataPath}/osf-web-services/tmp/", "700");
+      $this->chown("{$dataPath}/osf-web-services/", "www-data", TRUE);
+      $this->chgrp("{$dataPath}/osf-web-services/", "www-data", TRUE);
+      $this->chmod("{$dataPath}/osf-web-services/", "500", TRUE);
+      $this->chmod("{$dataPath}/osf-web-services/tmp/", "700", TRUE);
 
       // Cleanup
       $this->span("Cleaning...", 'info');
