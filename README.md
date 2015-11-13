@@ -15,9 +15,9 @@ Requirements
 
 Installing the Open Semantic Framework
 --------------------------------------
-The only steps needed to install the Open Semantic Framework are to:
+To install OSF on your server, you first have to install the OSF Installer command line tool. You only have to run the following commands:
                        
-```
+```bash
 mkdir -p /usr/share/osf-installer/
 
 cd /usr/share/osf-installer/
@@ -27,8 +27,27 @@ wget https://raw.github.com/structureddynamics/Open-Semantic-Framework-Installer
 chmod 755 install.sh
 
 ./install.sh
+```
 
+Now that the OSF Installer is installed, you can configure the installation and install OSF:
+
+```bash
+./osf-installer -c --install-osf -v
+```
+
+Or you can simply run the installer, without configuring it, using the settings defined in the `installer.ini` configuration file:
+
+```bash
 ./osf-installer --install-osf -v
+```
+
+When you install OSF using that command, then **no** input is required in the command line. This means that you can create _configuration profiles_ by updating the settings directly in the `installer.ini` file and use these values to automatically deploy OSF on your server. This kind of installation is normally used by automated deployment systems to automatically install and configure OSF on a server without requiring external inputs.
+
+
+Subsequently, if you want to install OSF for Drupal on the same server, then you can run the following command:
+
+```bash
+./osf-installer -d --install-osf-drupal -v
 ```
 
 Usage
@@ -40,7 +59,8 @@ Usage: osf-install [OPTIONS]
 General Options:
 -h, --help                              Show this help section
 -v, --verbose                           Make this installer verbose
--c, --configure-installer               Configure the options used by this installer
+-c, --configure-osf-installer           Configure the options used by this installer
+-d, --configure-osf-drupal-installer    Configure the options used by this installer to install OSF for Drupal
 --list-configurations                   List the current configuration used by the installer tool
 
 OSF Installation Options:
