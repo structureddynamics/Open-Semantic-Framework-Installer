@@ -149,6 +149,15 @@
           }
         }
       }
+
+      if (isset($this->config['installer']['auto-deploy'])) {
+        $input = $this->config['installer']['auto-deploy'];
+        if (!empty($input)) {
+          if ($this->isBoolean($input)) {
+            $this->auto_deploy = $this->getBoolean($input);
+          }
+        }
+      }       
       
       /**
        * Distro Upgrade
@@ -762,6 +771,22 @@
           break;
         }
       } while (1);      
+
+      /**
+       * Installation Configuration
+       */
+      $this->h3("Installation Configuration");
+      do {
+        $input = $this->getInput("Is the installation performed by an automatic deployment process? (current: {$this->upgrade_distro}, valid: true or false)");
+        if (!empty($input)) {
+          if ($this->isBoolean($input)) {
+            $this->auto_deploy = $this->getBoolean($input);
+            break;
+          }
+        } else {
+          break;
+        }
+      } while (1);          
       
       /**
        *  OSF Common
@@ -1582,6 +1607,7 @@
       $ini .= "osf-configured = \"" . ($this->installer_osf_configured ? 'true' : 'false') . "\"\n";
       $ini .= "osf-drupal-configured = \"" . ($this->installer_osf_drupal_configured ? 'true' : 'false') . "\"\n";
       $ini .= "upgrade-distro = \"" . ($this->upgrade_distro ? 'true' : 'false') . "\"\n";
+      $ini .= "auto-deploy = \"" . ($this->auto_deploy ? 'true' : 'false') . "\"\n";
       $ini .= "\n";
       $ini .= "[osf]\n";
       $ini .= "application-id = \"{$this->application_id}\"\n";
@@ -1682,6 +1708,7 @@
       $this->span("osf-configured = \"" . ($this->installer_osf_configured ? 'true' : 'false') . "\"", 'info');
       $this->span("osf-drupal-configured = \"" . ($this->installer_osf_drupal_configured ? 'true' : 'false') . "\"", 'info');
       $this->span("upgrade-distro = \"" . ($this->upgrade_distro ? 'true' : 'false') . "\"", 'info');
+      $this->span("auto-deploy = \"" . ($this->auto_deploy ? 'true' : 'false') . "\"", 'info');
 
       $this->h3("OSF Common configuration");
       $this->span("application-id = \"{$this->application_id}\"", 'info');

@@ -7,12 +7,56 @@
 
     /* Full path of the logfile */
     protected $log_file = '';
+    
+    /* Specify that the installation process occurs in an automatic deployment framework */
+    protected $auto_deploy = TRUE;    
 
     protected $currentWorkingDirectory;
 
     function __construct()
     {
       $this->currentWorkingDirectory = getcwd();
+    }
+    
+    private function commandReturn($commandReturnVal, $errorStatus, $errorLevel = 'error')
+    {
+      if ($commandReturnVal === FALSE ||
+          $commandReturnVal > 0) 
+      {
+        switch (strtolower($errorLevel)) 
+        {
+          case 'notice':
+            $this->span("An occured but the script continue its process. Check the log to see what was the error: {$this->log_file}", 'notice');
+          break;
+
+          case 'warning':
+            $this->span("An occured but the script continue its process. Check the log to see what was the error: {$this->log_file}", 'warn');
+          break;
+
+          case 'error':
+            if(!$this->auto_deploy)
+            {
+              $this->span("A non-recoverable error happened. Check the log to see what was the error: {$this->log_file}", 'error');
+              
+              $yes = $this->isYes($this->getInput("Do you want to continue the execution. If yes, then try to fix this error by hands before continuing, otherwise errors may occurs later in the process? (yes/no)\n"));
+              
+              if (!$yes){
+                exit($errorStatus);
+              }              
+            }
+            else
+            {
+              exit($errorStatus);
+            }
+          break;
+        }
+
+        return(FALSE);
+      } 
+      else 
+      {
+        return(TRUE);
+      }      
     }
 
     /**
@@ -37,30 +81,7 @@
       exec($command, $output, $return);
       $this->log($output);
 
-      if ($return > 0) {
-        switch (strtolower($errorLevel)) {
-          case 'notice':
-            $this->span("An occured but the script continue its process. Check the log to see what was the error: {$this->log_file}", 'notice');
-          break;
-
-          case 'warning':
-            $this->span("An occured but the script continue its process. Check the log to see what was the error: {$this->log_file}", 'warn');
-          break;
-
-          case 'error':
-            $this->span("A non-recoverable error happened. Check the log to see what was the error: {$this->log_file}", 'error');
-
-            $yes = $this->isYes($this->getInput("Do you want to continue the execution. If yes, then try to fix this error by hands before continuing, otherwise errors may occurs later in the process? (yes/no)\n"));
-            if (!$yes) {
-              exit(1);
-            }
-          break;
-        }
-
-        return(FALSE);
-      } else {
-        return(TRUE);
-      }
+      return($this->commandReturn($return, 2, $errorLevel));
     }
 
     /**
@@ -83,30 +104,7 @@
 
       $success = chdir($dir);
 
-      if (!$success) {
-        switch (strtolower($errorLevel)) {
-          case 'notice':
-            $this->span("An occured but the script continue its process. Check the log to see what was the error: {$this->log_file}", 'notice');
-          break;
-
-          case 'warning':
-            $this->span("An occured but the script continue its process. Check the log to see what was the error: {$this->log_file}", 'warn');
-          break;
-
-          case 'error':
-            $this->span("A non-recoverable error happened. Check the log to see what was the error: {$this->log_file}", 'error');
-
-            $yes = $this->isYes($this->getInput("Do you want to continue the execution. If yes, then try to fix this error by hands before continuing, otherwise errors may occurs later in the process? (yes/no)\n"));             
-            if (!$yes) {
-              exit(1);
-            }
-          break;
-        }
-
-        return(FALSE);
-      } else {
-        return(TRUE);
-      }
+      return($this->commandReturn($success, 3, $errorLevel));
     }
 
     /**
@@ -564,11 +562,7 @@
       exec($command, $output, $return);
       $this->log($output);
 
-      if ($return > 0) {
-        $this->span("Failed updating file: $file...", 'error');
-      }
-
-      return(TRUE);
+      return($this->commandReturn($return, 4));
     }
 
     /**
@@ -582,11 +576,7 @@
       // Run command
       $return = file_put_contents($file, $data, FILE_APPEND);
 
-      if ($return == FALSE) {
-        $this->span("Failed updating file: $file...", 'error');
-      }
-
-      return(TRUE);
+      return($this->commandReturn($return, 5));
     }
 
     /**
@@ -611,11 +601,7 @@
       exec($command, $output, $return);
       $this->log($output);
 
-      if ($return > 0) {
-        $this->span("Failed updating file: $file...", 'error');
-      }
-
-      return(TRUE);
+      return($this->commandReturn($return, 6));
     }
 
     /**
@@ -634,11 +620,7 @@
       exec($command, $output, $return);
       $this->log($output);
 
-      if ($return > 0) {
-        $this->span("Failed creating directory: $path...", 'error');
-      }
-
-      return(TRUE);
+      return($this->commandReturn($return, 7));
     }
 
     /**
@@ -671,11 +653,7 @@
       exec($command, $output, $return);
       $this->log($output);
 
-      if ($return > 0) {
-        $this->span("Failed removing file or directory: $path...", 'error');
-      }
-
-      return(TRUE);
+      return($this->commandReturn($return, 8));
     }
 
     /**
@@ -702,11 +680,7 @@
       exec($command, $output, $return);
       $this->log($output);
 
-      if ($return > 0) {
-        $this->span("Failed changing permissions for the path: $path...", 'error');
-      }
-
-      return(TRUE);
+      return($this->commandReturn($return, 9));
     }
 
     /**
@@ -733,11 +707,7 @@
       exec($command, $output, $return);
       $this->log($output);
 
-      if ($return > 0) {
-        $this->span("Failed changing group for the path: $path...", 'error');
-      }
-
-      return(TRUE);
+      return($this->commandReturn($return, 10));
     }
 
     /**
@@ -764,11 +734,7 @@
       exec($command, $output, $return);
       $this->log($output);
 
-      if ($return > 0) {
-        $this->span("Failed changing permissions for the path: $path...", 'error');
-      }
-
-      return(TRUE);
+      return($this->commandReturn($return, 11));
     }
 
     /**
@@ -792,11 +758,7 @@
       exec($command, $output, $return);
       $this->log($output);
 
-      if ($return > 0) {
-        $this->span("Failed linking the file: $src to destination: $dest...", 'error');
-      }
-
-      return(TRUE);
+      return($this->commandReturn($return, 12));
     }
 
     /**
@@ -830,11 +792,7 @@
       exec($command, $output, $return);
       $this->log($output);
 
-      if ($return > 0) {
-        $this->span("Failed copying the source: $src to destination: $dest...", 'error');
-      }
-
-      return(TRUE);
+      return($this->commandReturn($return, 13));
     }
 
     /**
@@ -864,11 +822,7 @@
       exec($command, $output, $return);
       $this->log($output);
 
-      if ($return > 0) {
-        $this->span("Failed moving the source: $src to destination: $dest...", 'error');
-      }
-
-      return(TRUE);
+      return($this->commandReturn($return, 14));
     }
 
     /**
@@ -892,11 +846,7 @@
       exec($command, $output, $return);
       $this->log($output);
 
-      if ($return > 0) {
-        $this->span("Failed unzipping the archive: $arch to destination: $dest...", 'error');
-      }
-
-      return(TRUE);
+      return($this->commandReturn($return, 14));
     }
 
     /**
