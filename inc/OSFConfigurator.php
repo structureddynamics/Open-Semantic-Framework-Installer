@@ -777,7 +777,7 @@
        */
       $this->h3("Installation Configuration");
       do {
-        $input = $this->getInput("Is the installation performed by an automatic deployment process? (current: {$this->upgrade_distro}, valid: true or false)");
+        $input = $this->getInput("Is the installation performed by an automatic deployment process? (current: {$this->auto_deploy}, valid: true or false)");
         if (!empty($input)) {
           if ($this->isBoolean($input)) {
             $this->auto_deploy = $this->getBoolean($input);
