@@ -11,7 +11,7 @@
       passthru('apt-get -y install php5 php5-curl unixodbc php5-odbc php5-cgi');      
       
       $this->span("Restarting Apache2...");
-      $this->exec('/etc/init.d/apache2 restart');      
+      $this->exec('/etc/init.d/apache2 restart', 'ignore');      
 
       $this->chdir($this->currentWorkingDirectory);
     }    
@@ -127,7 +127,7 @@
       
       $this->span("Restarting Apache2...");
       
-      $this->exec('/etc/init.d/apache2 restart');
+      $this->exec('/etc/init.d/apache2 restart', 'ignore');
       
       $this->span("Configure the osf.ini configuration file...");
 
@@ -332,7 +332,7 @@
       $this->exec('a2enmod rewrite');
       
       $this->span("Restarting Apache2...");
-      $this->exec('/etc/init.d/apache2 restart');      
+      $this->exec('/etc/init.d/apache2 restart', 'ignore');      
 
       $this->span("Performing some tests on the new Apache2 instance...");
       $this->span("Checking if the Apache2 instance is up and running...");
@@ -361,7 +361,7 @@
       $this->sed('; +extension=msql.so', 'extension=mysql.so', '/etc/php5/apache2/php.ini');
       
       $this->span("Restarting Apache2...");
-      $this->exec('/etc/init.d/apache2 restart');
+      $this->exec('/etc/init.d/apache2 restart', 'ignore');
 
       $this->span("Performing some tests on the new Apache2 instance...");
       $this->span("Checking if the Apache2 instance is up and running...");
@@ -401,7 +401,7 @@
       
       $this->span("Restarting Apache2...");
       
-      $this->exec('/etc/init.d/apache2 restart');      
+      $this->exec('/etc/init.d/apache2 restart', 'ignore');      
       
       $this->span("Starting Memcached...");
 
@@ -441,7 +441,7 @@
       
       $this->span("Restarting Apache2...");
       
-      $this->exec('/etc/init.d/apache2 restart');      
+      $this->exec('/etc/init.d/apache2 restart', 'ignore');      
     }       
     
     public function install_OSF_Drupal()
@@ -527,7 +527,7 @@
       
       $this->span("Restarting Apache2...");
       
-      $this->exec('/etc/init.d/apache2 restart');      
+      $this->exec('/etc/init.d/apache2 restart', 'ignore');      
 
       // Install required file for OSF Ontology
       $this->cp('resources/osf-drupal/new.owl', $this->data_folder.'/ontologies/files/new.owl');

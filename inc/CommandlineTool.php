@@ -25,6 +25,10 @@
       {
         switch (strtolower($errorLevel)) 
         {
+          case 'ignore':
+            return(TRUE);
+          break;
+          
           case 'notice':
             $this->span("An occured but the script continue its process. Check the log to see what was the error: {$this->log_file}", 'notice');
           break;
