@@ -100,7 +100,7 @@
     protected $owl_enabled = "true";
     protected $owl_host = "localhost";
     protected $owl_port = "8080";
-    protected $owl_url = "/OWLAPI";
+    protected $owl_url = "OWLAPI";
 
     /* Scones dependency */
     protected $scones_enabled = "true";
