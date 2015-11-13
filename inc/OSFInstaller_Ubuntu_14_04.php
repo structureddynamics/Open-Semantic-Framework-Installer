@@ -428,10 +428,8 @@
       $this->rm('*.tgz', TRUE);      
       
       $this->mv('memcache.php', 'index.php');
-      
-      $adminPassword = $this->getInput("What is the password you want to use to log into the Memcached user interface for the 'admin' user? ");
 
-      $this->sed("define('ADMIN_PASSWORD','pass');", "define('ADMIN_PASSWORD','{$adminPassword}');", 'index.php');
+      $this->sed("define('ADMIN_PASSWORD','pass');", "define('ADMIN_PASSWORD','{$this->keycache_ui_password}');", 'index.php');
       
       $this->span("Configuring Apache2 for the Memcached User Interface...");
       

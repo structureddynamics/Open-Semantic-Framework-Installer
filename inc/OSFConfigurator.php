@@ -52,7 +52,7 @@
     protected $ontologies_management_tool_folder = "/usr/share/ontologies-management-tool";
 
     /* Drupal framework */
-    protected $drupal_version = "7.23";
+    protected $drupal_version = "7.41";
     protected $drupal_folder = "/usr/share/drupal";
     protected $drupal_domain = "localhost";
     protected $drupal_admin_username = "admin";
@@ -88,6 +88,7 @@
     protected $keycache_server = "memcached";
     protected $keycache_host = "localhost";
     protected $keycache_port = "11211";
+    protected $keycache_ui_password = "admin";
 
     /* Solr dependency */
     protected $solr_enabled = "true";
@@ -599,6 +600,12 @@
           if ($this->isPort($input)) {
             $this->keycache_port = $input;
           }
+        }
+      }
+      if (isset($this->config['keycache']['keycache-ui-password'])) {
+        $input = $this->config['keycache']['keycache-ui-password'];
+        if (!empty($input)) {
+          $this->keycache_ui_password = $input;
         }
       }
 
@@ -1164,6 +1171,15 @@
           break;
         }
       } while (1);
+      do {
+        $input = $this->getInput("Input user interface password for admin user: (current: {$this->keycache_ui_password}, valid: <password>)");
+        if (!empty($input)) {
+          $this->keycache_ui_password = $input;
+          break;
+        } else {
+          break;
+        }
+      } while (1);      
 
       /**
        *  Solr dependency
@@ -1599,6 +1615,7 @@
       $ini .= "keycache-server = \"{$this->keycache_server}\"\n";
       $ini .= "keycache-host = \"{$this->keycache_host}\"\n";
       $ini .= "keycache-port = \"{$this->keycache_port}\"\n";
+      $ini .= "keycache-ui-password = \"{$this->keycache_ui_password}\"\n";
       $ini .= "\n";
       $ini .= "[solr]\n";
       $ini .= "solr-enabled = \"{$this->solr_enabled}\"\n";
@@ -1705,6 +1722,7 @@
       $this->span("keycache-server = \"{$this->keycache_server}\"", 'info');
       $this->span("keycache-host = \"{$this->keycache_host}\"", 'info');
       $this->span("keycache-port = \"{$this->keycache_port}\"", 'info');
+      $this->span("keycache-ui-password = \"{$this->keycache_ui_password}\"", 'info');
 
       $this->h3("Solr dependency configuration");
       $this->span("solr-enabled = \"{$this->solr_enabled}\"", 'info');
@@ -1724,6 +1742,4 @@
       $this->span("scones-port = \"{$this->scones_port}\"", 'info');
       $this->span("scones-url = \"{$this->scones_url}\"", 'info');
     }
-
   }
-
