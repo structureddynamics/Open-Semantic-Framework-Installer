@@ -128,12 +128,6 @@
       }
 
       $this->chdir($installationFolder.'/StructuredDynamics/osf/tests/');
-      $this->exec('phpunit --configuration phpunit.xml --filter \'StructuredDynamics\\osf\\tests\\ws\\crud\\read\\CrudReadTest::testLanguageEnglishSpecified\'');
-
-      $this->span("Restarting Virtuoso...");
-      $this->exec('/etc/init.d/virtuoso stop');
-      sleep(20);
-      $this->exec('/etc/init.d/virtuoso start');
 
       passthru('phpunit --configuration phpunit.xml --verbose --colors --log-junit log.xml');
       $this->chdir($this->currentWorkingDirectory);
