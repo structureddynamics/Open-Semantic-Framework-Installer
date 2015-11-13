@@ -290,8 +290,6 @@
       $this->rm("{$installPath}/keys.ini");
       $this->rm("{$installPath}/osf.ini");
       // OSF Web Service scripts
-      //$this->sed("\$sidDirectory = \".*\";", "\$sidDirectory = \"/osf-web-services/tmp/\";",
-      //  "{$installPath}/index.php");
       $this->sed("public static \$osf_ini = \".*\";", "public static \$osf_ini = \"{$dataPath}/\";",
         "{$installPath}/framework/WebService.php");
       $this->sed("public static \$keys_ini = \".*\";", "public static \$keys_ini = \"{$dataPath}/\";",
