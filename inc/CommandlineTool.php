@@ -20,8 +20,19 @@
     
     private function commandReturn($commandReturnVal, $errorStatus, $errorLevel = 'error')
     {
-      if ($commandReturnVal === FALSE ||
-          $commandReturnVal > 0) 
+      if(is_bool($commandReturnVal))
+      {
+        if($commandReturnVal === FALSE)
+        {
+          $commandReturnVal = 1;
+        }
+        else
+        {
+          $commandReturnVal = 0;
+        }
+      }
+      
+      if ($commandReturnVal > 0) 
       {
         switch (strtolower($errorLevel)) 
         {
