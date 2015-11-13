@@ -33,10 +33,11 @@
   }    
 
   // Get commandline options
-  $arguments = getopt('h::v::c::', array(
+  $arguments = getopt('h::v::c::d::', array(
     'help::',
     'verbose::',
-    'configure-installer::',
+    'configure-osf-installer::',
+    'configure-osf-drupal-installer::',
     'list-configurations::',
     'install-osf::',
     'install-osf-drupal::',
@@ -90,7 +91,8 @@
     $installer->span("General Options:");
     $installer->span("-h, --help                              Show this help section");
     $installer->span("-v, --verbose                           Make this insaller verbose");
-    $installer->span("-c, --configure-installer               Configure the options used by this installer");
+    $installer->span("-c, --configure-osf-installer           Configure the options used by this installer to install OSF");
+    $installer->span("-d, --configure-osf-drupal-installer    Configure the options used by this installer to install OSF for Drupal");
     $installer->span("--list-configurations                   List the current configuration used by the installer tool\n");
     $installer->span("OSF Installation Options:");
     $installer->span("Note: the [VERSION] parameter is optional.");
@@ -155,24 +157,25 @@
 
   // Configure installer
   
-  // Run both configurations if the user specifically want to configure them
-  if(isset($arguments['c']) || isset($arguments['configure-installer']))
+  // Run the configuration to install OSF
+  if(isset($arguments['c']) || isset($arguments['configure-osf-installer']))
   {
     $installer->configureInstallerOSF();
+  }  
+  
+  // Run the configuration to install OSF for Drupal
+  if(isset($arguments['d']) || isset($arguments['configure-osf-drupal-installer']))
+  {
     $installer->configureInstallerOSFDrupal();
   }  
+   
   // Run the OSF Drupal configuration if the user wants to install it without having it
   // configured
-  elseif(isset($arguments['install-osf-drupal']) && !$installer->installer_osf_drupal_configured)
+  if(isset($arguments['install-osf-drupal']) && !$installer->installer_osf_drupal_configured)
   {
     $installer->configureInstallerOSFDrupal();
   }
-  // If the user wants to do anything else and that the OSF configuration is not done
-  elseif(!$installer->installer_osf_configured && !isset($arguments['install-osf-drupal']))
-  {
-    $installer->configureInstallerOSF();
-  }
-
+  
   // List current configuration settings
   if(isset($arguments['list-configurations']))
   {
@@ -198,20 +201,20 @@
   }
 
   // Upgrade the OSF Web Services version on the system
-  /*if(isset($arguments['upgrade-osf-web-services']))
+  if(isset($arguments['upgrade-osf-web-services']))
   {
     include_once('inc/OSFWebServicesUpgrader.php');    
     
     $upgrader = new OSFWebServicesUpgrader(getcwd().'/installer.ini');
-  }*/
+  }
 
   // Upgrade the OSF Web Services to the latest development code
-  /*if(isset($arguments['upgrade-osf-web-services-code-base']))
+  if(isset($arguments['upgrade-osf-web-services-code-base']))
   {
     include_once('inc/OSFWebServicesUpgrader.php');    
     
     $upgrader = new OSFWebServicesUpgrader(getcwd().'/installer.ini', TRUE);
-  }*/
+  }
 
   /**
    *  OSF Web Services
