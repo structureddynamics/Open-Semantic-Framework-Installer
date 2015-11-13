@@ -534,8 +534,8 @@
           }
         }
       }
-      if (isset($this->config['sparql']['owl-url'])) {
-        $input = $this->config['sparql']['owl-url'];
+      if (isset($this->config['sparql']['sparql-url'])) {
+        $input = $this->config['sparql']['sparql-url'];
         if (!empty($input)) {
           if ($this->isPath($input)) {
             $this->sparql_url = $this->getPath($input);
