@@ -554,6 +554,10 @@
       $output = array();
       $this->log(array($find, $replace, $file), TRUE);
 
+      // Escape double quotes
+      $find = str_replace('"', '\"', $find);
+      $replace = str_replace('"', '\"', $replace);
+      
       // Build command
       $command = "sed -i \"s>{$find}>{$replace}>\" \"{$file}\"";
 
