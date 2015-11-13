@@ -1122,7 +1122,7 @@
        */
       $this->h3("Keycache dependency configuration");
       do {
-        $input = $this->getInput("Input if dependency should be configured: (current: {$this->keycache_enabled}, valid: true or false)");
+        $input = $this->getInput("Should the caching server be enabled? (current: {$this->keycache_enabled}, valid: true or false)");
         if (!empty($input)) {
           if ($this->isBoolean($input)) {
             $this->keycache_enabled = $this->getBoolean($input);
@@ -1133,7 +1133,7 @@
         }
       } while (1);
       do {
-        $input = $this->getInput("Input a server type: (current: {$this->keycache_server}, valid: memcached)");
+        $input = $this->getInput("Caching server type: (current: {$this->keycache_server}, valid: memcached)");
         if (!empty($input)) {
           if ($input == 'memcached') {
             $this->keycache_server = $input;
