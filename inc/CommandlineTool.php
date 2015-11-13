@@ -594,7 +594,7 @@
       // Run command
       $return = file_put_contents($file, $data, FILE_APPEND);
 
-      return($this->commandReturn($return, 5));
+      return($this->commandReturn(($return === FALSE ? 5 : 0), 5));
     }
 
     /**
