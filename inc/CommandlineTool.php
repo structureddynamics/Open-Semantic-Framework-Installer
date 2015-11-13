@@ -554,9 +554,9 @@
       $output = array();
       $this->log(array($find, $replace, $file), TRUE);
 
-      // Escape double quotes
-      $find = str_replace('"', '\"', $find);
-      $replace = str_replace('"', '\"', $replace);
+      // Escape reserved sed characters
+      $find = str_replace(array('"', '$', '>'), array('\"', '\$', '\>'), $find);
+      $replace = str_replace(array('"', '$', '>'), array('\"', '\$', '\>'), $replace);
       
       // Build command
       $command = "sed -i \"s>{$find}>{$replace}>\" \"{$file}\"";
