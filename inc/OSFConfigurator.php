@@ -78,8 +78,8 @@
     protected $sparql_dsn = "OSF-triples-store";
     protected $sparql_host = "localhost";
     protected $sparql_port = "8890";
-    protected $sparql_url = "/sparql";
-    protected $sparql_graph_url = "/sparql-graph-crud-auth";
+    protected $sparql_url = "sparql";
+    protected $sparql_graph_url = "sparql-graph-crud-auth";
     protected $sparql_username = "dba";
     protected $sparql_password = "dba";
 
