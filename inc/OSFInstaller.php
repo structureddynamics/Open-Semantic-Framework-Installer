@@ -291,6 +291,8 @@
       $this->span("Configuring...", 'info');
       $this->cp("{$installPath}/keys.ini", "{$dataPath}/keys.ini");
       $this->cp("{$installPath}/osf.ini", "{$dataPath}/osf.ini");
+      $this->rm("{$installPath}/keys.ini");
+      $this->rm("{$installPath}/osf.ini");
       // OSF Web Service scripts
       //$this->sed("\$sidDirectory = \".*\";", "\$sidDirectory = \"/osf-web-services/tmp/\";",
       //  "{$installPath}/index.php");
