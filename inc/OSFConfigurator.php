@@ -12,7 +12,10 @@
 
     /* OSF Drupal Installation status */
     public $installer_osf_drupal_configured = FALSE;
-
+    
+    /* Upgrade the Linux distro with the latest updates */
+    protected $upgrade_distro = TRUE;
+    
     /* OSF Common */
     protected $application_id = 'administer';
     protected $api_key = 'some-key';
@@ -146,7 +149,19 @@
           }
         }
       }
-
+      
+      /**
+       * Distro Upgrade
+       */
+      if (isset($this->config['installer']['upgrade-distro'])) {
+        $input = $this->config['installer']['upgrade-distro'];
+        if (!empty($input)) {
+          if ($this->isBoolean($input)) {
+            $this->upgrade_distro = $this->getBoolean($input);
+          }
+        }
+      }       
+       
       /**
        *  OSF Common
        */
@@ -732,6 +747,22 @@
       $this->h2("Configure the OSF-Installer Tool for OSF deployment");
       $this->span("Note: if you want to use the default value, you simply have to press Enter on your keyboard.", 'info');
 
+      /**
+       *  Linux Distro
+       */
+      $this->h3("Linux Distribution Configuration");
+      do {
+        $input = $this->getInput("Would you like to upgrade the softwares of the distribution to their latest version? (current: {$this->upgrade_distro}, valid: true or false)");
+        if (!empty($input)) {
+          if ($this->isBoolean($input)) {
+            $this->upgrade_distro = $this->getBoolean($input);
+            break;
+          }
+        } else {
+          break;
+        }
+      } while (1);      
+      
       /**
        *  OSF Common
        */
@@ -1550,6 +1581,7 @@
       $ini  = "[installer]\n";
       $ini .= "osf-configured = \"" . ($this->installer_osf_configured ? 'true' : 'false') . "\"\n";
       $ini .= "osf-drupal-configured = \"" . ($this->installer_osf_drupal_configured ? 'true' : 'false') . "\"\n";
+      $ini .= "upgrade-distro = \"" . ($this->upgrade_distro ? 'true' : 'false') . "\"\n";
       $ini .= "\n";
       $ini .= "[osf]\n";
       $ini .= "application-id = \"{$this->application_id}\"\n";
@@ -1649,6 +1681,7 @@
       $this->h3("OSF Installer configuration");
       $this->span("osf-configured = \"" . ($this->installer_osf_configured ? 'true' : 'false') . "\"", 'info');
       $this->span("osf-drupal-configured = \"" . ($this->installer_osf_drupal_configured ? 'true' : 'false') . "\"", 'info');
+      $this->span("upgrade-distro = \"" . ($this->upgrade_distro ? 'true' : 'false') . "\"", 'info');
 
       $this->h3("OSF Common configuration");
       $this->span("application-id = \"{$this->application_id}\"", 'info');

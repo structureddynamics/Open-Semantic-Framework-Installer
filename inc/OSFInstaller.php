@@ -62,9 +62,8 @@
 
       $this->h1("Installing prerequisites");
 
-      $yes = $this->isYes($this->getInput("We recommend that you upgrade all software on the server. Would you like to do this right now? (yes/no)"));
-
-      if ($yes) {
+      if($this->upgrade_distro) 
+      {
         $this->span("Updating the package registry...");
         $this->exec('apt-get -y update');
 
