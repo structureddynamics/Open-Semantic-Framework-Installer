@@ -113,7 +113,7 @@
       $this->runOSFTestsSuites($this->osf_web_services_folder);
 
       $this->span("Now that the OSF instance is installed, you can install OSF for Drupal on the same server using this command:\n\n", 'notice');
-      $this->span("    ./osf-installer --install-osf-drupal\n\n", 'notice');
+      $this->span("    ./osf-installer -d --install-osf-drupal\n\n", 'notice');
     }
 
     /**
