@@ -106,7 +106,7 @@
     protected $scones_enabled = "true";
     protected $scones_host = "localhost";
     protected $scones_port = "8080";
-    protected $scones_url = "/scones";
+    protected $scones_url = "scones";
 
     /**
      *  Construct class by loading configuration
