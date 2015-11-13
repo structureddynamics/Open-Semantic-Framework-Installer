@@ -971,8 +971,8 @@
       $this->exec("pmt --create-access --access-dataset=\"http://{$this->osf_web_services_domain}/wsf/ontologies/\" --access-group=\"http://{$this->drupal_domain}/role/3/administrator\" --access-perm-create=\"true\" --access-perm-read=\"true\" --access-perm-update=\"true\" --access-perm-delete=\"true\" --access-all-ws");
       // OSF PMT permissions for loaded ontologies
       $this->cp("{$cwdPath}/resources/osf-web-services/ontologies.lst", "{$dataPath}/ontologies/");
-      $this->sed("file://localhost/data", "file://localhost/{$dataPath}/",
-        "{$dataPath}/ontologies//ontologies.lst");
+      $this->sed("file://localhost/data", "file://localhost/".trim($dataPath, '/')."/",
+        "{$dataPath}/ontologies//ontologies.lst", "g");
       $loadedOntologies = explode(' ', file_get_contents("{$dataPath}/ontologies/ontologies.lst"));
       foreach($loadedOntologies as $loadedOntology) {
         $this->exec("pmt --create-access --access-dataset=\"{$loadedOntology}\" --access-group=\"http://{$this->drupal_domain}/role/3/administrator\" --access-perm-create=\"true\" --access-perm-read=\"true\" --access-perm-update=\"true\" --access-perm-delete=\"true\" --access-all-ws");
@@ -1339,8 +1339,8 @@
       $this->cp("{$cwdPath}/resources/osf-web-services/classHierarchySerialized.srz", "{$dataPath}/ontologies/structure/");
       $this->cp("{$cwdPath}/resources/osf-web-services/propertyHierarchySerialized.srz", "{$dataPath}/ontologies/structure/");
       $this->cp("{$cwdPath}/resources/osf-web-services/ontologies.lst", "{$dataPath}/ontologies/");
-      $this->sed("file://localhost/data", "file://localhost/{$dataPath}/",
-        "{$dataPath}/ontologies//ontologies.lst");
+      $this->sed("file://localhost/data", "file://localhost/".trim($dataPath, '/')."/",
+        "{$dataPath}/ontologies//ontologies.lst", "g");
       $this->span("Loading the core OSF ontologies...", 'info');
       $this->exec("omt --load-advanced-index=\"true\" --load-all --load-list=\"{$dataPath}/ontologies/ontologies.lst\" --osf-web-services=\"http://{$this->osf_web_services_domain}/ws/\"");
       $this->span("Creating underlying ontological structures...", 'info');

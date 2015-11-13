@@ -562,7 +562,7 @@
      * @param string  $replace    String to replace
      * @param string  $file       File to update
      */
-    public function sed($find, $replace, $file)
+    public function sed($find, $replace, $file, $modifiers = '')
     {
       $output = array();
 
@@ -571,7 +571,7 @@
       $replace = str_replace(array('"', '$', '>'), array('\"', '\$', '\>'), $replace);
       
       // Build command
-      $command = "sed -i \"s>{$find}>{$replace}>\" \"{$file}\"";
+      $command = "sed -i \"s>{$find}>{$replace}>{$modifiers}\" \"{$file}\"";
       
       $this->log(array($command), TRUE);
 
