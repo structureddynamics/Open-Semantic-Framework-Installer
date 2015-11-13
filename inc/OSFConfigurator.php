@@ -126,8 +126,8 @@
       /**
        *  OSF Installation status
        */
-      if (isset($this->config['installer']['osfConfigured'])) {
-        $input = $this->config['installer']['osfConfigured'];
+      if (isset($this->config['installer']['osf-configured'])) {
+        $input = $this->config['installer']['osf-configured'];
         if (!empty($input)) {
           if ($this->isBoolean($input)) {
             $this->installer_osf_configured = $this->getBoolean($input);
@@ -138,8 +138,8 @@
       /**
        *  OSF Drupal Installation status
        */
-      if (isset($this->config['installer']['osfDrupalConfigured'])) {
-        $input = $this->config['installer']['osfDrupalConfigured'];
+      if (isset($this->config['installer']['osf-drupal-configured'])) {
+        $input = $this->config['installer']['osf-drupal-configured'];
         if (!empty($input)) {
           if ($this->isBoolean($input)) {
             $this->installer_osf_drupal_configured = $this->getBoolean($input);
@@ -1548,8 +1548,8 @@
     private function saveConfigurations()
     {
       $ini  = "[installer]\n";
-      $ini .= "osfConfigured = \"" . ($this->installer_osf_configured ? 'true' : 'false') . "\"\n";
-      $ini .= "osfDrupalConfigured = \"" . ($this->installer_osf_drupal_configured ? 'true' : 'false') . "\"\n";
+      $ini .= "osf-configured = \"" . ($this->installer_osf_configured ? 'true' : 'false') . "\"\n";
+      $ini .= "osf-drupal-configured = \"" . ($this->installer_osf_drupal_configured ? 'true' : 'false') . "\"\n";
       $ini .= "\n";
       $ini .= "[osf]\n";
       $ini .= "application-id = \"{$this->application_id}\"\n";
@@ -1647,8 +1647,8 @@
       $this->h2("Showing the configuration for the OSF-Installer Tool");
 
       $this->h3("OSF Installer configuration");
-      $this->span("osfConfigured = \"" . ($this->installer_osf_configured ? 'true' : 'false') . "\"", 'info');
-      $this->span("osfDrupalConfigured = \"" . ($this->installer_osf_drupal_configured ? 'true' : 'false') . "\"", 'info');
+      $this->span("osf-configured = \"" . ($this->installer_osf_configured ? 'true' : 'false') . "\"", 'info');
+      $this->span("osf-drupal-configured = \"" . ($this->installer_osf_drupal_configured ? 'true' : 'false') . "\"", 'info');
 
       $this->h3("OSF Common configuration");
       $this->span("application-id = \"{$this->application_id}\"", 'info');
