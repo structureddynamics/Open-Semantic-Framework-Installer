@@ -873,9 +873,9 @@
         }
       } while (1);
       do {
-        $input = $this->getInput("Input a domain: (current: {$this->osf_web_services_domain})");
+        $input = $this->getInput("Input a domain or IP: (current: {$this->osf_web_services_domain})");
         if (!empty($input)) {
-          if ($this->isDomain($input)) {
+          if ($this->isDomain($input) || $this->isIP($input)) {
             $this->osf_web_services_domain = $input;
             break;
           }
@@ -1431,9 +1431,9 @@
         }
       } while (1);
       do {
-        $input = $this->getInput("Input a domain: (current: {$this->drupal_domain})");
+        $input = $this->getInput("Input a domain or IP: (current: {$this->drupal_domain})");
         if (!empty($input)) {
-          if ($this->isDomain($input)) {
+          if ($this->isDomain($input) || $this->isIP($input)) {
             $this->drupal_domain = $input;
             break;
           }
