@@ -82,6 +82,14 @@
       $this->installVirtuoso();
       $this->installSolr();
       $this->installMemcached();
+      
+      // Generate some OSF API key is none has been defined by the user
+      if(empty($this->api_key) || $this->api_key == "some-key") 
+      {
+        $this->span("Generating a OSF API Key...", 'info');
+        $this->api_key = strtoupper(bin2hex(openssl_random_pseudo_bytes(16)));
+        $this->span("The generated API Key is {$this->api_key}", 'notice');
+      }
 
       // OSF Tools, Components and Web Service
       $this->switch_OSF_PermissionsManagementTool('install');
