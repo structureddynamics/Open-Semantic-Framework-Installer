@@ -299,8 +299,17 @@
       $this->sed("public static \$keys_ini = \".*\";", "public static \$keys_ini = \"{$dataPath}/\";",
         "{$installPath}/framework/WebService.php");
       // OSF Web Service credentials
-      $this->append("\n{$this->application_id} = \"{$this->api_key}\"",
-        "{$dataPath}/keys.ini");
+      if(stripos(file_get_contents("{$dataPath}/keys.ini"), "{$this->application_id} = ") === FALSE)
+      {
+        $this->append("\n{$this->application_id} = \"{$this->api_key}\"",
+         "{$dataPath}/keys.ini");
+      }
+      else
+      {
+        $this->sed("{$this->application_id} = .*", "", "{$dataPath}/keys.ini");
+        $this->append("{$this->application_id} = \"{$this->api_key}\"",
+         "{$dataPath}/keys.ini");
+      }
       // OSF Web Service paths
       $this->setIni("network", "wsf_base_url", "\"http://{$this->osf_web_services_domain}\"",
         "{$dataPath}/osf.ini");
