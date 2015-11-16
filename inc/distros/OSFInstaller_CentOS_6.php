@@ -2,7 +2,7 @@
 
   include_once('inc/OSFInstaller.php');
 
-  class OSFInstaller_Ubuntu_14_04 extends OSFInstaller
+  class OSFInstaller_CentOS_6 extends OSFInstaller
   {
 
     /**
@@ -17,10 +17,11 @@
       }
 
       $this->span("Installing required general packages...");
-      $this->exec('apt-get install -y \
-        curl vim ftp-upload \
+      $this->exec('yum install -y \
+        initscripts \
+        curl vim \
         gcc gawk \
-        openssl libssl-dev');
+        openssl openssl-devel');
     }
 
     /**
@@ -29,10 +30,10 @@
     public function updateDistro()
     {
       $this->span("Updating the package registry...");
-      $this->exec('apt-get update -y');
+      $this->exec('yum makecache');
 
       $this->span("Upgrading the server...");
-      $this->exec('apt-get upgrade -y');
+      $this->exec('yum update -y');
     }
 
     /**
@@ -43,15 +44,12 @@
       $this->h1("Installing PHP");
 
       $this->span("Installing PHP5...");
-      passthru('apt-get install -y \
-        php5-dev php-pear \
-        php5-cli libphp5-embed php5-cgi \
-        php5-curl php5-mcrypt \
-        php5-gd php5-imap \
-        php5-mysqlnd php5-odbc');
-
-      $this->span("Enabling mysql extension...");
-      $this->exec('php5enmod mysql');
+      passthru('yum install -y \
+        php-devel php-pear \
+        php-cli php-embedded php-cgi \
+        php-mbstring php-mcrypt \
+        php-gd php-imap \
+        php-pdo php-mysql php-odbc');
     }
 
     /**
@@ -62,26 +60,28 @@
       $this->h1("Installing Java");
 
       $this->span("Installing Java6/7...");
-      $this->exec('apt-get install -y \
-        default-jdk \
-        openjdk-6-jdk openjdk-7-jdk;');
+      $this->exec('yum install -y \
+        java \
+        java-gcj java-openjdk jdk ecj \
+        java-1.6.0-openjdk java-1.7.0-openjdk \
+        log4j slf4j wsdl4j tzdata-java \
+        jakarta-commons-logging jakarta-taglibs-standard;');
     }
 
     /**
-     * Install Apache as required by OSF/OSF-Drupal
+     * Install Apache as required by OSF and OSF-Drupal
      */
     public function installApache()
     {
       $this->h1("Installing Apache");
 
       $this->span("Installing Apache2...");
-      $this->exec('apt-get install -y \
-        apache2 apache2-utils \
-        apache2-mpm-prefork \
-        libapache2-mod-php5');
+      $this->exec('yum install -y \
+        httpd httpd-devel httpd-tools \
+        mod_ssl');
 
       $this->span("Enabling mod-rewrite...");
-      $this->exec('a2enmod rewrite');
+      //TODO
 
       $this->span("Restarting Apache2...");
       $this->exec('service apache2 restart');
@@ -102,9 +102,9 @@
       $this->h1("Installing Tomcat");
 
       $this->span("Installing Tomcat6...");
-      $this->exec('apt-get install -y \
-        tomcat6 \
-        tomcat6-admin tomcat6-user');
+      $this->exec('yum install -y \
+        tomcat \
+        tomcat-admin-webapps tomcat-webapps');
 
       $this->span("Restarting Tomcat6...");
       $this->exec('service tomcat6 restart');
@@ -125,8 +125,8 @@
           // Need to use passthru because the installer prompts the user
           // with screens requiring input.
           // This command cannot be captured in the log.
-          passthru('apt-get install -y \
-            mysql-client');
+          passthru('yum install -y \
+            mysql-libs');
           break;
 
         // MySQL server installation
@@ -137,8 +137,8 @@
           // Need to use passthru because the installer prompts the user
           // with screens requiring input.
           // This command cannot be captured in the log.
-          passthru('apt-get install -y \
-            mysql-server');
+          passthru('yum install -y \
+            mysql');
           break;
 
       }
@@ -208,13 +208,13 @@
       
       $this->span("Downloading OWLAPI...");
       
-      $this->chdir('/var/lib/tomcat6/webapps/');
+      $this->chdir('/var/lib/tomcat7/webapps/');
       
       $this->wget('http://wiki.opensemanticframework.org/files/OWLAPI.war');
       
-      $this->span("Starting Tomcat6 to install the OWLAPI war installation file...");
+      $this->span("Starting Tomcat7 to install the OWLAPI war installation file...");
       
-      $this->exec('service tomcat6 restart');
+      $this->exec('service tomcat7 restart');
       
       // wait 20 secs to make sure Tomcat6 had the time to install the OWLAPI webapp
       sleep(20);
@@ -269,10 +269,10 @@
 
       $this->h1("Installing Virtuoso 7 from .deb file....");   
 
-      $this->wget('https://github.com/structureddynamics/OSF-Installer-Ext/raw/3.3/virtuoso-opensource/virtuoso-opensource_7.1_amd64.deb');
-      $this->exec('dpkg -i virtuoso-opensource_7.1_amd64.deb');     
+      $this->wget('https://github.com/structureddynamics/OSF-Installer-Ext/raw/3.3/virtuoso-opensource/virtuoso-opensource_7.1_amd64.rpm');
+      $this->exec('rpm -ivh virtuoso-opensource_7.1_amd64.rpm');
       
-      $this->mv('/etc/init.d/virtuoso-opensource', '/etc/init.d/virtuoso');
+      $this->mv('service virtuoso-opensource', 'service virtuoso');
 
       $this->span("Installing odbc.ini and odbcinst.ini files...");
       
@@ -323,7 +323,7 @@
       
       sleep(20);
       
-      $this->exec('service virtuoso start');
+      $this->exec('service virtuoso start');      
             
       $this->span("You can start Virtuoso using this command: service virtuoso start", 'debug');
     }
@@ -363,7 +363,7 @@
     public function installSolr()
     {
       $this->h1("Installing Solr");
-
+      
       $this->span("Preparing installation...");
 
       $this->mkdir('/tmp/solr-install/');
@@ -509,7 +509,7 @@
     }       
     
     public function install_OSF_Drupal()
-    {   
+    {    
       // Install Pear
 
       // First check if Pear is installed
@@ -707,16 +707,16 @@
     */
     public static function isWorkingInstaller()
     {
-      exec('cat /etc/issue', $output);
+      exec('cat /etc/system-release', $output);
 
       foreach($output as $line)
       {
-        if(stripos($line, 'ubuntu') !== FALSE)
+        if(stripos($line, 'CentOS') !== FALSE)
         {
           // Validate version
-          $version = (float) shell_exec('lsb_release -rs');
+          $version = (float) shell_exec('cat /etc/system-release | cut -d" " -f3 | cut -d "." -f1');
           
-          if($version >= 14.04 && $version < 14.05)
+          if($version == 6)
           {
             return(TRUE);
           }
@@ -725,26 +725,12 @@
             return(FALSE);
           }
         }
-        elseif(stripos($line, 'Linux Mint') !== FALSE)
+        elseif(stripos($line, 'Red Hat Enterprise Linux Server') !== FALSE)
         {
           // Validate version
-          $version = (float) shell_exec('lsb_release -rs');
-
-          if($version >= 17 && $version < 18)
-          {
-            return(TRUE);
-          }
-          else
-          {
-            return(FALSE);
-          }
-        }
-        elseif(stripos($line, 'Debian') !== FALSE)
-        {
-          // Validate version
-          $version = (float) shell_exec('cat /etc/issue | cut -d" " -f3 | cut -d " " -f1');
-
-          if($version == 7)
+          $version = (float) shell_exec('cat /etc/system-release | cut -d" " -f3 | cut -d "." -f1');
+          
+          if($version == 6)
           {
             return(TRUE);
           }
@@ -754,6 +740,7 @@
           }
         }
       }
+      
       return(FALSE);
     }
   }

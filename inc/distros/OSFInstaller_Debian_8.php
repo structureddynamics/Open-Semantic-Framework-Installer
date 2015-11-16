@@ -101,13 +101,13 @@
     {
       $this->h1("Installing Tomcat");
 
-      $this->span("Installing Tomcat6...");
+      $this->span("Installing Tomcat7...");
       $this->exec('apt-get install -y \
-        tomcat6 \
-        tomcat6-admin tomcat6-user');
+        tomcat7 \
+        tomcat7-admin tomcat7-user');
 
-      $this->span("Restarting Tomcat6...");
-      $this->exec('service tomcat6 restart');
+      $this->span("Restarting Tomcat7...");
+      $this->exec('service tomcat7 restart');
     }
 
     /**
@@ -208,15 +208,15 @@
       
       $this->span("Downloading OWLAPI...");
       
-      $this->chdir('/var/lib/tomcat6/webapps/');
+      $this->chdir('/var/lib/tomcat7/webapps/');
       
       $this->wget('http://wiki.opensemanticframework.org/files/OWLAPI.war');
       
-      $this->span("Starting Tomcat6 to install the OWLAPI war installation file...");
+      $this->span("Starting Tomcat7 to install the OWLAPI war installation file...");
       
-      $this->exec('service tomcat6 restart');
+      $this->exec('service tomcat7 restart');
       
-      // wait 20 secs to make sure Tomcat6 had the time to install the OWLAPI webapp
+      // wait 20 secs to make sure Tomcat7 had the time to install the OWLAPI webapp
       sleep(20);
       
       $this->span("Configuring PHP for the OWLAPI...");
@@ -711,40 +711,12 @@
 
       foreach($output as $line)
       {
-        if(stripos($line, 'ubuntu') !== FALSE)
-        {
-          // Validate version
-          $version = (float) shell_exec('lsb_release -rs');
-          
-          if($version >= 14.04 && $version < 14.05)
-          {
-            return(TRUE);
-          }
-          else
-          {
-            return(FALSE);
-          }
-        }
-        elseif(stripos($line, 'Linux Mint') !== FALSE)
-        {
-          // Validate version
-          $version = (float) shell_exec('lsb_release -rs');
-
-          if($version >= 17 && $version < 18)
-          {
-            return(TRUE);
-          }
-          else
-          {
-            return(FALSE);
-          }
-        }
-        elseif(stripos($line, 'Debian') !== FALSE)
+        if(stripos($line, 'Debian') !== FALSE)
         {
           // Validate version
           $version = (float) shell_exec('cat /etc/issue | cut -d" " -f3 | cut -d " " -f1');
 
-          if($version == 7)
+          if($version == 8)
           {
             return(TRUE);
           }
