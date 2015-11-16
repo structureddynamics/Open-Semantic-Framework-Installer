@@ -4,17 +4,145 @@
 
   class OSFInstaller_Ubuntu_14_04 extends OSFInstaller
   {
-    public function installPhp5()
+
+    /**
+     * Prepare the distribution with the minimum requirements
+     */
+    public function prepareDistro()
     {
-      $this->h1("Installing PHP5");
+      $this->h1("Installing prerequisites");
 
-      passthru('apt-get -y install php5 php5-curl unixodbc php5-odbc php5-cgi');      
-      
+      if($this->upgrade_distro) {
+        updateDistro();
+      }
+
+      $this->span("Installing required general packages...");
+      $this->exec('apt-get install -y \
+        curl vim ftp-upload \
+        gcc gawk \
+        openssl libssl-dev');
+    }
+
+    /**
+     * Update the distribution packages
+     */
+    public function updateDistro()
+    {
+      $this->span("Updating the package registry...");
+      $this->exec('apt-get update -y');
+
+      $this->span("Upgrading the server...");
+      $this->exec('apt-get upgrade -y');
+    }
+
+    /**
+     * Install PHP as required by OSF and OSF-Drupal
+     */
+    public function installPHP()
+    {
+      $this->h1("Installing PHP");
+
+      $this->span("Installing PHP5...");
+      passthru('apt-get install -y \
+        php5-dev php-pear \
+        php5-cli libphp5-embed php5-cgi \
+        php5-curl php5-mcrypt \
+        php5-gd php5-imap \
+        php5-mysqlnd php5-odbc');
+
+      $this->span("Enabling mysql extension...");
+      $this->exec('php5enmod mysql');
+    }
+
+    /**
+     * Install Java as required by Tomcat, Solr, Owl and Scones
+     */
+    public function installJava()
+    {
+      $this->h1("Installing Java");
+
+      $this->span("Installing Java6/7...");
+      $this->exec('apt-get install -y \
+        default-jdk \
+        openjdk-6-jdk openjdk-7-jdk;');
+    }
+
+    /**
+     * Install Apache as required by OSF/OSF-Drupal
+     */
+    public function installApache()
+    {
+      $this->h1("Installing Apache");
+
+      $this->span("Installing Apache2...");
+      $this->exec('apt-get install -y \
+        apache2 apache2-utils \
+        apache2-mpm-prefork \
+        libapache2-mod-php5');
+
+      $this->span("Enabling mod-rewrite...");
+      $this->exec('a2enmod rewrite');
+
       $this->span("Restarting Apache2...");
-      $this->exec('/etc/init.d/apache2 restart');      
+      $this->exec('service apache2 restart');
 
-      $this->chdir($this->currentWorkingDirectory);
-    }    
+      $this->span("Performing some tests on the new Apache2 instance...");
+      $this->span("Checking if the Apache2 instance is up and running...");
+
+      if(strpos(shell_exec('curl -s http://localhost'), 'It works!') === FALSE) {
+        $this->span("[Error] Apache2 is not currently running...", 'warn');
+      }
+    }
+
+    /**
+     * Install Tomcat as required by Solr, Owl and Scones
+     */
+    public function installTomcat()
+    {
+      $this->h1("Installing Tomcat");
+
+      $this->span("Installing Tomcat6...");
+      $this->exec('apt-get install -y \
+        tomcat6 \
+        tomcat6-admin tomcat6-user');
+
+      $this->span("Restarting Tomcat6...");
+      $this->exec('service tomcat6 restart');
+    }
+
+    /**
+     * Install MySQL as required by OSF-Drupal
+     */
+    public function installMySQL($mode = 'server')
+    {
+      switch($mode) {
+
+        // MySQL client installation
+        case 'client':
+          $this->h1("Installing MySQL client");
+
+          $this->span("Installing MySQL5 client...");
+          // Need to use passthru because the installer prompts the user
+          // with screens requiring input.
+          // This command cannot be captured in the log.
+          passthru('apt-get install -y \
+            mysql-client');
+          break;
+
+        // MySQL server installation
+        case 'server':
+          $this->h1("Installing MySQL server");
+
+          $this->span("Installing MySQL5 server...");
+          // Need to use passthru because the installer prompts the user
+          // with screens requiring input.
+          // This command cannot be captured in the log.
+          passthru('apt-get install -y \
+            mysql-server');
+          break;
+
+      }
+    }
 
     /**
     * Install PHPUnit as required by OSF
@@ -78,12 +206,6 @@
     {
       $this->h1("Installing OWLAPI");
       
-      $this->span("Installing OWLAPI requirements...");
-      
-      $this->exec('apt-get -y install tomcat6');
-      
-      $this->exec('/etc/init.d/tomcat6 stop');
-      
       $this->span("Downloading OWLAPI...");
       
       $this->chdir('/var/lib/tomcat6/webapps/');
@@ -92,7 +214,7 @@
       
       $this->span("Starting Tomcat6 to install the OWLAPI war installation file...");
       
-      $this->exec('/etc/init.d/tomcat6 start');
+      $this->exec('service tomcat6 restart');
       
       // wait 20 secs to make sure Tomcat6 had the time to install the OWLAPI webapp
       sleep(20);
@@ -106,7 +228,7 @@
       $this->sed('allow_call_time_pass_reference = Off', 'allow_call_time_pass_reference = On', '/etc/php5/cli/php.ini');
 
       $this->span("Restart Apache2...");
-      $this->exec('/etc/init.d/apache2 restart');
+      $this->exec('service apache2 restart');
     }
 
     /**
@@ -127,7 +249,7 @@
       
       $this->span("Restarting Apache2...");
       
-      $this->exec('/etc/init.d/apache2 restart');
+      $this->exec('service apache2 restart');
       
       $this->span("Configure the osf.ini configuration file...");
 
@@ -159,11 +281,11 @@
 
       $this->span("Test Virtuoso startup...");
       
-      $this->exec('/etc/init.d/virtuoso stop');
+      $this->exec('service virtuoso stop');
       
       sleep(20);
       
-      $this->exec('/etc/init.d/virtuoso start');
+      $this->exec('service virtuoso start');
       
       $isVirtuosoRunning = shell_exec('ps aux | grep virtuoso');
       
@@ -197,13 +319,13 @@
       
       $this->span("Restarting Virtuoso...");
       
-      $this->exec('/etc/init.d/virtuoso stop');
+      $this->exec('service virtuoso stop');
       
       sleep(20);
       
-      $this->exec('/etc/init.d/virtuoso start');      
+      $this->exec('service virtuoso start');
             
-      $this->span("You can start Virtuoso using this command: /etc/init.d/virtuoso start", 'debug');
+      $this->span("You can start Virtuoso using this command: service virtuoso start", 'debug');
     }
 
     /**
@@ -241,11 +363,7 @@
     public function installSolr()
     {
       $this->h1("Installing Solr");
-      
-      $this->span("Installing prerequirements...");
-      
-      $this->exec('apt-get -y install openjdk-7-jdk');
-      
+
       $this->span("Preparing installation...");
 
       $this->mkdir('/tmp/solr-install/');
@@ -286,13 +404,13 @@
 
       $this->span("Starting Solr...");
 
-      $this->exec('/etc/init.d/solr start');
+      $this->exec('service solr start');
       
       $this->span('Register Solr to automatically start at the system\'s startup...');
       
       $this->exec('sudo update-rc.d solr defaults');
       
-      $this->span("You can start Solr using this command: /etc/init.d/solr start", 'notice');      
+      $this->span("You can start Solr using this command: service solr start", 'notice');
     }    
 
     /**
@@ -313,65 +431,11 @@
         $this->cp("{$this->osf_web_services_folder}/{$this->osf_web_services_ns}/framework/solr_schema_v1_3_2.xml", '/usr/share/solr/osf-web-services/solr/conf/schema.xml');
         
         $this->span("Restarting Solr...");
-        $this->exec('/etc/init.d/solr stop');
-        $this->exec('/etc/init.d/solr start');
+        $this->exec('service solr stop');
+        $this->exec('service solr start');
       }
     }
 
-    /**
-    * Install Apache2 as required by OSF
-    */
-    public function installApache2()
-    {
-      $this->h1("Installing Apache2");
-      
-      $this->span("Installing Apache2...");
-      $this->exec('apt-get -y install apache2');
-      
-      $this->span("Enabling mod-rewrite...");
-      $this->exec('a2enmod rewrite');
-      
-      $this->span("Restarting Apache2...");
-      $this->exec('/etc/init.d/apache2 restart');      
-
-      $this->span("Performing some tests on the new Apache2 instance...");
-      $this->span("Checking if the Apache2 instance is up and running...");
-      
-      if(strpos(shell_exec('curl -s http://localhost'), 'It works!') === FALSE)
-      {
-        $this->span("[Error] Apache2 is not currently running...", 'warn');
-      }
-    }
-
-    /**
-    * Install MySQL as required by OSF
-    */
-    public function installMySQL()
-    {
-      $this->h1("Installing MySQL");
-
-      $this->span("Installing MySQL...");
-      
-      // Need to use passthru because the installer prompts the user
-      // with screens requiring input.
-      // This command cannot be captured in the log.
-      passthru('apt-get -y install mysql-server');
-      
-      $this->span("Updating php.ini to enable mysql...");
-      $this->sed('; +extension=msql.so', 'extension=mysql.so', '/etc/php5/apache2/php.ini');
-      
-      $this->span("Restarting Apache2...");
-      $this->exec('/etc/init.d/apache2 restart');
-
-      $this->span("Performing some tests on the new Apache2 instance...");
-      $this->span("Checking if the Apache2 instance is up and running...");
-      
-      if(strpos(shell_exec('curl -s http://localhost'), 'It works!') === FALSE)
-      {
-        $this->span("[Error] Apache2 is not currently running...", 'warn');
-      }
-    }    
-    
     /**
     * Install MySQL as required by OSF
     */
@@ -384,7 +448,7 @@
       // Need to use passthru because the installer prompts the user
       // with screens requiring input.
       // This command cannot be captured in the log.
-      passthru('apt-get -y install phpmyadmin');
+      passthru('apt-get install -y phpmyadmin');
     }       
     
     /**
@@ -396,16 +460,16 @@
 
       $this->span("Installing Memcached...");
       
-      $this->exec('apt-get -y install memcached');      
-      $this->exec('apt-get -y install php5-memcache');      
+      $this->exec('apt-get install -y memcached');
+      $this->exec('apt-get install -y php5-memcache');
       
       $this->span("Restarting Apache2...");
       
-      $this->exec('/etc/init.d/apache2 restart');      
+      $this->exec('service apache2 restart');
       
       $this->span("Starting Memcached...");
 
-      $this->exec('/etc/init.d/memcached restart');      
+      $this->exec('service memcached restart');
    
       $this->span("Installing Memcached User Interface...");
       
@@ -416,9 +480,9 @@
       $this->chdir('/usr/share/memcached-ui/');
       
       $this->wget('http://artur.ejsmont.org/blog/misc/uploads/memcache_stats_v0.1.tgz');
-      $this->exec('tar -xvf memcache_stats_v0.1.tgz');      
+      $this->exec('tar -xvf memcache_stats_v0.1.tgz');
       
-      $this->chdir('memcache_stats_v01/');      
+      $this->chdir('memcache_stats_v01/');
 
       $this->mv('*', '../');
       
@@ -441,17 +505,11 @@
       
       $this->span("Restarting Apache2...");
       
-      $this->exec('/etc/init.d/apache2 restart');      
+      $this->exec('service apache2 restart');      
     }       
     
     public function install_OSF_Drupal()
-    {
-      // Install MySQL & PHPMyAdmin requirements
-      
-      $this->installMySQL();
-      
-      $this->installPhpMyAdmin();
-      
+    {   
       // Install Pear
 
       // First check if Pear is installed
@@ -489,12 +547,12 @@
       
       if($this->exec('dpkg-query -l git', 'ignore') === FALSE)
       {
-        $this->exec('apt-get -y install git', 'error');
+        $this->exec('apt-get install -y git', 'error');
       }
       
       if($this->exec('dpkg-query -l php5-curl', 'ignore') === FALSE)
       {
-        $this->exec('apt-get -y install php5-curl', 'error');
+        $this->exec('apt-get install -y php5-curl', 'error');
       }
       
       $this->exec('drush make --prepare-install resources/osf-drupal/osf_drupal.make '.$this->drupal_folder, 'error');
@@ -527,7 +585,7 @@
       
       $this->span("Restarting Apache2...");
       
-      $this->exec('/etc/init.d/apache2 restart');      
+      $this->exec('service apache2 restart');      
 
       // Install required file for OSF Ontology
       $this->cp('resources/osf-drupal/new.owl', $this->data_folder.'/ontologies/files/new.owl');

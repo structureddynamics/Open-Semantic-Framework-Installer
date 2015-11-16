@@ -59,30 +59,24 @@
       $this->span("\n\nCopyright 2008-15. Structured Dynamics LLC. All rights reserved.\n\n");
 
       $this->h1("General Settings Initialization");
-
-      $this->h1("Installing prerequisites");
-
-      if($this->upgrade_distro) 
-      {
-        $this->span("Updating the package registry...");
-        $this->exec('apt-get -y update');
-
-        $this->span("Upgrading the server...");
-        $this->exec('apt-get -y upgrade');
-      }
-
-      $this->span("Installing required general packages...");
-      $this->exec('apt-get -y install curl gcc libssl-dev openssl gawk vim default-jdk ftp-upload');
+      $this->prepareDistro();
 
       // Dependency chain:
-      // PHP5 depends on MySQL
-      // Virtuoso depends on PHP5
-      $this->installPhp5();
-      $this->installApache2();
+      // PHP stack for OSF and OSF-Drupal
+      $this->installMySQL('client');
+      $this->installPHP();
+      $this->installApache();
+      // Java stack for Solr, Owl and Scones
+      $this->installJava();
+      $this->installTomcat();
+      // Backends
+      $this->installMySQL('server');
       $this->installVirtuoso();
       $this->installSolr();
       $this->installMemcached();
-      
+      // Tools
+      $this->installPhpMyAdmin();
+
       // Generate some OSF API key is none has been defined by the user
       if(empty($this->api_key) || $this->api_key == "some-key") 
       {
