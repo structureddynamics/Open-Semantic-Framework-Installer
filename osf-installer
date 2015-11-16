@@ -13,7 +13,7 @@
   // That way, if it is run from elsewhere, the relative paths will follow.
   chdir(dirname(realpath($argv[0])));  
 
-  include_once('inc/OSFInstaller_Ubuntu_14_04.php');
+  include_once('inc/distros/OSFInstaller_Ubuntu_14_04.php');
   
   $installer;
   
