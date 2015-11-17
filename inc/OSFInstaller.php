@@ -15,7 +15,7 @@
     /**
      * Tries to install PHP5 using the packages available for the Linux distribution
      */
-    abstract public function installPhp5();
+    abstract public function installPhp();
 
     /**
      * Install Virtuoso as required by OSF
@@ -35,7 +35,7 @@
     /**
      * Install Apache2 as required by OSF
      */
-    abstract public function installApache2();
+    abstract public function installApache();
 
     /**
      * Install MySQL as required by OSF
