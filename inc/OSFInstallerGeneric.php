@@ -11,7 +11,7 @@
     /**
     * Tries to install PHP5 using the packages available for the linux distribution
     */
-    public function installPhp5()
+    public function installPhp()
     { 
       $this->span("Option not supported for this Linux distribution and version.", 'error');
     }
@@ -35,7 +35,7 @@
     /**
     * Install Apache2 as required by OSF
     */
-    public function installApache2()
+    public function installApache()
     {
       $this->span("Option not supported for this Linux distribution and version.", 'error');
     }
