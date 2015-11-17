@@ -43,13 +43,10 @@
     {
       $this->h1("Installing PHP");
 
-      $this->span("Installing PHP5...");
-      passthru('yum install -y \
-        php-devel php-pear \
-        php-cli php-embedded php-cgi \
-        php-mbstring php-mcrypt \
-        php-gd php-imap \
-        php-pdo php-mysql php-odbc');
+      $this->span("Installing PHP...");
+      passthru('yum install -y php php-devel php-pear php-cli \
+                               php-embedded php-cgi php-mbstring \
+                               php-gd php-pdo php-mysql php-odbc');
     }
 
     /**
@@ -76,12 +73,10 @@
       $this->h1("Installing Apache");
 
       $this->span("Installing Apache2...");
-      $this->exec('yum install -y \
-        httpd httpd-devel httpd-tools \
-        mod_ssl');
+      $this->exec('yum install -y httpd httpd-devel httpd-tools mod_ssl');
 
       $this->span("Enabling mod-rewrite...");
-      //TODO
+      $this->exec('echo "LoadModule rewrite_module modules/mod_rewrite.so" > /etc/httpd/conf.modules.d/00-rewrite.conf');
 
       $this->span("Restarting Apache2...");
       $this->exec('systemctl restart httpd.service');
@@ -89,7 +84,7 @@
       $this->span("Performing some tests on the new Apache2 instance...");
       $this->span("Checking if the Apache2 instance is up and running...");
 
-      if(strpos(shell_exec('curl -s http://localhost'), 'It works!') === FALSE) {
+      if(strpos(shell_exec('curl -s http://localhost'), 'Apache HTTP Server Test Page powered by CentOS') === FALSE) {
         $this->span("[Error] Apache2 is not currently running...", 'warn');
       }
     }
