@@ -62,7 +62,7 @@
         java-gcj java-openjdk jdk ecj \
         java-1.6.0-openjdk java-1.7.0-openjdk \
         log4j slf4j wsdl4j tzdata-java \
-        jakarta-commons-logging jakarta-taglibs-standard;');
+        jakarta-commons-logging jakarta-taglibs-standard');
     }
 
     /**
@@ -102,7 +102,7 @@
         tomcat-admin-webapps tomcat-webapps');
 
       $this->span("Restarting Tomcat7...");
-      $this->exec('systemctl restart tomcat7.service');
+      $this->exec('systemctl restart tomcat.service');
     }
 
     /**
