@@ -440,10 +440,17 @@
 
       $this->span("Installing PhpMyAdmin...");
       
-      // Need to use passthru because the installer prompts the user
-      // with screens requiring input.
-      // This command cannot be captured in the log.
-      passthru('apt-get install -y phpmyadmin');
+      $this->chdir('/tmp');
+      
+      $this->wget('http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-5.noarch.rpm');
+      
+      $this->exec('rpm -ivh epel-release-7-5.noarch.rpm');
+      
+      $this->exec('yum install -y phpmyadmin');
+      
+      $this->exec('systemctl restart httpd.service');
+      
+      $this->span('In order to be able to log into the user interface, make sure you add your IP address in the conf file: /etc/httpd/conf.d/phpMyAdmin.conf and restarting httpd.', 'warn');
     }       
     
     /**
