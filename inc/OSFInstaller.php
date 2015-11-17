@@ -211,15 +211,24 @@
       $this->unzip("{$tmpPath}/{$pkgVersion}.zip", "{$tmpPath}/");
       $this->mkdir("{$installPath}/");
       
+      // @TODO this should be refactored such that this logic occurs in the
+      //       distro files...
+      $user = 'www-data';
+      
+      if(posix_getpwnam('www-data') === FALSE)
+      {
+        $user = 'apache';
+      }
+      
       $this->cp("{$tmpPath}/OSF-Web-Services-{$pkgVersion}/.", "{$installPath}/", TRUE);
-      $this->chown("{$installPath}/", "www-data", TRUE);
-      $this->chgrp("{$installPath}/", "www-data", TRUE);
+      $this->chown("{$installPath}/", $user, TRUE);
+      $this->chgrp("{$installPath}/", $user, TRUE);
       $this->chmod("{$installPath}/", "755", TRUE);
       
       $this->mkdir("{$dataPath}/osf-web-services/tmp/");          
       $this->mkdir("{$dataPath}/osf-web-services/configs/");
-      $this->chown("{$dataPath}/osf-web-services/", "www-data", TRUE);
-      $this->chgrp("{$dataPath}/osf-web-services/", "www-data", TRUE);
+      $this->chown("{$dataPath}/osf-web-services/", $user, TRUE);
+      $this->chgrp("{$dataPath}/osf-web-services/", $user, TRUE);
       $this->chmod("{$dataPath}/osf-web-services/", "500", TRUE);
       $this->chmod("{$dataPath}/osf-web-services/tmp/", "700", TRUE);
 
