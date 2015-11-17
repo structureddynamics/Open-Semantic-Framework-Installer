@@ -69,7 +69,7 @@ Note: the [VERSION] parameter is optional.
 
 --install-osf                           Install the Open Semantic Framework
 --install-apache2                       Install Apache2
---install-mysql                         Install MySQL
+--install-sql                           Install SQL
 --install-phpmyadmin                    Install PhpMyAdmin
 --install-virtuoso                      Install Virtuoso
 --install-solr                          Install Solr

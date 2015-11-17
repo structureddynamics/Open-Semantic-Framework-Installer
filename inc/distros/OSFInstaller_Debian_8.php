@@ -113,7 +113,7 @@
     /**
      * Install MySQL as required by OSF-Drupal
      */
-    public function installMySQL($mode = 'server')
+    public function installSQL($mode = 'server')
     {
       switch($mode) {
 

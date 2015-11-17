@@ -40,7 +40,7 @@
     /**
      * Install MySQL as required by OSF
      */
-    abstract public function installMySQL();
+    abstract public function installSQL();
 
     /**
      * Install MySQL as required by OSF
@@ -63,14 +63,14 @@
 
       // Dependency chain:
       // PHP stack for OSF and OSF-Drupal
-      $this->installMySQL('client');
+      $this->installSQL('client');
       $this->installPHP();
       $this->installApache();
       // Java stack for Solr, Owl and Scones
       $this->installJava();
       $this->installTomcat();
       // Backends
-      $this->installMySQL('server');
+      $this->installSQL('server');
       $this->installVirtuoso();
       $this->installSolr();
       $this->installMemcached();

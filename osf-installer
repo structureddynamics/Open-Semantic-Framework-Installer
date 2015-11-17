@@ -42,7 +42,7 @@
     'install-osf::',
     'install-osf-drupal::',
     'install-apache2::',
-    'install-mysql::',
+    'install-sql::',
     'install-phpmyadmin::',
     'install-php5::',
     'install-virtuoso::',
@@ -100,7 +100,7 @@
     $installer->span("");
     $installer->span("--install-osf                           Install the Open Semantic Framework ");
     $installer->span("--install-apache2                       Install Apache2 ");
-    $installer->span("--install-mysql                         Install MySQL ");
+    $installer->span("--install-sql                           Install SQL ");
     $installer->span("--install-phpmyadmin                    Install PhpMyAdmin ");
     $installer->span("--install-virtuoso                      Install Virtuoso ");
     $installer->span("--install-solr                          Install Solr ");
@@ -343,10 +343,10 @@
     $installer->installPhp5();
   }
   
-  // Install MySQL on the system
-  if(isset($arguments['install-mysql']))
+  // Install SQL on the system
+  if(isset($arguments['install-sql']))
   {
-    $installer->installMySQL();
+    $installer->installSQL();
   }
   
   // Install PhpMyAdmin on the system

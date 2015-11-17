@@ -18,10 +18,10 @@
 
       $this->span("Installing required general packages...");
       $this->exec('yum install -y \
-        initscripts \
-        curl vim \
-        gcc gawk \
-        openssl openssl-devel');
+                       initscripts \
+                       curl vim \
+                       gcc gawk \
+                       openssl openssl-devel');
     }
 
     /**
@@ -113,32 +113,30 @@
     /**
      * Install MySQL as required by OSF-Drupal
      */
-    public function installMySQL($mode = 'server')
+    public function installSQL($mode = 'server')
     {
       switch($mode) {
 
         // MySQL client installation
         case 'client':
-          $this->h1("Installing MySQL client");
+          $this->h1("Installing 'MariaDB' client");
 
-          $this->span("Installing MySQL5 client...");
+          $this->span("Installing MariaDB client...");
           // Need to use passthru because the installer prompts the user
           // with screens requiring input.
           // This command cannot be captured in the log.
-          passthru('apt-get install -y \
-            mysql-client');
+          passthru('yum install -y mariadb');
           break;
 
         // MySQL server installation
         case 'server':
-          $this->h1("Installing MySQL server");
+          $this->h1("Installing MariaDB server");
 
-          $this->span("Installing MySQL5 server...");
+          $this->span("Installing MariaDB server...");
           // Need to use passthru because the installer prompts the user
           // with screens requiring input.
           // This command cannot be captured in the log.
-          passthru('apt-get install -y \
-            mysql-server');
+          passthru('yum install -y mariadb-server');
           break;
 
       }
