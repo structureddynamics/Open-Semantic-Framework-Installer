@@ -689,6 +689,7 @@
 
       // Prepare log file
       exec("mkdir -p {$this->logging_folder}");
+      date_default_timezone_set('UTC');
       $this->log_file = $this->logging_folder . '/osf-install-' . date('Y-m-d_H:i:s') . '.log';
       exec("touch {$this->log_file}");
     }
