@@ -64,8 +64,8 @@
       // Dependency chain:
       // PHP stack for OSF and OSF-Drupal
       $this->installSQL('client');
-      $this->installPHP();
       $this->installApache();
+      $this->installPHP();
       // Java stack for Solr, Owl and Scones
       $this->installJava();
       $this->installTomcat();
