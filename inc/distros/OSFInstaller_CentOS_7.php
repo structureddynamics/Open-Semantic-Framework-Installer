@@ -18,7 +18,7 @@
 
       $this->span("Installing required general packages...");
       $this->exec('yum install -y \
-                       initscripts \
+                       initscripts wget \
                        curl vim \
                        gcc gawk \
                        openssl openssl-devel');
