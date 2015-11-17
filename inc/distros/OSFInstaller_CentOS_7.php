@@ -396,13 +396,16 @@
 
       $this->span("Starting Solr...");
 
-      $this->exec('systemctl start solr.service');
+      $this->exec('service solr start');
       
       $this->span('Register Solr to automatically start at the system\'s startup...');
       
-      $this->exec('sudo update-rc.d solr defaults');
+      // @TODO Upgrade this to create a systemd services and to do the same procedure we
+      //       did for Virtuoso to start Solr at startup.
+      $this->append('/etc/init.d/solr start', '/etc/rc.local');      
+      $this->chmod('/etc/rc.d/rc.local', '+x');
       
-      $this->span("You can start Solr using this command: systemctl start solr.service", 'notice');
+      $this->span("You can start Solr using this command: service solr start", 'notice');
     }    
 
     /**
