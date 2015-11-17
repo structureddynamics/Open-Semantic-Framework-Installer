@@ -455,8 +455,7 @@
 
       $this->span("Installing Memcached...");
       
-      $this->exec('apt-get install -y memcached');
-      $this->exec('apt-get install -y php5-memcache');
+      $this->exec('yum install install -y memcached php-pecl-memcache');
       
       $this->span("Restarting Apache2...");
       
@@ -464,13 +463,11 @@
       
       $this->span("Starting Memcached...");
 
-      $this->exec('service memcached restart');
+      $this->exec('systemctl restart memcached.service');
    
       $this->span("Installing Memcached User Interface...");
       
-      $this->chdir('/usr/share/');
-      
-      $this->mkdir('memcached-ui');
+      $this->mkdir('/usr/share/memcached-ui/');
       
       $this->chdir('/usr/share/memcached-ui/');
       
