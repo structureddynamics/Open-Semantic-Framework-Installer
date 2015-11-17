@@ -68,12 +68,12 @@ Note: the [VERSION] parameter is optional.
       If no version is specified, the latest DEV version will be used
 
 --install-osf                           Install the Open Semantic Framework
---install-apache2                       Install Apache2
+--install-apache                        Install Apache
 --install-sql                           Install SQL
 --install-phpmyadmin                    Install PhpMyAdmin
 --install-virtuoso                      Install Virtuoso
 --install-solr                          Install Solr
---install-php5                          Install PHP5
+--install-php                           Install PHP
 --install-osf-ws-php-api="[VERSION]"                    Install the OSF-WS-PHP-API library
 --install-osf-tests-suites="[VERSION]"                  Install the OSF Tests Suites
 --install-osf-datasets-management-tool="[VERSION]"      Install the OSF Datasets Management Tool

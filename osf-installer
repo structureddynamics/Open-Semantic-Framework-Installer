@@ -41,10 +41,10 @@
     'list-configurations::',
     'install-osf::',
     'install-osf-drupal::',
-    'install-apache2::',
+    'install-apache::',
     'install-sql::',
     'install-phpmyadmin::',
-    'install-php5::',
+    'install-php::',
     'install-virtuoso::',
     'install-solr::',
     // OSF Web Services
@@ -99,12 +99,12 @@
     $installer->span("      If no version is specified, the latest DEV version will be used");
     $installer->span("");
     $installer->span("--install-osf                           Install the Open Semantic Framework ");
-    $installer->span("--install-apache2                       Install Apache2 ");
+    $installer->span("--install-apache                        Install Apache ");
     $installer->span("--install-sql                           Install SQL ");
     $installer->span("--install-phpmyadmin                    Install PhpMyAdmin ");
     $installer->span("--install-virtuoso                      Install Virtuoso ");
     $installer->span("--install-solr                          Install Solr ");
-    $installer->span("--install-php5                          Install PHP5 ");
+    $installer->span("--install-php                           Install PHP ");
     $installer->span("\nOSF Drupal Installation Options:");
     $installer->span("");
     $installer->span("--install-osf-drupal                    Install Drupal with the OSF Drupal modules ");
@@ -332,15 +332,15 @@
   }
 
   // Install Apache2 on the system
-  if(isset($arguments['install-apache2']))
+  if(isset($arguments['install-apache']))
   {
-    $installer->installApache2();
+    $installer->installApache();
   }
   
   // Install PHP5 on the system
-  if(isset($arguments['install-php5']))
+  if(isset($arguments['install-php']))
   {
-    $installer->installPhp5();
+    $installer->installPhp();
   }
   
   // Install SQL on the system
