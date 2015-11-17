@@ -259,26 +259,26 @@
     */
     public function installVirtuoso()
     {
-
       $this->h1("Installing Virtuoso 7 from .deb file....");   
 
-      $this->wget('https://github.com/structureddynamics/OSF-Installer-Ext/raw/3.3/virtuoso-opensource/virtuoso-opensource_7.1_amd64.rpm');
-      $this->exec('rpm -ivh virtuoso-opensource_7.1_amd64.rpm');
+      $this->span('Install redhat-lsb dependency...');
+      $this->exec('yum install -y redhat-lsb');
       
-      $this->mv('service virtuoso-opensource', 'service virtuoso');
+      $this->wget('https://github.com/structureddynamics/OSF-Installer-Ext/raw/3.4/virtuoso-opensource/virtuoso-opensource-7.2.1.x86_64.rpm');
+      $this->exec('rpm -ivh virtuoso-opensource-7.2.1.x86_64.rpm');
+      
+      $this->mv('/etc/rc.d/init.d/virtuoso-opensource', '/etc/rc.d/init.d/virtuoso');
 
       $this->span("Installing odbc.ini and odbcinst.ini files...");
       
-      $this->cp('resources/virtuoso/odbc.ini', '/etc/odbc.ini');
-      $this->cp('resources/virtuoso/odbcinst.ini', '/etc/odbcinst.ini');
+      $this->append("\n\n".file_get_contents('resources/virtuoso/odbc.ini'), '/etc/odbc.ini');
+      $this->append("\n\n".file_get_contents('resources/virtuoso/odbcinst.ini'), '/etc/odbcinst.ini');
 
       $this->span("Test Virtuoso startup...");
       
-      $this->exec('systemctl stop virtuoso.service');
+      $this->exec('systemctl restart virtuoso.service');
       
       sleep(20);
-      
-      $this->exec('systemctl start virtuoso.service');
       
       $isVirtuosoRunning = shell_exec('ps aux | grep virtuoso');
       
@@ -289,7 +289,8 @@
       else
       {
         $this->span("Register Virtuoso to automatically start at the system's startup...");
-        $this->exec('sudo update-rc.d virtuoso defaults');
+        $this->exec('/sbin/chkconfig --add virtuoso');
+        $this->exec('/sbin/chkconfig virtuoso on');
 
         if(!$this->change_password($this->sparql_password))
         {
@@ -312,11 +313,9 @@
       
       $this->span("Restarting Virtuoso...");
       
-      $this->exec('systemctl stop virtuoso.service');
+      $this->exec('systemctl restart virtuoso.service');
       
       sleep(20);
-      
-      $this->exec('systemctl start virtuoso.service');      
             
       $this->span("You can start Virtuoso using this command: systemctl start virtuoso.service", 'debug');
     }
