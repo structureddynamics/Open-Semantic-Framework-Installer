@@ -1,8 +1,7 @@
 Alias /ws /usr/share/osf
 
 <Directory /usr/share/osf/>
-  Options +FollowSymLinks
-  AllowOverride All
-  order allow,deny
-  allow from all
+  AllowOverride None
+  Options None
+  Require all granted
 </Directory> 
