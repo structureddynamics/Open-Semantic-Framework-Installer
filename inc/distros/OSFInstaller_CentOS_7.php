@@ -13,8 +13,21 @@
       $this->h1("Installing prerequisites");
 
       if($this->upgrade_distro) {
-        updateDistro();
+        $this->updateDistro();
       }
+      
+      // If the EPEL repository doesn't exist on the server, then add it
+      if($this->exec('yum repolist | grep epel', 'ignore') > 0)
+      {
+        $this->chdir('/tmp');
+        
+        $this->wget('http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-5.noarch.rpm');
+        
+        $this->exec('rpm -ivh epel-release-7-5.noarch.rpm');
+        
+        $this->rm('epel-release-7-5.noarch.rpm');
+      }
+      
 
       $this->span("Installing required general packages...");
       $this->exec('yum install -y \
@@ -235,10 +248,10 @@
       
       $this->cp('resources/osf-web-services/osf-web-services', '/etc/apache2/sites-available/osf-web-services.conf');
 
-      $this->ln('/etc/apache2/sites-available/osf-web-services.conf', '/etc/apache2/sites-enabled/osf-web-services.conf');
+      $this->ln('/etc/apache2/sites-available/osf-web-services.conf', '/etc/httpd/conf.d/osf-web-services.conf');
       
       // Fix the OSF Web Services path in the apache config file
-      $this->sed('/usr/share/osf', "{$this->osf_web_services_folder}/{$this->osf_web_services_ns}", '/etc/apache2/sites-available/osf-web-services.conf');
+      $this->sed('/usr/share/osf', "{$this->osf_web_services_folder}/{$this->osf_web_services_ns}", '/etc/httpd/conf.d/osf-web-services.conf');
       
       $this->span("Restarting Apache2...");
       
@@ -439,13 +452,7 @@
       $this->h1("Installing PhpMyAdmin");
 
       $this->span("Installing PhpMyAdmin...");
-      
-      $this->chdir('/tmp');
-      
-      $this->wget('http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-5.noarch.rpm');
-      
-      $this->exec('rpm -ivh epel-release-7-5.noarch.rpm');
-      
+            
       $this->exec('yum install -y phpmyadmin');
       
       $this->exec('systemctl restart httpd.service');
