@@ -215,24 +215,27 @@
       
       $this->span("Downloading OWLAPI...");
       
-      $this->chdir('/var/lib/tomcat7/webapps/');
+      $this->chdir('/var/lib/tomcat/webapps/');
+      
+      // Remove default Tomcat projects
+      $this->rm('examples', TRUE);
+      $this->rm('host-manager', TRUE);
+      $this->rm('manager', TRUE);
+      $this->rm('ROOT', TRUE);
+      $this->rm('sample', TRUE);      
       
       $this->wget('http://wiki.opensemanticframework.org/files/OWLAPI.war');
       
-      $this->span("Starting Tomcat7 to install the OWLAPI war installation file...");
+      $this->span("Starting Tomcat to install the OWLAPI war installation file...");
       
-      $this->exec('systemctl restart tomcat7.service');
+      $this->exec('systemctl restart tomcat.service');
       
       // wait 20 secs to make sure Tomcat7 had the time to install the OWLAPI webapp
       sleep(20);
       
       $this->span("Configuring PHP for the OWLAPI...");
       
-      $this->sed('allow_url_include = Off', 'allow_url_include = On', '/etc/php5/apache2/php.ini');
-      $this->sed('allow_url_include = Off', 'allow_url_include = On', '/etc/php5/cli/php.ini');
-
-      $this->sed('allow_call_time_pass_reference = Off', 'allow_call_time_pass_reference = On', '/etc/php5/apache2/php.ini');
-      $this->sed('allow_call_time_pass_reference = Off', 'allow_call_time_pass_reference = On', '/etc/php5/cli/php.ini');
+      $this->sed('allow_url_include = Off', 'allow_url_include = On', '/etc/php.ini');
 
       $this->span("Restart Apache2...");
       $this->exec('systemctl restart httpd.service');
