@@ -250,10 +250,8 @@
       
       $this->span("Configure Apache2 for the OSF Web Services...");
       
-      $this->cp('resources/osf-web-services/osf-web-services', '/etc/apache2/sites-available/osf-web-services.conf');
+      $this->cp('resources/osf-web-services/osf-web-services', '/etc/httpd/conf.d/osf-web-services.conf');
 
-      $this->ln('/etc/apache2/sites-available/osf-web-services.conf', '/etc/httpd/conf.d/osf-web-services.conf');
-      
       // Fix the OSF Web Services path in the apache config file
       $this->sed('/usr/share/osf', "{$this->osf_web_services_folder}/{$this->osf_web_services_ns}", '/etc/httpd/conf.d/osf-web-services.conf');
       
@@ -578,14 +576,10 @@
       // Configuring Apache2 for Drupal      
       $this->span("Configure Apache2 for Drupal...");
       
-      $this->cp('resources/osf-drupal/drupal', '/etc/apache2/sites-available/');
-
-      $this->mv('/etc/apache2/sites-available/drupal', '/etc/apache2/sites-available/drupal.conf');
-
-      $this->ln('/etc/apache2/sites-available/drupal.conf', '/etc/apache2/sites-enabled/drupal.conf');
+      $this->cp('resources/osf-drupal/drupal', '/etc/httpd/conf.d/drupal.conf');
       
       // Fix the OSF Web Services path in the apache config file
-      $this->sed('/usr/share/drupal', $this->drupal_folder, '/etc/apache2/sites-available/drupal.conf');
+      $this->sed('/usr/share/drupal', $this->drupal_folder, '/etc/httpd/conf.d/drupal.conf');
       
       // Delete the default Apache2 enabled site file
       if(file_exists('/etc/apache2/sites-enabled/000-default.conf'))
