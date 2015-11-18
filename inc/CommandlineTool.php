@@ -37,7 +37,7 @@
         switch (strtolower($errorLevel)) 
         {
           case 'ignore':
-            return(TRUE);
+            return($commandReturnVal);
           break;
           
           case 'notice':
@@ -66,11 +66,11 @@
           break;
         }
 
-        return(FALSE);
+        return($commandReturnVal);
       } 
       else 
       {
-        return(TRUE);
+        return($commandReturnVal);
       }      
     }
 
