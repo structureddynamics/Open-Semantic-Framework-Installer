@@ -160,7 +160,7 @@
       
       // Get name, version and paths
       $pkgName = "PHPUnit";
-      $installPath = "/usr/local/bin";
+      $installPath = "/usr/bin";
       $tmpPath = "/tmp/osf/phpunit";
 
       // Download
