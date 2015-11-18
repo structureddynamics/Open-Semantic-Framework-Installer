@@ -285,8 +285,10 @@
       $this->exec('rpm -ivh virtuoso-opensource-7.2.1.x86_64.rpm');
       
       $this->mv('/etc/rc.d/init.d/virtuoso-opensource', '/etc/rc.d/init.d/virtuoso');
-
+      
       $this->span("Installing odbc.ini and odbcinst.ini files...");
+      
+      $this->chdir($this->currentWorkingDirectory);
       
       $this->append("\n\n".file_get_contents('resources/virtuoso/odbc.ini'), '/etc/odbc.ini');
       $this->append("\n\n".file_get_contents('resources/virtuoso/odbcinst.ini'), '/etc/odbcinst.ini');
