@@ -79,14 +79,6 @@
     public function install_OSF_Drupal()
     {
       $this->span("Option not supported for this Linux distribution and version.", 'error');
-    }    
-    
-    /**
-    * Install OSF for Drupal
-    */
-    public function install_OSF_Drupal()
-    {
-      $this->span("Option not supported for this Linux distribution and version.", 'error');
-    }      
+    }        
   }
 ?>
