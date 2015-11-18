@@ -220,7 +220,7 @@
       //       distro files...
       $user = 'www-data';
       
-      if(posix_getpwnam('www-data') === FALSE)
+      if($this->exec('id -u www-data') > 0)
       {
         $user = 'apache';
       }
