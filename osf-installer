@@ -14,6 +14,7 @@
   chdir(dirname(realpath($argv[0])));  
 
   include_once('inc/distros/OSFInstaller_Ubuntu_14_04.php');
+  include_once('inc/distros/OSFInstaller_CentOS_7.php');
   
   $installer;
   
@@ -24,6 +25,10 @@
   if(OSFInstaller_Ubuntu_14_04::isWorkingInstaller())
   {    
     $installer = new OSFInstaller_Ubuntu_14_04(getcwd().'/installer.ini');  
+  }
+  elseif(OSFInstaller_CentOS_7::isWorkingInstaller())
+  {
+    $installer = new OSFInstaller_CentOS_7(getcwd().'/installer.ini');
   }
   else
   {
