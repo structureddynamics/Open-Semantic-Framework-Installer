@@ -224,9 +224,6 @@
       $this->sed('allow_url_include = Off', 'allow_url_include = On', '/etc/php5/apache2/php.ini');
       $this->sed('allow_url_include = Off', 'allow_url_include = On', '/etc/php5/cli/php.ini');
 
-      $this->sed('allow_call_time_pass_reference = Off', 'allow_call_time_pass_reference = On', '/etc/php5/apache2/php.ini');
-      $this->sed('allow_call_time_pass_reference = Off', 'allow_call_time_pass_reference = On', '/etc/php5/cli/php.ini');
-
       $this->span("Restart Apache2...");
       $this->exec('service apache2 restart');
     }
