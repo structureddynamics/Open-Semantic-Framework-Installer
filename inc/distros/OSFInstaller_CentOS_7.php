@@ -724,9 +724,9 @@
         if(stripos($line, 'CentOS') !== FALSE)
         {
           // Validate version
-          $version = (float) shell_exec('cat /etc/system-release | cut -d" " -f3 | cut -d "." -f1');
-          
-          if($version == 7)
+          preg_match('/.*release[\s]([7]+)\..*/i', $line, $matches);
+
+          if(isset($matches[1]) && $matches[1] == "7")
           {
             return(TRUE);
           }
@@ -738,9 +738,9 @@
         elseif(stripos($line, 'Red Hat Enterprise Linux Server') !== FALSE)
         {
           // Validate version
-          $version = (float) shell_exec('cat /etc/system-release | cut -d" " -f3 | cut -d "." -f1');
+          preg_match('/.*release[\s]([7]+)\..*/i', $line, $matches);
           
-          if($version == 7)
+          if(isset($matches[1]) && $matches[1] == "7")
           {
             return(TRUE);
           }
