@@ -220,7 +220,7 @@
       //       distro files...
       $user = 'www-data';
       
-      if($this->exec('id -u www-data') > 0)
+      if($this->exec('id -u www-data', 'ignore') > 0)
       {
         $user = 'apache';
       }
