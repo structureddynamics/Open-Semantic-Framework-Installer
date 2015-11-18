@@ -23,6 +23,11 @@
     abstract public function installVirtuoso();
 
     /**
+     * Install Virtuoso as required by OSF
+     */
+    abstract public function prepareDistro();
+
+    /**
      * Install Solr as required by OSF
      */
     abstract public function installSolr();
