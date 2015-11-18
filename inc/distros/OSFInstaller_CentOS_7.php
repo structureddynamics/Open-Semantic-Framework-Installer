@@ -511,9 +511,7 @@
       
       $this->chdir($this->currentWorkingDirectory);
       
-      $this->cp('resources/memcached/memcached', '/etc/apache2/sites-available/memcached.conf');
-
-      $this->ln('/etc/apache2/sites-available/memcached.conf', '/etc/apache2/sites-enabled/memcached.conf');
+      $this->cp('resources/memcached/memcached', '/etc/httpd/conf.d/memcached.conf');
       
       $this->span("Restarting Apache2...");
       
