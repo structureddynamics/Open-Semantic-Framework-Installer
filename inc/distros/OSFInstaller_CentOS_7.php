@@ -274,7 +274,7 @@
     */
     public function installVirtuoso()
     {
-      $this->h1("Installing Virtuoso 7 from .deb file....");   
+      $this->h1("Installing Virtuoso 7 from .rpm file....");   
 
       $this->span('Install redhat-lsb dependency...');
       $this->exec('yum install -y redhat-lsb');
@@ -443,8 +443,8 @@
         $this->cp("{$this->osf_web_services_folder}/{$this->osf_web_services_ns}/framework/solr_schema_v1_3_2.xml", '/usr/share/solr/osf-web-services/solr/conf/schema.xml');
         
         $this->span("Restarting Solr...");
-        $this->exec('systemctl stop solr.service');
-        $this->exec('systemctl start solr.service');
+        $this->exec('service solr stop');
+        $this->exec('service solr start');
       }
     }
     
