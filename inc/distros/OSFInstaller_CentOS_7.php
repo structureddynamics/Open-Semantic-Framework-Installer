@@ -291,11 +291,9 @@
       $this->append("\n\n".file_get_contents('resources/virtuoso/odbc.ini'), '/etc/odbc.ini');
       $this->append("\n\n".file_get_contents('resources/virtuoso/odbcinst.ini'), '/etc/odbcinst.ini');
 
-      sleep(20);
+      sleep(30);
       
-      $isVirtuosoRunning = shell_exec('ps aux | grep virtuoso');
-      
-      if(strpos($isVirtuosoRunning, '/usr/bin/virtuoso') === FALSE)
+      if($this->exec('ps -cax | grep virtuoso', 'ignore') > 0)
       {
         $this->span('Virtuoso is not running. Check the logs, something went wrong.', 'error');
       }
