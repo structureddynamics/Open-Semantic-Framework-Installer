@@ -28,6 +28,9 @@
         $this->rm('epel-release-7-5.noarch.rpm');
       }
       
+      // SELinux to permissive
+      $this->exec('setenforce permissive');
+      $this->sed('SELINUX=enforcing', 'SELINUX=permissive', '/etc/selinux/config');      
 
       $this->span("Installing required general packages...");
       $this->exec('yum install -y \
