@@ -472,6 +472,10 @@
       
       $this->exec('yum install install -y memcached php-pecl-memcache');
       
+      $this->span("Configuring Memcached...");
+      
+      $this->sed("OPTIONS=\"\"", "OPTIONS=\"-l 127.0.0.1\"", "/etc/sysconfig/memcached");
+      
       $this->span("Restarting Apache2...");
       
       $this->exec('systemctl restart httpd.service');
