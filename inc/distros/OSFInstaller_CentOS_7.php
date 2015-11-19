@@ -64,6 +64,10 @@
                                php-embedded php-cgi php-mbstring \
                                php-gd php-pdo php-mysql php-odbc \
                                php-mcrypt php-imap');
+                               
+      $this->span("Configuring PHP...");
+      
+      $this->sed(';date.timezone =', 'date.timezone = UTC');
     }
 
     /**
