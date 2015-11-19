@@ -296,7 +296,9 @@
       $this->append("\n\n".file_get_contents('resources/virtuoso/odbc.ini'), '/etc/odbc.ini');
       $this->append("\n\n".file_get_contents('resources/virtuoso/odbcinst.ini'), '/etc/odbcinst.ini');
 
-      sleep(30);
+      $this->exec('systemctl start virtuoso.service');
+      
+      sleep(20);
       
       if($this->exec('ps -cax | grep virtuoso', 'ignore') > 0)
       {
