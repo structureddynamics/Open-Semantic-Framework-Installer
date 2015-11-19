@@ -106,8 +106,6 @@
       $this->setupVirtuoso();
       $this->load_OSF_OntologiesManagementTool();
 
-      $this->exec('/etc/init.d/apache2 restart');
-
       $this->installPHPUnit();
       $this->runOSFTestsSuites($this->osf_web_services_folder);
 
