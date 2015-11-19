@@ -291,10 +291,6 @@
       $this->append("\n\n".file_get_contents('resources/virtuoso/odbc.ini'), '/etc/odbc.ini');
       $this->append("\n\n".file_get_contents('resources/virtuoso/odbcinst.ini'), '/etc/odbcinst.ini');
 
-      $this->span("Test Virtuoso startup...");
-      
-      $this->exec('systemctl restart virtuoso.service');
-      
       sleep(20);
       
       $isVirtuosoRunning = shell_exec('ps aux | grep virtuoso');
