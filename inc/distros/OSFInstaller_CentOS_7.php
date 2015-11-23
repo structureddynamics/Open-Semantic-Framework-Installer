@@ -117,12 +117,12 @@
     {
       $this->h1("Installing Tomcat");
 
-      $this->span("Installing Tomcat7...");
+      $this->span("Installing Tomcat...");
       $this->exec('yum install -y \
         tomcat \
         tomcat-admin-webapps tomcat-webapps');
 
-      $this->span("Restarting Tomcat7...");
+      $this->span("Restarting Tomcat...");
       $this->exec('systemctl restart tomcat.service');
     }
 
@@ -286,7 +286,7 @@
       $this->span('Install redhat-lsb dependency...');
       $this->exec('yum install -y redhat-lsb');
       
-      $this->wget("https://github.com/structureddynamics/OSF-Installer-Ext/raw/{$this->installer_version}/virtuoso-opensource/virtuoso-opensource-7.2.1.x86_64.rpm");
+      $this->wget("https://github.com/structureddynamics/OSF-Installer-Ext/raw/{$this->installer_version}/virtuoso-opensource/virtuoso-opensource-7.2.1.x86_64--centos-7.rpm");
       $this->exec('rpm -ivh virtuoso-opensource-7.2.1.x86_64.rpm');
       
       $this->sed('virtuoso-opensource-6.0', 'virtuoso', '/etc/rc.d/init.d/virtuoso-opensource');
