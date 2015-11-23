@@ -266,7 +266,7 @@
 
       $this->h1("Installing Virtuoso 7 from .deb file....");   
 
-      $this->wget('https://github.com/structureddynamics/OSF-Installer-Ext/raw/3.3/virtuoso-opensource/virtuoso-opensource_7.1_amd64.deb');
+      $this->wget("https://github.com/structureddynamics/OSF-Installer-Ext/raw/{$this->installer_version}/virtuoso-opensource/virtuoso-opensource_7.1_amd64.deb");
       $this->exec('dpkg -i virtuoso-opensource_7.1_amd64.deb');     
       
       $this->mv('/etc/init.d/virtuoso-opensource', '/etc/init.d/virtuoso');

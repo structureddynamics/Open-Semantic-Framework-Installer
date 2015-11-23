@@ -7,6 +7,9 @@
     /* Parsed intaller.ini configuration file */
     protected $config;
 
+    /* OSF Installer Version */
+    public $installer_version = "3.4.0";
+
     /* OSF Installation status */
     public $installer_osf_configured = FALSE;
 
@@ -26,16 +29,16 @@
     protected $osf_web_services_ns = "StructuredDynamics/osf/ws";
 
     /* OSF Web Services */
-    protected $osf_web_services_version = "3.3.0";
+    protected $osf_web_services_version = "3.4.0";
     protected $osf_web_services_folder = "/usr/share/osf";
     protected $osf_web_services_domain = "localhost";
 
     /* OSF WS-PHP-API */
-    protected $osf_ws_php_api_version = "3.1.2";
+    protected $osf_ws_php_api_version = "3.1.3";
     protected $osf_ws_php_api_folder = "StructuredDynamics/osf";
 
     /* OSF Tests Suites */
-    protected $osf_tests_suites_version = "3.3.0";
+    protected $osf_tests_suites_version = "3.4.0";
     protected $osf_tests_suites_folder = "StructuredDynamics/osf/tests";
 
     /* OSF Data Validator Tool */
@@ -51,7 +54,7 @@
     protected $datasets_management_tool_folder = "/usr/share/datasets-management-tool";
 
     /* OSF Ontologies Management Tool */
-    protected $ontologies_management_tool_version = "3.1.0";
+    protected $ontologies_management_tool_version = "3.1.1";
     protected $ontologies_management_tool_folder = "/usr/share/ontologies-management-tool";
 
     /* Drupal framework */
@@ -118,6 +121,18 @@
       if (!$this->config) {
         $this->span("An error occured when we tried to parse the {$configFile} file. Make sure it is parseable and try again", 'error');
         exit(1);
+      }
+
+      /**
+       *  OSF Installation version
+       */
+      if (isset($this->config['installer']['version'])) {
+        $input = $this->config['installer']['version'];
+        if (!empty($input)) {
+          if ($this->isVersion($input)) {
+            $this->installer_version = $this->getBoolean($input);
+          }
+        }
       }
 
       /**
@@ -1488,6 +1503,7 @@
     private function saveConfigurations()
     {
       $ini  = "[installer]\n";
+      $ini .= "version = \"{$this->installer_version}\"\n";
       $ini .= "osf-configured = \"" . ($this->installer_osf_configured ? 'true' : 'false') . "\"\n";
       $ini .= "osf-drupal-configured = \"" . ($this->installer_osf_drupal_configured ? 'true' : 'false') . "\"\n";
       $ini .= "upgrade-distro = \"" . ($this->upgrade_distro ? 'true' : 'false') . "\"\n";
@@ -1583,6 +1599,7 @@
       $this->h2("Showing the configuration for the OSF-Installer Tool");
 
       $this->h3("OSF Installer configuration");
+      $this->span("version = \"{$this->installer_version}\"\n", 'info');
       $this->span("osf-configured = \"" . ($this->installer_osf_configured ? 'true' : 'false') . "\"", 'info');
       $this->span("osf-drupal-configured = \"" . ($this->installer_osf_drupal_configured ? 'true' : 'false') . "\"", 'info');
       $this->span("upgrade-distro = \"" . ($this->upgrade_distro ? 'true' : 'false') . "\"", 'info');
