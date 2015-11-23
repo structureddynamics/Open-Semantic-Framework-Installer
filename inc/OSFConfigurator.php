@@ -130,7 +130,7 @@
         $input = $this->config['installer']['version'];
         if (!empty($input)) {
           if ($this->isVersion($input)) {
-            $this->installer_version = $this->getBoolean($input);
+            $this->installer_version = $input;
           }
         }
       }
