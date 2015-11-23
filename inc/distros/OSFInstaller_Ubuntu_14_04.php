@@ -13,7 +13,7 @@
       $this->h1("Installing prerequisites");
 
       if($this->upgrade_distro) {
-        updateDistro();
+        $this->updateDistro();
       }
 
       $this->span("Installing required general packages...");
