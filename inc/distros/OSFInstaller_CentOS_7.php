@@ -67,7 +67,7 @@
                                
       $this->span("Configuring PHP...");
       
-      $this->sed(';date.timezone =', 'date.timezone = UTC');
+      $this->sed(';date.timezone =', 'date.timezone = UTC', '/etc/php.ini');
     }
 
     /**
