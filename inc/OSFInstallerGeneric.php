@@ -52,7 +52,7 @@
     /**
     * Install MySQL as required by OSF
     */
-    public function installSQL()
+    public function installSQL($mode = 'server')
     {
       $this->span("Option not supported for this Linux distribution and version.", 'error');
     }

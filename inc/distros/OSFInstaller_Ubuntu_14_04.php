@@ -507,6 +507,14 @@
     
     public function install_OSF_Drupal()
     {   
+      // Instally the SQL engine used by Drupal
+      
+      $this->installSQL('server');
+      $this->installSQL('client');
+
+      $this->installPhpMyAdmin();
+
+      
       // Install Pear
 
       // First check if Pear is installed

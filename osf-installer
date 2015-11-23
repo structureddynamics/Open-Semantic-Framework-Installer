@@ -351,7 +351,8 @@
   // Install SQL on the system
   if(isset($arguments['install-sql']))
   {
-    $installer->installSQL();
+    $installer->installSQL('server');
+    $installer->installSQL('client');
   }
   
   // Install PhpMyAdmin on the system

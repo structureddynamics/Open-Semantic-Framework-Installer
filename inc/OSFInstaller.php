@@ -67,20 +67,16 @@
       $this->prepareDistro();
 
       // Dependency chain:
-      // PHP stack for OSF and OSF-Drupal
-      $this->installSQL('client');
+      // PHP stack for OSF
       $this->installApache();
       $this->installPHP();
       // Java stack for Solr, Owl and Scones
       $this->installJava();
       $this->installTomcat();
       // Backends
-      $this->installSQL('server');
       $this->installVirtuoso();
       $this->installSolr();
       $this->installMemcached();
-      // Tools
-      $this->installPhpMyAdmin();
 
       // Generate some OSF API key is none has been defined by the user
       if(empty($this->api_key) || $this->api_key == "some-key") 
