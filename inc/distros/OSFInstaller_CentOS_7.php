@@ -532,6 +532,8 @@
       $this->installSQL('server');
       $this->installSQL('client');
       
+      $this->exec('systemctl restart mariadb.service');
+      
       $this->exec('systemctl restart httpd.service');
 
       $this->installPhpMyAdmin();      
