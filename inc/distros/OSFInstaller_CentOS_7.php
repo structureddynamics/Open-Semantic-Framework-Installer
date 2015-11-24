@@ -531,54 +531,35 @@
       
       $this->installSQL('server');
       $this->installSQL('client');
+      
+      $this->exec('systemctl restart httpd.service');
 
+      // Change default password
+      $this->exec("mysqladmin -u {$this->sql_app_username} password {$this->sql_app_password}");
+      
       $this->installPhpMyAdmin();      
-      
-      // Install Pear
-
-      // First check if Pear is installed
-      if($this->exec('pear', 'ignore') === FALSE)
-      {
-        $this->h1("Installing Pear");
-
-        $this->chdir('/tmp/');
-                 
-        $this->wget('http://pear.php.net/go-pear.phar');
-      
-        passthru('php go-pear.phar');
-      }
-      
+           
       // Install Drush
       
-      // Check if Drush is installed
-      if($this->exec('drush', 'ignore') === FALSE)
-      {
-        $this->h1("Installing Drush");
-
-        $this->exec('pear upgrade --force Console_Getopt', 'warning');
-        $this->exec('pear upgrade --force pear', 'warning');
-        $this->exec('pear upgrade-all', 'warning');
-        
-        $this->exec('pear channel-discover pear.drush.org', 'warning');
-        
-        $this->exec('pear install drush/drush', 'warning');
-      }
+      // Install composer
+      $this->chdir('/tmp/');
+      
+      $this->exec('curl -sS https://getcomposer.org/installer | php');
+      $this->mv('composer.phar', '/usr/bin/composer');
+      
+      // Install Drush
+      $this->exec('composer global require drush/drush:7.1.0');
+      
+      $this->ln('/root/.composer/vendor/bin/drush', '/usr/bin/drush');        
       
       // Install Drupal            
       $this->h1("Installing Drupal & OSF Drupal");      
       
       $this->chdir($this->currentWorkingDirectory);
       
-      if($this->exec('dpkg-query -l git', 'ignore') === FALSE)
-      {
-        $this->exec('apt-get install -y git', 'error');
-      }
-      
-      if($this->exec('dpkg-query -l php5-curl', 'ignore') === FALSE)
-      {
-        $this->exec('apt-get install -y php5-curl', 'error');
-      }
-      
+      $this->exec('yum -y install git', 'error');
+      $this->exec('yum -y install php-curl', 'error');
+                                      
       $this->exec('drush make --prepare-install resources/osf-drupal/osf_drupal.make '.$this->drupal_folder, 'error');
             
       $this->chdir($this->drupal_folder);     
@@ -596,13 +577,9 @@
       
       // Fix the OSF Web Services path in the apache config file
       $this->sed('/usr/share/drupal', $this->drupal_folder, '/etc/httpd/conf.d/drupal.conf');
+      $this->sed('apache2', 'httpd', '/etc/httpd/conf.d/drupal.conf');
       
-      // Delete the default Apache2 enabled site file
-      if(file_exists('/etc/apache2/sites-enabled/000-default.conf'))
-      {
-        $this->rm('/etc/apache2/sites-enabled/000-default.conf', 'warn');
-      }
-      
+
       $this->span("Restarting Apache2...");
       
       $this->exec('systemctl restart httpd.service');      
@@ -623,8 +600,6 @@
       
       $this->rm('colorpicker.zip');
 
-      $this->load_OSF_PermissionsManagementTool();
-      
       // Enable OSF Drupal modules      
       $this->chdir($this->drupal_folder);     
       
