@@ -63,7 +63,7 @@
       passthru('yum install -y php php-devel php-pear php-cli \
                                php-embedded php-cgi php-mbstring \
                                php-gd php-pdo php-mysql php-odbc \
-                               php-mcrypt php-imap');
+                               php-mcrypt php-imap php-xml');
                                
       $this->span("Configuring PHP...");
       
