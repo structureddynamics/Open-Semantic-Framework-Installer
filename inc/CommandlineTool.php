@@ -567,8 +567,8 @@
       $output = array();
 
       // Escape reserved sed characters
-      $find = str_replace(array('"', '$', '>'), array('\"', '\$', '\>'), $find);
-      $replace = str_replace(array('"', '$', '>'), array('\"', '\$', '\>'), $replace);
+      $find = str_replace(array("\n", '"', '$', '>'), array('\n', '\"', '\$', '\>'), $find);
+      $replace = str_replace(array("\n", '"', '$', '>'), array('\n', '\"', '\$', '\>'), $replace);
       
       // Build command
       $command = "sed -i \"s>{$find}>{$replace}>{$modifiers}\" \"{$file}\"";
