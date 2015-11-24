@@ -513,9 +513,6 @@
       $this->installSQL('client');
       
       $this->exec('service apache2 restart');
-
-      // Change default password
-      $this->exec("mysqladmin -u {$this->sql_app_username} password {$this->sql_app_password}");
       
       $this->installPhpMyAdmin();
            
