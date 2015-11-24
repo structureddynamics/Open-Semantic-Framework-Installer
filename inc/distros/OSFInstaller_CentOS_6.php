@@ -250,6 +250,8 @@
       $this->span("Configure Apache2 for the OSF Web Services...");
       
       $this->cp('resources/osf-web-services/osf-web-services', '/etc/httpd/conf.d/osf-web-services.conf');
+      
+      $this->sed('Require all granted', "AllowOverride None\nOptions None", '/etc/httpd/conf.d/osf-web-services.conf');
 
       // Fix the OSF Web Services path in the apache config file
       $this->sed('/usr/share/osf', "{$this->osf_web_services_folder}/{$this->osf_web_services_ns}", '/etc/httpd/conf.d/osf-web-services.conf');
@@ -511,6 +513,8 @@
       $this->chdir($this->currentWorkingDirectory);
       
       $this->cp('resources/memcached/memcached', '/etc/httpd/conf.d/memcached.conf');
+      
+      $this->sed('Require all granted', "AllowOverride None\nOptions None", '/etc/httpd/conf.d/memcached.conf');
       
       $this->span("Restarting Apache2...");
       
