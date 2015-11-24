@@ -511,39 +511,26 @@
       
       $this->installSQL('server');
       $this->installSQL('client');
+      
+      $this->exec('service apache2 restart');
 
+      // Change default password
+      $this->exec("mysqladmin -u {$this->sql_app_username} password {$this->sql_app_password}");
+      
       $this->installPhpMyAdmin();
-
-      
-      // Install Pear
-
-      // First check if Pear is installed
-      if($this->exec('pear', 'ignore') === FALSE)
-      {
-        $this->h1("Installing Pear");
-
-        $this->chdir('/tmp/');
-                 
-        $this->wget('http://pear.php.net/go-pear.phar');
-      
-        passthru('php go-pear.phar');
-      }
-      
+           
       // Install Drush
       
-      // Check if Drush is installed
-      if($this->exec('drush', 'ignore') === FALSE)
-      {
-        $this->h1("Installing Drush");
-
-        $this->exec('pear upgrade --force Console_Getopt', 'warning');
-        $this->exec('pear upgrade --force pear', 'warning');
-        $this->exec('pear upgrade-all', 'warning');
-        
-        $this->exec('pear channel-discover pear.drush.org', 'warning');
-        
-        $this->exec('pear install drush/drush', 'warning');
-      }
+      // Install composer
+      $this->chdir('/tmp/');
+      
+      $this->exec('curl -sS https://getcomposer.org/installer | php');
+      $this->mv('composer.phar', '/usr/bin/composer');
+      
+      // Install Drush
+      $this->exec('composer global require drush/drush:7.1.0');
+      
+      $this->ln('/root/.composer/vendor/bin/drush', '/usr/bin/drush');        
       
       // Install Drupal            
       $this->h1("Installing Drupal & OSF Drupal");      
