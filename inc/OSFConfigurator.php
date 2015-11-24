@@ -741,8 +741,8 @@
 
       // Restore
       $this->span("Restoring backup...", 'info');
-      $this->mv("{$bckPath}/phpunit.xml", "{$installPath}/");
-      $this->mv("{$bckPath}/Config.php", "{$installPath}/");
+      $this->mv("{$bckPath}/tests/phpunit.xml", "{$installPath}/");
+      $this->mv("{$bckPath}/tests/Config.php", "{$installPath}/");
 
       // Cleanup
       $this->span("Cleaning backup...", 'info');
