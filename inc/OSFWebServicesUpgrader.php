@@ -225,17 +225,17 @@
       // Reconfigure the default WebService.php file
       $wsFile = file_get_contents('WebService.php');
       
-      $wsFile = str_replace('osf_ini = "/usr/share/osf/StructuredDynamics/osf/ws/"', 'osf_ini = "'.$osf_ini.'"');
-      $wsFile = str_replace('keys_ini = "/usr/share/osf/StructuredDynamics/osf/ws/"', 'keys_ini = "'.$keys_ini.'"');
+      $wsFile = str_replace('osf_ini = "/usr/share/osf/StructuredDynamics/osf/ws/"', 'osf_ini = "'.$osf_ini.'"', $wsFile);
+      $wsFile = str_replace('keys_ini = "/usr/share/osf/StructuredDynamics/osf/ws/"', 'keys_ini = "'.$keys_ini.'"', $wsFile);
       
       file_put_contents('WebService.php', $wsFile);
       
       // Add new configuration option "virtuoso-disable-transaction-log"
-      $ini = file_get_contents($osf_ini);
+      $ini = file_get_contents($osf_ini.'osf.ini');
       
       $ini = str_replace("[triplestore]", "[triplestore]\n\nvirtuoso-disable-transaction-log = \"true\"\n\n", $ini);
       
-      file_put_contents($osf_ini, $ini);
+      file_put_contents($osf_ini.'osf.ini', $ini);
       
       $this->currentInstalledVersion = '3.4.0';
       
