@@ -534,6 +534,9 @@
       
       $this->exec('systemctl restart mariadb.service');
       
+      // Run the MariaDB tool to setup a secure installation
+      $this->exec('/usr/bin/mysql_secure_installation');
+      
       $this->exec('systemctl restart httpd.service');
 
       $this->installPhpMyAdmin();      
