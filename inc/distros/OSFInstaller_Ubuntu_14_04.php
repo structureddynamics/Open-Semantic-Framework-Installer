@@ -591,9 +591,7 @@
       $this->exec('unzip colorpicker.zip');
       
       $this->rm('colorpicker.zip');
-
-      $this->load_OSF_PermissionsManagementTool();
-      
+     
       // Enable OSF Drupal modules      
       $this->chdir($this->drupal_folder);     
       
