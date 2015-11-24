@@ -15,6 +15,7 @@
 
   include_once('inc/distros/OSFInstaller_Ubuntu_14_04.php');
   include_once('inc/distros/OSFInstaller_CentOS_7.php');
+  include_once('inc/distros/OSFInstaller_CentOS_6.php');
   
   $installer;
   
@@ -29,6 +30,10 @@
   elseif(OSFInstaller_CentOS_7::isWorkingInstaller())
   {
     $installer = new OSFInstaller_CentOS_7(getcwd().'/installer.ini');
+  }
+  elseif(OSFInstaller_CentOS_6::isWorkingInstaller())
+  {
+    $installer = new OSFInstaller_CentOS_6(getcwd().'/installer.ini');
   }
   else
   {

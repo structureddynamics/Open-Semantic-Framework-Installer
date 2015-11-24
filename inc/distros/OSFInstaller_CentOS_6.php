@@ -13,15 +13,31 @@
       $this->h1("Installing prerequisites");
 
       if($this->upgrade_distro) {
-        updateDistro();
+        $this->updateDistro();
       }
+      
+      // If the EPEL repository doesn't exist on the server, then add it
+      if($this->exec('yum repolist | grep epel', 'ignore') > 0)
+      {
+        $this->chdir('/tmp');
+        
+        $this->wget('http://download.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm');
+        
+        $this->exec('rpm -ivh epel-release-6-8.noarch.rpm');
+        
+        $this->rm('epel-release-6-8.noarch.rpm');
+      }
+      
+      // SELinux to permissive
+      $this->exec('setenforce permissive');
+      $this->sed('SELINUX=enforcing', 'SELINUX=permissive', '/etc/selinux/config');      
 
       $this->span("Installing required general packages...");
       $this->exec('yum install -y \
-        initscripts \
-        curl vim \
-        gcc gawk \
-        openssl openssl-devel');
+                       initscripts wget \
+                       curl vim \
+                       gcc gawk \
+                       openssl openssl-devel');
     }
 
     /**
@@ -43,13 +59,15 @@
     {
       $this->h1("Installing PHP");
 
-      $this->span("Installing PHP5...");
-      passthru('yum install -y \
-        php-devel php-pear \
-        php-cli php-embedded php-cgi \
-        php-mbstring php-mcrypt \
-        php-gd php-imap \
-        php-pdo php-mysql php-odbc');
+      $this->span("Installing PHP...");
+      passthru('yum install -y php php-devel php-pear php-cli \
+                               php-embedded php-cgi php-mbstring \
+                               php-gd php-pdo php-mysql php-odbc \
+                               php-mcrypt php-imap');
+                               
+      $this->span("Configuring PHP...");
+      
+      $this->sed(';date.timezone =', 'date.timezone = UTC', '/etc/php.ini');
     }
 
     /**
@@ -65,7 +83,7 @@
         java-gcj java-openjdk jdk ecj \
         java-1.6.0-openjdk java-1.7.0-openjdk \
         log4j slf4j wsdl4j tzdata-java \
-        jakarta-commons-logging jakarta-taglibs-standard;');
+        jakarta-commons-logging jakarta-taglibs-standard');
     }
 
     /**
@@ -76,20 +94,15 @@
       $this->h1("Installing Apache");
 
       $this->span("Installing Apache2...");
-      $this->exec('yum install -y \
-        httpd httpd-devel httpd-tools \
-        mod_ssl');
-
-      $this->span("Enabling mod-rewrite...");
-      //TODO
+      $this->exec('yum install -y httpd httpd-devel httpd-tools mod_ssl');
 
       $this->span("Restarting Apache2...");
-      $this->exec('service apache2 restart');
+      $this->exec('service httpd restart');
 
       $this->span("Performing some tests on the new Apache2 instance...");
       $this->span("Checking if the Apache2 instance is up and running...");
 
-      if(strpos(shell_exec('curl -s http://localhost'), 'It works!') === FALSE) {
+      if(strpos(shell_exec('curl -s http://localhost'), 'Apache HTTP Server Test Page powered by CentOS') === FALSE) {
         $this->span("[Error] Apache2 is not currently running...", 'warn');
       }
     }
@@ -101,13 +114,13 @@
     {
       $this->h1("Installing Tomcat");
 
-      $this->span("Installing Tomcat6...");
+      $this->span("Installing Tomcat...");
       $this->exec('yum install -y \
         tomcat \
         tomcat-admin-webapps tomcat-webapps');
 
-      $this->span("Restarting Tomcat6...");
-      $this->exec('service tomcat6 restart');
+      $this->span("Restarting Tomcat...");
+      $this->exec('service tomcat restart');
     }
 
     /**
@@ -153,7 +166,7 @@
       
       // Get name, version and paths
       $pkgName = "PHPUnit";
-      $installPath = "/usr/local/bin";
+      $installPath = "/usr/bin";
       $tmpPath = "/tmp/osf/phpunit";
 
       // Download
@@ -208,24 +221,20 @@
       
       $this->span("Downloading OWLAPI...");
       
-      $this->chdir('/var/lib/tomcat7/webapps/');
+      $this->chdir('/var/lib/tomcat/webapps/');
       
       $this->wget('http://wiki.opensemanticframework.org/files/OWLAPI.war');
       
-      $this->span("Starting Tomcat7 to install the OWLAPI war installation file...");
+      $this->span("Starting Tomcat to install the OWLAPI war installation file...");
       
-      $this->exec('service tomcat7 restart');
+      $this->exec('service tomcat restart');
       
-      // wait 20 secs to make sure Tomcat6 had the time to install the OWLAPI webapp
+      // wait 20 secs to make sure Tomcat had the time to install the OWLAPI webapp
       sleep(20);
       
       $this->span("Configuring PHP for the OWLAPI...");
       
-      $this->sed('allow_url_include = Off', 'allow_url_include = On', '/etc/php5/apache2/php.ini');
-      $this->sed('allow_url_include = Off', 'allow_url_include = On', '/etc/php5/cli/php.ini');
-
-      $this->sed('allow_call_time_pass_reference = Off', 'allow_call_time_pass_reference = On', '/etc/php5/apache2/php.ini');
-      $this->sed('allow_call_time_pass_reference = Off', 'allow_call_time_pass_reference = On', '/etc/php5/cli/php.ini');
+      $this->sed('allow_url_include = Off', 'allow_url_include = On', '/etc/php.ini');
 
       $this->span("Restart Apache2...");
       $this->exec('service apache2 restart');
@@ -240,16 +249,14 @@
       
       $this->span("Configure Apache2 for the OSF Web Services...");
       
-      $this->cp('resources/osf-web-services/osf-web-services', '/etc/apache2/sites-available/osf-web-services.conf');
+      $this->cp('resources/osf-web-services/osf-web-services', '/etc/httpd/conf.d/osf-web-services.conf');
 
-      $this->ln('/etc/apache2/sites-available/osf-web-services.conf', '/etc/apache2/sites-enabled/osf-web-services.conf');
-      
       // Fix the OSF Web Services path in the apache config file
-      $this->sed('/usr/share/osf', "{$this->osf_web_services_folder}/{$this->osf_web_services_ns}", '/etc/apache2/sites-available/osf-web-services.conf');
+      $this->sed('/usr/share/osf', "{$this->osf_web_services_folder}/{$this->osf_web_services_ns}", '/etc/httpd/conf.d/osf-web-services.conf');
       
       $this->span("Restarting Apache2...");
       
-      $this->exec('service apache2 restart');
+      $this->exec('service httpd restart');
       
       $this->span("Configure the osf.ini configuration file...");
 
@@ -266,37 +273,38 @@
     */
     public function installVirtuoso()
     {
+      $this->h1("Installing Virtuoso 7 from .rpm file....");   
 
-      $this->h1("Installing Virtuoso 7 from .deb file....");   
-
-      $this->wget('https://github.com/structureddynamics/OSF-Installer-Ext/raw/3.3/virtuoso-opensource/virtuoso-opensource_7.1_amd64.rpm');
-      $this->exec('rpm -ivh virtuoso-opensource_7.1_amd64.rpm');
+      $this->span('Install redhat-lsb dependency...');
+      $this->exec('yum install -y redhat-lsb');
       
-      $this->mv('service virtuoso-opensource', 'service virtuoso');
-
+      $this->wget("https://github.com/structureddynamics/OSF-Installer-Ext/raw/{$this->installer_version}/virtuoso-opensource/virtuoso-opensource-7.2.1.x86_64--centos-6.rpm");
+      $this->exec('rpm -ivh virtuoso-opensource-7.2.1.x86_64.rpm');
+      
+      $this->sed('virtuoso-opensource-6.0', 'virtuoso', '/etc/rc.d/init.d/virtuoso-opensource');
+      
+      $this->mv('/etc/rc.d/init.d/virtuoso-opensource', '/etc/rc.d/init.d/virtuoso');
+      
       $this->span("Installing odbc.ini and odbcinst.ini files...");
       
-      $this->cp('resources/virtuoso/odbc.ini', '/etc/odbc.ini');
-      $this->cp('resources/virtuoso/odbcinst.ini', '/etc/odbcinst.ini');
-
-      $this->span("Test Virtuoso startup...");
+      $this->chdir($this->currentWorkingDirectory);
       
-      $this->exec('service virtuoso stop');
+      $this->append("\n\n".file_get_contents('resources/virtuoso/odbc.ini'), '/etc/odbc.ini');
+      $this->append("\n\n".file_get_contents('resources/virtuoso/odbcinst.ini'), '/etc/odbcinst.ini');
+
+      $this->exec('service virtuoso start');
       
       sleep(20);
       
-      $this->exec('service virtuoso start');
-      
-      $isVirtuosoRunning = shell_exec('ps aux | grep virtuoso');
-      
-      if(strpos($isVirtuosoRunning, '/usr/bin/virtuoso') === FALSE)
+      if($this->exec('ps -cax | grep virtuoso', 'ignore') > 0)
       {
         $this->span('Virtuoso is not running. Check the logs, something went wrong.', 'error');
       }
       else
       {
         $this->span("Register Virtuoso to automatically start at the system's startup...");
-        $this->exec('sudo update-rc.d virtuoso defaults');
+        $this->exec('/sbin/chkconfig --add virtuoso');
+        $this->exec('/sbin/chkconfig virtuoso on');
 
         if(!$this->change_password($this->sparql_password))
         {
@@ -319,11 +327,9 @@
       
       $this->span("Restarting Virtuoso...");
       
-      $this->exec('service virtuoso stop');
+      $this->exec('service virtuoso restart');
       
       sleep(20);
-      
-      $this->exec('service virtuoso start');      
             
       $this->span("You can start Virtuoso using this command: service virtuoso start", 'debug');
     }
@@ -408,7 +414,10 @@
       
       $this->span('Register Solr to automatically start at the system\'s startup...');
       
-      $this->exec('sudo update-rc.d solr defaults');
+      // @TODO Upgrade this to create a systemd services and to do the same procedure we
+      //       did for Virtuoso to start Solr at startup.
+      $this->append('/etc/init.d/solr start', '/etc/rc.local');      
+      $this->chmod('/etc/rc.d/rc.local', '+x');
       
       $this->span("You can start Solr using this command: service solr start", 'notice');
     }    
@@ -435,7 +444,7 @@
         $this->exec('service solr start');
       }
     }
-
+    
     /**
     * Install MySQL as required by OSF
     */
@@ -444,11 +453,12 @@
       $this->h1("Installing PhpMyAdmin");
 
       $this->span("Installing PhpMyAdmin...");
+            
+      $this->exec('yum install -y phpmyadmin');
       
-      // Need to use passthru because the installer prompts the user
-      // with screens requiring input.
-      // This command cannot be captured in the log.
-      passthru('apt-get install -y phpmyadmin');
+      $this->exec('service httpd restart');
+      
+      $this->span('In order to be able to log into the user interface, make sure you add your IP address in the conf file: /etc/httpd/conf.d/phpMyAdmin.conf and restarting httpd.', 'warn');
     }       
     
     /**
@@ -460,12 +470,15 @@
 
       $this->span("Installing Memcached...");
       
-      $this->exec('apt-get install -y memcached');
-      $this->exec('apt-get install -y php5-memcache');
+      $this->exec('yum install install -y memcached php-pecl-memcache');
+      
+      $this->span("Configuring Memcached...");
+      
+      $this->sed("OPTIONS=\"\"", "OPTIONS=\"-l 127.0.0.1\"", "/etc/sysconfig/memcached");
       
       $this->span("Restarting Apache2...");
       
-      $this->exec('service apache2 restart');
+      $this->exec('service httpd restart');
       
       $this->span("Starting Memcached...");
 
@@ -473,9 +486,7 @@
    
       $this->span("Installing Memcached User Interface...");
       
-      $this->chdir('/usr/share/');
-      
-      $this->mkdir('memcached-ui');
+      $this->mkdir('/usr/share/memcached-ui/');
       
       $this->chdir('/usr/share/memcached-ui/');
       
@@ -499,17 +510,22 @@
       
       $this->chdir($this->currentWorkingDirectory);
       
-      $this->cp('resources/memcached/memcached', '/etc/apache2/sites-available/memcached.conf');
-
-      $this->ln('/etc/apache2/sites-available/memcached.conf', '/etc/apache2/sites-enabled/memcached.conf');
+      $this->cp('resources/memcached/memcached', '/etc/httpd/conf.d/memcached.conf');
       
       $this->span("Restarting Apache2...");
       
-      $this->exec('service apache2 restart');      
+      $this->exec('service httpd restart');      
     }       
     
     public function install_OSF_Drupal()
-    {    
+    { 
+      // Instally the SQL engine used by Drupal
+      
+      $this->installSQL('server');
+      $this->installSQL('client');
+
+      $this->installPhpMyAdmin();      
+      
       // Install Pear
 
       // First check if Pear is installed
@@ -568,14 +584,10 @@
       // Configuring Apache2 for Drupal      
       $this->span("Configure Apache2 for Drupal...");
       
-      $this->cp('resources/osf-drupal/drupal', '/etc/apache2/sites-available/');
-
-      $this->mv('/etc/apache2/sites-available/drupal', '/etc/apache2/sites-available/drupal.conf');
-
-      $this->ln('/etc/apache2/sites-available/drupal.conf', '/etc/apache2/sites-enabled/drupal.conf');
+      $this->cp('resources/osf-drupal/drupal', '/etc/httpd/conf.d/drupal.conf');
       
       // Fix the OSF Web Services path in the apache config file
-      $this->sed('/usr/share/drupal', $this->drupal_folder, '/etc/apache2/sites-available/drupal.conf');
+      $this->sed('/usr/share/drupal', $this->drupal_folder, '/etc/httpd/conf.d/drupal.conf');
       
       // Delete the default Apache2 enabled site file
       if(file_exists('/etc/apache2/sites-enabled/000-default.conf'))
@@ -585,7 +597,7 @@
       
       $this->span("Restarting Apache2...");
       
-      $this->exec('service apache2 restart');      
+      $this->exec('service httpd restart');      
 
       // Install required file for OSF Ontology
       $this->cp('resources/osf-drupal/new.owl', $this->data_folder.'/ontologies/files/new.owl');
@@ -714,9 +726,9 @@
         if(stripos($line, 'CentOS') !== FALSE)
         {
           // Validate version
-          $version = (float) shell_exec('cat /etc/system-release | cut -d" " -f3 | cut -d "." -f1');
-          
-          if($version == 6)
+          preg_match('/.*release[\s]([6]+)\..*/i', $line, $matches);
+
+          if(isset($matches[1]) && $matches[1] == "6")
           {
             return(TRUE);
           }
@@ -728,9 +740,9 @@
         elseif(stripos($line, 'Red Hat Enterprise Linux Server') !== FALSE)
         {
           // Validate version
-          $version = (float) shell_exec('cat /etc/system-release | cut -d" " -f3 | cut -d "." -f1');
+          preg_match('/.*release[\s]([6]+)\..*/i', $line, $matches);
           
-          if($version == 6)
+          if(isset($matches[1]) && $matches[1] == "6")
           {
             return(TRUE);
           }
