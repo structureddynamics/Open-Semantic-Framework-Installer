@@ -7,13 +7,8 @@ projects[drupal][version] = 7.41
 
 ; OSF for Drupal
 
-;projects[osf][subdir] = contrib
-;projects[osf][version] = 3.x
 projects[osf][subdir] = contrib
-projects[osf][type] = module
-projects[osf][download][type] = git
-projects[osf][download][branch] = 7.x-3.x
-;projects[osf][download][revision] = c0bd2a8bfd396e0eb0155c955eea7768a343fd3d
+projects[osf][version] = 3.3
 
 ; Standard contributions
 
