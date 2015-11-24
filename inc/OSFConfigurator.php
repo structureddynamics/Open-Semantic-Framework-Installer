@@ -749,6 +749,32 @@
       $this->rm("{$bckPath}/", TRUE);
     }
     
+    /**
+     * Install OSF Tests suites
+     */
+    private function install_OSF_TestsSuites($pkgVersion = '')
+    {
+      // Get package info
+      $installPath = "{$this->osf_web_services_folder}/{$this->osf_tests_suites_folder}";
+      $tmpPath = "/tmp/osf/tests";
+
+      // Download
+      $this->span("Downloading...", 'info');
+      $this->mkdir("{$tmpPath}/");
+      $this->wget("https://github.com/structureddynamics/OSF-Tests-Suites/archive/${pkgVersion}.zip", "{$tmpPath}/");
+
+      // Install
+      $this->span("Installing...", 'info');
+      $this->unzip("{$tmpPath}/{$pkgVersion}.zip", "{$tmpPath}/");
+      $this->mkdir("{$installPath}/");
+      $this->cp("{$tmpPath}/OSF-Tests-Suites-{$pkgVersion}/StructuredDynamics/osf/tests/.", "{$installPath}/", TRUE);
+
+      // Cleanup
+      $this->span("Cleaning...", 'info');
+      $this->rm("{$tmpPath}/", TRUE);
+    }
+    
+    
     
     /**
      *  Ask a series of questions to the user to configure the installer
