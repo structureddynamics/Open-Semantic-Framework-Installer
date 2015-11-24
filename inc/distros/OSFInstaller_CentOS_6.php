@@ -251,7 +251,7 @@
       
       $this->cp('resources/osf-web-services/osf-web-services', '/etc/httpd/conf.d/osf-web-services.conf');
       
-      $this->sed('Require all granted', "AllowOverride None\nOptions None", '/etc/httpd/conf.d/osf-web-services.conf');
+      $this->sed('Require all granted', "Order allow,deny\n    allow from all", '/etc/httpd/conf.d/osf-web-services.conf');
 
       // Fix the OSF Web Services path in the apache config file
       $this->sed('/usr/share/osf', "{$this->osf_web_services_folder}/{$this->osf_web_services_ns}", '/etc/httpd/conf.d/osf-web-services.conf');
@@ -514,7 +514,7 @@
       
       $this->cp('resources/memcached/memcached', '/etc/httpd/conf.d/memcached.conf');
       
-      $this->sed('Require all granted', "AllowOverride None\nOptions None", '/etc/httpd/conf.d/memcached.conf');
+      $this->sed('Require all granted', "Order allow,deny\n    allow from all", '/etc/httpd/conf.d/memcached.conf');
       
       $this->span("Restarting Apache2...");
       
@@ -542,7 +542,7 @@
       
       $this->exec('curl -sS https://getcomposer.org/installer | php');
       $this->mv('composer.phar', '/usr/bin/composer');
-      
+                                            
       // Install Drush
       $this->exec('composer global require drush/drush:7.1.0');
       
@@ -570,6 +570,8 @@
       $this->span("Configure Apache2 for Drupal...");
       
       $this->cp('resources/osf-drupal/drupal', '/etc/httpd/conf.d/drupal.conf');
+      
+      $this->sed('Require all granted', "Order allow,deny\n    allow from all", '/etc/httpd/conf.d/drupal.conf');
       
       // Fix the OSF Web Services path in the apache config file
       $this->sed('/usr/share/drupal', $this->drupal_folder, '/etc/httpd/conf.d/drupal.conf');
