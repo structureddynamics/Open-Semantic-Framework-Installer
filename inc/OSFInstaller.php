@@ -114,18 +114,6 @@
      */
     abstract public function install_OSF_Drupal();
 
-    public function runOSFTestsSuites($installationFolder = '')
-    {
-      if ($installationFolder == '') {
-        $installationFolder = $this->osf_web_services_folder;
-      }
-
-      $this->chdir($installationFolder.'/StructuredDynamics/osf/tests/');
-
-      passthru('phpunit --configuration phpunit.xml --verbose --colors --log-junit log.xml');
-      $this->chdir($this->currentWorkingDirectory);
-    }
-
     /**
      * Switch for OSF Web Services
      */
@@ -555,33 +543,6 @@
       // Cleanup
       $this->span("Cleaning...", 'info');
       $this->rm("{$tmpPath}/", TRUE);
-    }
-
-    /**
-     * Upgrade OSF Tests suites
-     */
-    private function upgrade_OSF_TestsSuites($pkgVersion = '')
-    {
-      // Get package info
-      $installPath = "{$this->osf_web_services_folder}/{$this->osf_tests_suites_folder}";
-      $bckPath = "/tmp/osf/tests-" . date('Y-m-d_H-i-s');
-
-      // Backup
-      $this->span("Making backup...", 'info');
-      $this->mkdir("{$bckPath}/");
-      $this->mv("{$installPath}/.", "{$bckPath}/.");
-
-      // Install
-      $this->install_OSF_TestsSuites($pkgVersion);
-
-      // Restore
-      $this->span("Restoring backup...", 'info');
-      $this->mv("{$bckPath}/phpunit.xml", "{$installPath}/");
-      $this->mv("{$bckPath}/Config.php", "{$installPath}/");
-
-      // Cleanup
-      $this->span("Cleaning backup...", 'info');
-      $this->rm("{$bckPath}/", TRUE);
     }
 
     /**
