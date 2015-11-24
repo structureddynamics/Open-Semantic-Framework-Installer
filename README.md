@@ -151,10 +151,10 @@ All the options are described in the following table:
 |                  | sql-server                          | _mysql_                                  | SQL engine to use for Drupal. *should be `mysql`. Only one currently supported |
 |                  | sql-host                            | _localhost_                              | Domain name, or IP address of the OSF server. This domain name or IP address need to be accessible by the server that deploy OSF. |
 |                  | sql-port                            | _3306_                                   | _reserved -- not yet used_ |
-|                  | sql-root-username                   | _root_                                   | _reserved -- not yet used_ |
-|                  | sql-root-password                   | _root_                                   | _reserved -- not yet used_ |
-|                  | sql-app-username                    | _drupal_                                 | _reserved -- not yet used_ |
-|                  | sql-app-password                    | _drupal_                                 | _reserved -- not yet used_ |
+|                  | sql-root-username                   | _root_                                   | Name of the root user of the SQL server |
+|                  | sql-root-password                   | _root_                                   | Password of the root user of the SQL server |
+|                  | sql-app-username                    | _root_                                   | Username of the SQL server to use to install Drupal. By default it is root. |
+|                  | sql-app-password                    | _root_                                   | Password of the SQL server to use to install Drupal. By default it is root. |
 |                  | sql-app-database                    | _drupal_                                 | _reserved -- not yet used_ |
 |                  | sql-app-engine                      | _innodb_                                 | _reserved -- not yet used_ |
 |                  | sql-app-collation                   | _utf8_general_ci_                        | _reserved -- not yet used_ |
