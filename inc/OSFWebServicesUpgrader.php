@@ -18,9 +18,9 @@
       {
         $this->backupInstalledVersion();
         
-        $this->upgradeCodebase('3.3');
+        $this->upgradeCodebase('3.4');
         
-        $this->upgradeOSFTestsSuites('3.3');
+        $this->upgrade_OSF_TestsSuites('3.4');
         
         $this->runOSFTestsSuites();
       }
@@ -61,7 +61,7 @@
           break;
         }
         
-        $this->upgradeOSFTestsSuites($this->currentInstalledVersion);
+        $this->upgrade_OSF_TestsSuites($this->currentInstalledVersion);
         $this->runOSFTestsSuites();     
       } 
     } 
