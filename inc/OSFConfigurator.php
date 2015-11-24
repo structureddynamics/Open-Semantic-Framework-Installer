@@ -734,7 +734,7 @@
       // Backup
       $this->span("Making backup...", 'info');
       $this->mkdir("{$bckPath}/");
-      $this->mv("{$installPath}/.", "{$bckPath}/.");
+      $this->mv("{$installPath}/", "{$bckPath}/");
 
       // Install
       $this->install_OSF_TestsSuites($pkgVersion);
