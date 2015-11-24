@@ -237,7 +237,7 @@
       $this->sed('allow_url_include = Off', 'allow_url_include = On', '/etc/php.ini');
 
       $this->span("Restart Apache2...");
-      $this->exec('service apache2 restart');
+      $this->exec('service httpd restart');
     }
 
     /**
