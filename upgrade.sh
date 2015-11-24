@@ -65,5 +65,5 @@ sudo chmod 755 install.sh
 sudo rm -rf Open-Semantic-Framework-Installer*
 sudo rm -f 3.4.zip
 
-cecho "\n\nThe OSD-Installer has been upgraded\n"
+cecho "\n\nThe OSF-Installer has been upgraded\n"
 
