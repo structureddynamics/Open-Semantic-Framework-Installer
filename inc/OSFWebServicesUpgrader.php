@@ -2,7 +2,7 @@
   
   class OSFWebServicesUpgrader extends OSFConfigurator
   {
-    private $latestVersion = '3.3.0';
+    private $latestVersion = '3.4.0';
     
     private $currentInstalledVersion = '';
     
