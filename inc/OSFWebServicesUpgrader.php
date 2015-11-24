@@ -10,7 +10,7 @@
     {
       parent::__construct($configFile);
 
-      $versionIni = parse_ini_file($this->osf_web_services_folder.$this->osf_web_services_ns.'/VERSION.ini', TRUE);
+      $versionIni = parse_ini_file("{$this->osf_web_services_folder}/{$this->osf_web_services_ns}/VERSION.ini", TRUE);
       
       $this->currentInstalledVersion = $versionIni['version']['version'];
       
@@ -74,10 +74,10 @@
       
       $this->mkdir($backupFolder);
       
-      $this->cp($this->osf_web_services_folder.$this->osf_web_services_ns.'/', $backupFolder);
+      $this->cp("{$this->osf_web_services_folder}/{$this->osf_web_services_ns}/", $backupFolder);
       
       // Backup the osf.ini config file
-      $this->chdir($this->osf_web_services_folder.$this->osf_web_services_ns.'/ws/framework/');
+      $this->chdir("{$this->osf_web_services_folder}/{$this->osf_web_services_ns}/ws/framework/");
       
       $wsFile = file_get_contents('WebService.php');
       
@@ -206,7 +206,7 @@
     {                    
       $this->upgradeCodebase('3.4.0');
       
-      $this->chdir($this->osf_web_services_folder.$this->osf_web_services_ns.'/ws/framework/');
+      $this->chdir("{$this->osf_web_services_folder}/{$this->osf_web_services_ns}/ws/framework/");
       
       $wsFile = file_get_contents('WebService.php');
       
