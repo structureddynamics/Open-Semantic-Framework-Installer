@@ -730,7 +730,31 @@
       // Get package info
       $installPath = "{$this->osf_web_services_folder}/{$this->osf_tests_suites_folder}";
       $bckPath = "/tmp/osf/tests-" . date('Y-m-d_H-i-s');
+      
+      $this->span("Backup of the previous version is available here: {$bckPath}");
 
+      // Get previous settings in Config.php
+      $configFile = file_get_contents("{$installPath}/Config.php");
+      
+      preg_match('/this-\>osfInstanceFolder = "(.*)"/', $configFile, $matches);
+      $osfInstanceFolderExtracted = $matches[1];
+      preg_match('/this-\>endpointUrl = "(.*)"/', $configFile, $matches);
+      $endpointUrlExtracted = $matches[1];
+      preg_match('/this-\>endpointUri = "(.*)"/', $configFile, $matches);
+      $endpointUriExtracted = $matches[1];
+      preg_match('/this-\>userID = \'(.*)\'/', $configFile, $matches);
+      $userIDExtracted = $matches[1];
+      preg_match('/this-\>adminGroup = \'(.*)\'/', $configFile, $matches);
+      $adminGroupExtracted = $matches[1];
+      preg_match('/this-\>testGroup = "(.*)"/', $configFile, $matches);
+      $testGroupExtracted = $matches[1];
+      preg_match('/this-\>testUser = "(.*)"/', $configFile, $matches);
+      $testUserExtracted = $matches[1];
+      preg_match('/this-\>applicationID = \'(.*)\'/', $configFile, $matches);
+      $applicationIDExtracted = $matches[1];
+      preg_match('/this-\>apiKey = \'(.*)\'/', $configFile, $matches);
+      $apiKeyExtracted = $matches[1];  
+      
       // Backup
       $this->span("Making backup...", 'info');
       $this->mkdir("{$bckPath}/");
@@ -740,13 +764,20 @@
       $this->install_OSF_TestsSuites($pkgVersion);
 
       // Restore
-      $this->span("Restoring backup...", 'info');
-      $this->mv("{$bckPath}/tests/phpunit.xml", "{$installPath}/");
-      $this->mv("{$bckPath}/tests/Config.php", "{$installPath}/");
+      $this->span("Restoring settings...", 'info');
+      $this->sed('REPLACEME', $this->osf_web_services_folder.'/StructuredDynamics/osf', "{$installPath}/phpunit.xml");
 
-      // Cleanup
-      $this->span("Cleaning backup...", 'info');
-      $this->rm("{$bckPath}/", TRUE);
+      // Apply existing settings to new Config.php file
+      $this->sed('$this-\>osfInstanceFolder = \".*\";', '$this-\>osfInstanceFolder = \"'.$osfInstanceFolderExtracted.'\";>', "{$installPath}/Config.php");
+      $this->sed('$this-\>endpointUrl = \".*\";', '$this-\>endpointUrl = \"'.$endpointUrlExtracted.'\";', "{$installPath}/Config.php");      
+      $this->sed('$this-\>endpointUri = \".*\";', '$this-\>endpointUri = \"'.$endpointUriExtracted.'\";', "{$installPath}/Config.php");      
+      $this->sed('$this-\>userID = \'.*\';', '$this-\>userID = \''.$userIDExtracted.'\';', "{$installPath}/Config.php");      
+      $this->sed('$this-\>adminGroup = \'.*\';', '$this-\>adminGroup = \''.$adminGroupExtracted.'\';', "{$installPath}/Config.php");      
+      $this->sed('$this-\>testGroup = \".*\";', '$this-\>testGroup = \"'.$testGroupExtracted.'\";', "{$installPath}/Config.php");      
+      $this->sed('$this-\>testUser = \".*\";', '$this-\>testUser = \"'.$testUserExtracted.'\";', "{$installPath}/Config.php");      
+      $this->sed('$this-\>applicationID = \'.*\';', '$this-\>applicationID = \''.$applicationIDExtracted.'\';', "{$installPath}/Config.php");      
+      $this->sed('$this-\>apiKey = \'.*\';', '$this-\>apiKey = \''.$apiKeyExtracted.'\';>', "{$installPath}/Config.php");            
+      
     }
     
     /**
