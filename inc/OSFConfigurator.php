@@ -768,7 +768,7 @@
       $this->sed('REPLACEME', $this->osf_web_services_folder.'/StructuredDynamics/osf', "{$installPath}/phpunit.xml");
 
       // Apply existing settings to new Config.php file
-      $this->sed('$this-\>osfInstanceFolder = \".*\";', '$this-\>osfInstanceFolder = \"'.$osfInstanceFolderExtracted.'\";>', "{$installPath}/Config.php");
+      $this->sed('$this-\>osfInstanceFolder = \".*\";', '$this-\>osfInstanceFolder = \"'.$osfInstanceFolderExtracted.'\";', "{$installPath}/Config.php");
       $this->sed('$this-\>endpointUrl = \".*\";', '$this-\>endpointUrl = \"'.$endpointUrlExtracted.'\";', "{$installPath}/Config.php");      
       $this->sed('$this-\>endpointUri = \".*\";', '$this-\>endpointUri = \"'.$endpointUriExtracted.'\";', "{$installPath}/Config.php");      
       $this->sed('$this-\>userID = \'.*\';', '$this-\>userID = \''.$userIDExtracted.'\';', "{$installPath}/Config.php");      
@@ -776,7 +776,7 @@
       $this->sed('$this-\>testGroup = \".*\";', '$this-\>testGroup = \"'.$testGroupExtracted.'\";', "{$installPath}/Config.php");      
       $this->sed('$this-\>testUser = \".*\";', '$this-\>testUser = \"'.$testUserExtracted.'\";', "{$installPath}/Config.php");      
       $this->sed('$this-\>applicationID = \'.*\';', '$this-\>applicationID = \''.$applicationIDExtracted.'\';', "{$installPath}/Config.php");      
-      $this->sed('$this-\>apiKey = \'.*\';', '$this-\>apiKey = \''.$apiKeyExtracted.'\';>', "{$installPath}/Config.php");            
+      $this->sed('$this-\>apiKey = \'.*\';', '$this-\>apiKey = \''.$apiKeyExtracted.'\';', "{$installPath}/Config.php");            
       
     }
     
