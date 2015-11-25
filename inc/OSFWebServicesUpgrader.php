@@ -238,24 +238,6 @@
       file_put_contents($osf_ini.'osf.ini', $ini);
       
       $this->currentInstalledVersion = '3.4.0';
-      
-      
-      //
-      // These are the steps that needs to be performed for each upgrade.
-      // Some of these steps may not apply to a specific version upgrade
-      // in which case it will simply be ignored.
-      //
-
-      // 1) Delete files in the previous version of the OSF Web Services that are not needed anymore
-      // 2) If the WebService.php file got modified, do re-create it using the same $data_ini and $network_ini settings
-      // 3) If new osf.ini settings got added, add them to the end of the current osf.ini file
-      // 4) If changes have been made to the Triple Store, do perform these changes
-      // 5) If the Solr schema changed, update the schema, restart Solr, and re-load data into Solr using the Dataset Management Tool
-      // 6) If new software or libraries are needed for this upgrade, then simply install and configure them.      
-      
-      /*
-      $this->currentInstalledVersion = '3.3.1';
-      */
     } 
             
     private function upgradeTo_3_5_0()

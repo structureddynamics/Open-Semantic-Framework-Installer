@@ -232,9 +232,6 @@
   if (isset($arguments['install-osf-web-services'])) {
     $installer->switch_OSF_WebServices('install', $arguments['install-osf-web-services']);
   }
-  if (isset($arguments['upgrade-osf-web-services'])) {
-    $installer->switch_OSF_WebServices('upgrade', $arguments['upgrade-osf-web-services']);
-  }
   if (isset($arguments['uninstall-osf-web-services'])) {
     $installer->switch_OSF_WebServices('uninstall');
   }

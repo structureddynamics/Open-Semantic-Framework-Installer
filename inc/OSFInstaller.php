@@ -229,26 +229,7 @@
      */
     private function upgrade_OSF_WebServices($pkgVersion = '')
     {
-      // Get package info
-      $installPath = "{$this->osf_web_services_folder}/{$this->osf_web_services_ns}";
-      $bckPath = "/tmp/osf/web-services-" . date('Y-m-d_H-i-s');
-
-      // Backup
-      $this->span("Making backup...", 'info');
-      $this->mkdir("{$bckPath}/");
-      $this->mv("{$installPath}/.", "{$bckPath}/.");
-
-      // Install
-      $this->install_OSF_WebServices($pkgVersion);
-
-      // Restore
-      $this->span("Restoring backup...", 'info');
-      $this->mv("{$bckPath}/osf.ini", "{$installPath}/");
-      $this->mv("{$bckPath}/keys.ini", "{$installPath}/");
-
-      // Cleanup
-      $this->span("Cleaning backup...", 'info');
-      $this->rm("{$bckPath}/", TRUE);
+      // Use OSFWebServicesUpgrader.php instead for now until it is refactored
     }
 
     /**
