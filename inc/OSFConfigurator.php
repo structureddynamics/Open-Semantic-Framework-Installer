@@ -725,7 +725,7 @@
     /**
      * Upgrade OSF Tests suites
      */
-    protected function upgrade_OSF_TestsSuites($pkgVersion = '')
+    public function upgrade_OSF_TestsSuites($pkgVersion = '')
     {
       // Get package info
       $installPath = "{$this->osf_web_services_folder}/{$this->osf_tests_suites_folder}";
@@ -783,7 +783,7 @@
     /**
      * Install OSF Tests suites
      */
-    private function install_OSF_TestsSuites($pkgVersion = '')
+    public function install_OSF_TestsSuites($pkgVersion = '')
     {
       // Get package info
       $installPath = "{$this->osf_web_services_folder}/{$this->osf_tests_suites_folder}";
