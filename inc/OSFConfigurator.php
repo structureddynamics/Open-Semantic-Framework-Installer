@@ -50,7 +50,7 @@
     protected $permissions_management_tool_folder = "/usr/share/permissions-management-tool";
 
     /* OSF Datasets Management Tool */
-    protected $datasets_management_tool_version = "3.3.0";
+    protected $datasets_management_tool_version = "3.4.0";
     protected $datasets_management_tool_folder = "/usr/share/datasets-management-tool";
 
     /* OSF Ontologies Management Tool */
