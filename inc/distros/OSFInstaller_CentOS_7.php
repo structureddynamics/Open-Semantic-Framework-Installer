@@ -552,7 +552,7 @@
       // Install Drush
       $this->exec('composer global require drush/drush:7.1.0');
       
-      $this->ln('/root/.composer/vendor/bin/drush', '/usr/bin/drush');        
+      $this->ln('/root/.composer/vendor/drush/drush/drush', '/usr/bin/drush');        
       
       // Install Drupal            
       $this->h1("Installing Drupal & OSF Drupal");      
