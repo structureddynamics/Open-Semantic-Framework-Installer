@@ -1222,10 +1222,8 @@
       do {
         $input = $this->getInput("SPARQL server password: (current: {$this->sparql_password}, valid: <password>)");
         if (!empty($input)) {
-          if ($this->isAlphaNumeric($input)) {
-            $this->sparql_password = $input;
-            break;
-          }
+          $this->sparql_password = $input;
+          break;
         } else {
           break;
         }
@@ -1463,10 +1461,8 @@
       do {
         $input = $this->getInput("Drupal admin password: (current: {$this->drupal_admin_password})");
         if (!empty($input)) {
-          if ($this->isAlphaNumeric($input)) {
-            $this->drupal_admin_password = $input;
-            break;
-          }
+          $this->drupal_admin_password = $input;
+          break;
         } else {
           break;
         }
@@ -1523,10 +1519,8 @@
       do {
         $input = $this->getInput("SQL server root password: (current: {$this->sql_root_password}, valid: <password>)");
         if (!empty($input)) {
-          if ($this->isAlphaNumeric($input)) {
-            $this->sql_root_password = $input;
-            break;
-          }
+          $this->sql_root_password = $input;
+          break;
         } else {
           break;
         }
@@ -1545,10 +1539,8 @@
       do {
         $input = $this->getInput("SQL server application password: (current: {$this->sql_app_password}, valid: <password>)");
         if (!empty($input)) {
-          if ($this->isAlphaNumeric($input)) {
-            $this->sql_app_password = $input;
-            break;
-          }
+          $this->sql_app_password = $input;
+          break;
         } else {
           break;
         }
