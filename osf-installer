@@ -76,7 +76,6 @@
     'upgrade-osf-permissions-management-tool::',
     'uninstall-osf-permissions-management-tool::',
     'configure-osf-permissions-management-tool::',
-    'load-osf-permissions-management-tool::',
     // OSF Datasets Management Tool
     'install-osf-datasets-management-tool::',
     'upgrade-osf-datasets-management-tool::',
@@ -149,7 +148,6 @@
     $installer->span("--upgrade-osf-permissions-management-tool=\"[VERSION]\"   Upgrade OSF Permissions Management Tool");
     $installer->span("--uninstall-osf-permissions-management-tool             Uninstall OSF Permissions Management Tool");
     $installer->span("--configure-osf-permissions-management-tool             Configure OSF Permissions Management Tool");
-    $installer->span("--load-osf-permissions-management-tool                  Load OSF Permissions Management Tool");
     $installer->span("");
     $installer->span("--install-osf-datasets-management-tool=\"[VERSION]\"      Install OSF Datasets Management Tool");
     $installer->span("--upgrade-osf-datasets-management-tool=\"[VERSION]\"      Upgrade OSF Datasets Management Tool");
@@ -298,9 +296,6 @@
   }
   if (isset($arguments['configure-osf-permissions-management-tool'])) {
     $installer->switch_OSF_PermissionsManagementTool('configure');
-  }
-  if (isset($arguments['load-osf-permissions-management-tool'])) {
-    $installer->switch_OSF_PermissionsManagementTool('load');
   }
 
   /**

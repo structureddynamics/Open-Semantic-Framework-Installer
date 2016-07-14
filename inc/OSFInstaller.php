@@ -759,15 +759,6 @@
           }
           $this->config_OSF_PermissionsManagementTool($pkgVersion);
           break;
-        case 'load':
-          $this->h2("Loading {$pkgName} {$pkgVersion}");
-          // Check if is not installed
-          if (!is_dir("{$installPath}/")) {
-            $this->span("The package is not installed. Consider installing it with the option: --install-osf-permissions-management-tool", 'warn');
-            return;
-          }
-          $this->load_OSF_PermissionsManagementTool($pkgVersion);
-          break;
         default:
           $this->h2("{$pkgName} {$pkgVersion}");
           $this->span("Wrong operation. Nothing to do.", 'warn');
@@ -865,37 +856,6 @@
         "{$configPath}/pmt.ini");
       $this->setIni("credentials", "user", "\"http://{$this->osf_web_services_domain}/wsf/users/admin\"",
         "{$configPath}/pmt.ini");
-    }
-
-    /**
-     * Load OSF Permissions Management Tool
-     */
-    private function load_OSF_PermissionsManagementTool()
-    {
-      // Get package info
-      $dataPath = "{$this->data_folder}";
-      $cwdPath = rtrim($this->currentWorkingDirectory, '/');
-
-      // Install
-      // OSF PMT administrative groups
-      $this->span("Creating the Drupal administrators group...", 'info');
-      $this->exec("pmt --create-group=\"http://{$this->drupal_domain}/role/3/administrator\" --app-id=\"{$this->application_id}\"");
-      // OSF PMT administrative users
-      $this->span("Creating the Drupal administrator user...", 'info');
-      $this->exec("pmt --register-user=\"http://{$this->drupal_domain}/user/1\" --register-user-group=\"http://{$this->drupal_domain}/role/3/administrator\"");
-      // OSF PMT permissions for core datasets
-      $this->span("Creating the permissions for the core datasets...", 'info');
-      $this->exec("pmt --create-access --access-dataset=\"http://{$this->osf_web_services_domain}/wsf/\" --access-group=\"http://{$this->drupal_domain}/role/3/administrator\" --access-perm-create=\"true\" --access-perm-read=\"true\" --access-perm-update=\"true\" --access-perm-delete=\"true\" --access-all-ws");
-      $this->exec("pmt --create-access --access-dataset=\"http://{$this->osf_web_services_domain}/wsf/datasets/\" --access-group=\"http://{$this->drupal_domain}/role/3/administrator\" --access-perm-create=\"true\" --access-perm-read=\"true\" --access-perm-update=\"true\" --access-perm-delete=\"true\" --access-all-ws");
-      $this->exec("pmt --create-access --access-dataset=\"http://{$this->osf_web_services_domain}/wsf/ontologies/\" --access-group=\"http://{$this->drupal_domain}/role/3/administrator\" --access-perm-create=\"true\" --access-perm-read=\"true\" --access-perm-update=\"true\" --access-perm-delete=\"true\" --access-all-ws");
-      // OSF PMT permissions for loaded ontologies
-      $this->cp("{$cwdPath}/resources/osf-web-services/ontologies.lst", "{$dataPath}/ontologies/");
-      $this->sed("file://localhost/data", "file://localhost/".trim($dataPath, '/')."/",
-        "{$dataPath}/ontologies//ontologies.lst", "g");
-      $loadedOntologies = explode(' ', file_get_contents("{$dataPath}/ontologies/ontologies.lst"));
-      foreach($loadedOntologies as $loadedOntology) {
-        $this->exec("pmt --create-access --access-dataset=\"{$loadedOntology}\" --access-group=\"http://{$this->drupal_domain}/role/3/administrator\" --access-perm-create=\"true\" --access-perm-read=\"true\" --access-perm-update=\"true\" --access-perm-delete=\"true\" --access-all-ws");
-      }
     }
 
     /**

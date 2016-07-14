@@ -689,6 +689,36 @@
       
       $this->chdir($this->currentWorkingDirectory);
       
+      $this->span("Creating OSF permissions...");
+      
+      // Get package info
+      $cwdPath = rtrim($this->currentWorkingDirectory, '/');      
+      
+      // OSF PMT administrative groups
+      $this->span("Creating the Drupal administrators group...", 'info');
+      $this->exec("pmt --create-group=\"http://{$this->drupal_domain}/role/3/administrator\" --app-id=\"{$this->application_id}\"");
+      
+      // OSF PMT administrative users
+      $this->span("Creating the Drupal administrator user...", 'info');
+      $this->exec("pmt --register-user=\"http://{$this->drupal_domain}/user/1\" --register-user-group=\"http://{$this->drupal_domain}/role/3/administrator\"");
+      
+      // OSF PMT permissions for core datasets
+      $this->span("Creating the permissions for the core datasets...", 'info');
+      $this->exec("pmt --create-access --access-dataset=\"http://{$this->osf_web_services_domain}/wsf/\" --access-group=\"http://{$this->drupal_domain}/role/3/administrator\" --access-perm-create=\"true\" --access-perm-read=\"true\" --access-perm-update=\"true\" --access-perm-delete=\"true\" --access-all-ws");
+      $this->exec("pmt --create-access --access-dataset=\"http://{$this->osf_web_services_domain}/wsf/datasets/\" --access-group=\"http://{$this->drupal_domain}/role/3/administrator\" --access-perm-create=\"true\" --access-perm-read=\"true\" --access-perm-update=\"true\" --access-perm-delete=\"true\" --access-all-ws");
+      $this->exec("pmt --create-access --access-dataset=\"http://{$this->osf_web_services_domain}/wsf/ontologies/\" --access-group=\"http://{$this->drupal_domain}/role/3/administrator\" --access-perm-create=\"true\" --access-perm-read=\"true\" --access-perm-update=\"true\" --access-perm-delete=\"true\" --access-all-ws");
+      
+      // OSF PMT permissions for loaded ontologies
+      $this->cp("{$cwdPath}/resources/osf-web-services/ontologies.lst", "{$this->data_folder}/ontologies/");
+      $this->sed("file://localhost/data", "file://localhost/".trim($this->data_folder, '/')."/",
+        "{$this->data_folder}/ontologies//ontologies.lst", "g");
+      $loadedOntologies = explode(' ', file_get_contents("{$this->data_folder}/ontologies/ontologies.lst"));
+      
+      foreach($loadedOntologies as $loadedOntology) {
+        $this->exec("pmt --create-access --access-dataset=\"{$loadedOntology}\" --access-group=\"http://{$this->drupal_domain}/role/3/administrator\" --access-perm-create=\"true\" --access-perm-read=\"true\" --access-perm-update=\"true\" --access-perm-delete=\"true\" --access-all-ws");
+      }
+      
+      
       $this->span("Now that OSF for Drupal is installed, the next steps would be to follow the Initial OSF for Drupal Configuration Guide:\n\n", 'notice');
       $this->span("    http://wiki.opensemanticframework.org/index.php/Initial_OSF_for_Drupal_Configuration\n\n", 'notice');
     }    

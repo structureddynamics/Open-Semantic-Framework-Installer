@@ -3,7 +3,7 @@
 api = 2
 core = 7.x
 projects[drupal][type] = core
-projects[drupal][version] = 7.41
+projects[drupal][version] = 7.50
 
 ; OSF for Drupal
 
@@ -25,10 +25,10 @@ projects[entitycache][subdir] = contrib
 projects[entitycache][version] = 1.5
 
 projects[features][subdir] = facetapi
-projects[features][version] = 2.7
+projects[features][version] = 2.10
 
 projects[features][subdir] = contrib
-projects[features][version] = 2.7
+projects[features][version] = 2.10
 
 projects[libraries][type] = module
 projects[libraries][subdir] = contrib
@@ -40,14 +40,14 @@ projects[jquery_colorpicker][version] = 1.2
 
 projects[search_api][type] = module
 projects[search_api][subdir] = contrib
-projects[search_api][version] = 1.16
+projects[search_api][version] = 1.19
 
 projects[search_api_page][type] = module
 projects[search_api_page][subdir] = contrib
 projects[search_api_page][version] = 1.2
 
 projects[views][subdir] = contrib
-projects[views][version] = 3.13
+projects[views][version] = 3.14
 
 projects[diff][subdir] = contrib
 projects[diff][version] = 3.2
