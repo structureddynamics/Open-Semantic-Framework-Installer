@@ -1219,7 +1219,7 @@
       $this->cp("{$cwdPath}/resources/osf-web-services/propertyHierarchySerialized.srz", "{$dataPath}/ontologies/structure/");
       $this->cp("{$cwdPath}/resources/osf-web-services/ontologies.lst", "{$dataPath}/ontologies/");
       $this->sed("file://localhost/data", "file://localhost/".trim($dataPath, '/')."/",
-        "{$dataPath}/ontologies//ontologies.lst", "g");
+        "{$dataPath}/ontologies/ontologies.lst", "g");
       $this->span("Loading the core OSF ontologies...", 'info');
       $this->exec("omt --load-advanced-index=\"true\" --load-all --load-list=\"{$dataPath}/ontologies/ontologies.lst\" --osf-web-services=\"http://{$this->osf_web_services_domain}/ws/\"");
       $this->span("Creating underlying ontological structures...", 'info');

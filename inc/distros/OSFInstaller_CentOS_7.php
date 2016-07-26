@@ -715,7 +715,7 @@
       // OSF PMT permissions for loaded ontologies
       $this->cp("{$cwdPath}/resources/osf-web-services/ontologies.lst", "{$this->data_folder}/ontologies/");
       $this->sed("file://localhost/data", "file://localhost/".trim($this->data_folder, '/')."/",
-        "{$this->data_folder}/ontologies//ontologies.lst", "g");
+        "{$this->data_folder}/ontologies/ontologies.lst", "g");
       $loadedOntologies = explode(' ', file_get_contents("{$this->data_folder}/ontologies/ontologies.lst"));
       
       foreach($loadedOntologies as $loadedOntology) {
