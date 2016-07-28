@@ -534,15 +534,9 @@
       
       $this->chdir($this->currentWorkingDirectory);
       
-      if($this->exec('dpkg-query -l git', 'ignore') === FALSE)
-      {
-        $this->exec('apt-get install -y git', 'error');
-      }
+      $this->exec('apt-get install -y git', 'error');
       
-      if($this->exec('dpkg-query -l php5-curl', 'ignore') === FALSE)
-      {
-        $this->exec('apt-get install -y php5-curl', 'error');
-      }
+      $this->exec('apt-get install -y php5-curl', 'error');
       
       $this->exec('drush make --prepare-install resources/osf-drupal/osf_drupal.make '.$this->drupal_folder, 'error');
             
