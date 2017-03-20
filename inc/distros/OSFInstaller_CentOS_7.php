@@ -300,7 +300,7 @@
       $this->append("\n\n".file_get_contents('resources/virtuoso/odbc.ini'), '/etc/odbc.ini');
       $this->append("\n\n".file_get_contents('resources/virtuoso/odbcinst.ini'), '/etc/odbcinst.ini');
 
-      $this->exec('systemctl start virtuoso.service');
+      $this->exec('service virtuoso start');
       
       sleep(20);
       
@@ -335,11 +335,11 @@
       
       $this->span("Restarting Virtuoso...");
       
-      $this->exec('systemctl restart virtuoso.service');
+      $this->exec('service virtuoso start');
       
       sleep(20);
             
-      $this->span("You can start Virtuoso using this command: systemctl start virtuoso.service", 'debug');
+      $this->span("You can start Virtuoso using this command: service virtuoso start", 'debug');
     }
 
     /**
