@@ -479,7 +479,7 @@
       $this->wget('https://github.com/webcivics/memcache_stats_v01/archive/master.zip');
       $this->exec('unzip master.zip');
 
-      $this->chdir('memcache_stats_v01_master/');
+      $this->chdir('memcache_stats_v01-master/');
 
       $this->mv('*', '../');
 
