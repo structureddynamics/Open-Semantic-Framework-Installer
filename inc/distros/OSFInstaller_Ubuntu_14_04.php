@@ -476,10 +476,10 @@
       
       $this->chdir('/usr/share/memcached-ui/');
       
-      $this->wget('http://artur.ejsmont.org/blog/misc/uploads/memcache_stats_v0.1.tgz');
-      $this->exec('tar -xvf memcache_stats_v0.1.tgz');
+      $this->wget('https://github.com/webcivics/memcache_stats_v01/archive/master.zip');
+      $this->exec('unzip master.zip');
       
-      $this->chdir('memcache_stats_v01/');
+      $this->chdir('memcache_stats_v01_master/');
 
       $this->mv('*', '../');
       
