@@ -26,7 +26,7 @@ cecho () # Color-echo.
 
   echo -e "$color"
   echo -e "$message"
-  
+
   tput sgr0 # Reset to normal.
 
   return
@@ -41,12 +41,12 @@ echo -e "\n\n"
 cecho "\n\nInstalling requirements...\n"
 
 # Make sure that apt-get exists for this Linux distribution
-if which apt-get >/dev/null; 
+if which apt-get >/dev/null;
 then
   apt-get -y update
   apt-get -y install php5
   apt-get -y install unzip wget
-elif which yum >/dev/null; 
+elif which yum >/dev/null;
 then
   yum install -y php unzip wget
 else
@@ -55,7 +55,7 @@ fi
 
 cecho "\n\nDownload the latest version of the OSF Installer tool...\n"
 
-wget https://github.com/structureddynamics/Open-Semantic-Framework-Installer/archive/3.4.zip
+wget https://github.com/webcivics/Open-Semantic-Framework-Installer/archive/3.4.zip
 
 unzip 3.4.zip
 
@@ -72,5 +72,3 @@ chmod 755 osf-installer
 chmod 755 upgrade.sh
 
 cecho "\n\nRun the 'osf-installer' script to install OSF or any of its components.\n"
-
-

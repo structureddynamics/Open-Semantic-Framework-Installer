@@ -79,7 +79,7 @@
       $this->installMemcached();
 
       // Generate some OSF API key is none has been defined by the user
-      if(empty($this->api_key) || $this->api_key == "some-key") 
+      if(empty($this->api_key) || $this->api_key == "some-key")
       {
         $this->span("Generating a OSF API Key...", 'info');
         $this->api_key = strtoupper(bin2hex(openssl_random_pseudo_bytes(16)));
@@ -191,28 +191,28 @@
       // Download
       $this->span("Downloading...", 'info');
       $this->mkdir("{$tmpPath}/");
-      $this->wget("https://github.com/structureddynamics/OSF-Web-Services/archive/${pkgVersion}.zip", "{$tmpPath}/");
+      $this->wget("https://github.com/WebCivics/OSF-Web-Services/archive/${pkgVersion}.zip", "{$tmpPath}/");
 
       // Install
       $this->span("Installing...", 'info');
       $this->unzip("{$tmpPath}/{$pkgVersion}.zip", "{$tmpPath}/");
       $this->mkdir("{$installPath}/");
-      
+
       // @TODO this should be refactored such that this logic occurs in the
       //       distro files...
       $user = 'www-data';
-      
+
       if($this->exec('id -u www-data', 'ignore') > 0)
       {
         $user = 'apache';
       }
-      
+
       $this->cp("{$tmpPath}/OSF-Web-Services-{$pkgVersion}/.", "{$installPath}/", TRUE);
       $this->chown("{$installPath}/", $user, TRUE);
       $this->chgrp("{$installPath}/", $user, TRUE);
       $this->chmod("{$installPath}/", "755", TRUE);
-      
-      $this->mkdir("{$dataPath}/osf-web-services/tmp/");          
+
+      $this->mkdir("{$dataPath}/osf-web-services/tmp/");
       $this->mkdir("{$dataPath}/osf-web-services/configs/");
       $this->chown("{$dataPath}/osf-web-services/", $user, TRUE);
       $this->chgrp("{$dataPath}/osf-web-services/", $user, TRUE);
@@ -1259,7 +1259,7 @@
         return(FALSE);
       }
 
-      return(TRUE);  
+      return(TRUE);
     }
 
     protected function init_osf($password)
@@ -1290,4 +1290,3 @@
       return(TRUE);
     }
   }
-
