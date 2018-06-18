@@ -182,17 +182,17 @@
 
       $this->chdir("{$this->osf_web_services_folder}/{$this->osf_web_services_ns}/framework/arc2/");
 
-      $this->wget('https://github.com/semsol/arc2/archive/v2.1.1.zip');
+      $this->wget('https://github.com/semsol/arc2/archive/v2.2.4.zip');
 
-      $this->exec('unzip v2.1.1.zip');
+      $this->exec('unzip v2.2.4.zip');
 
-      $this->chdir("{$this->osf_web_services_folder}/{$this->osf_web_services_ns}/framework/arc2/arc2-2.1.1/");
+      $this->chdir("{$this->osf_web_services_folder}/{$this->osf_web_services_ns}/framework/arc2/arc2-2.2.4/");
 
       $this->mv('*', '../');
 
       $this->chdir("{$this->osf_web_services_folder}/{$this->osf_web_services_ns}/framework/arc2/");
 
-      $this->rm('arc2-2.1.1', TRUE);
+      $this->rm('arc2-2.2.4', TRUE);
 
       $this->rm('v*.zip*');
 
@@ -266,8 +266,8 @@
 
       $this->h1("Installing Virtuoso 7 from .deb file....");
 
-      $this->wget("https://github.com/WebCivics/OSF-Installer-Ext/raw/{$this->installer_version}/virtuoso-opensource/virtuoso-opensource_7.1_amd64.deb");
-      $this->exec('dpkg -i virtuoso-opensource_7.1_amd64.deb');
+      $this->wget("https://github.com/WebCivics/OSF-Installer-Ext/raw/{$this->installer_version}/virtuoso-opensource/virtuoso_7.2.4-stable-1_amd64.deb");
+      $this->exec('dpkg -i virtuoso_7.2.4-stable-1_amd64.deb');
 
       $this->mv('/etc/init.d/virtuoso-opensource', '/etc/init.d/virtuoso');
 
@@ -369,15 +369,15 @@
 
       $this->span("Downloading Solr...");
 
-      $this->wget('http://archive.apache.org/dist/lucene/solr/3.6.0/apache-solr-3.6.0.tgz');
+      $this->wget('http://archive.apache.org/dist/lucene/solr/3.6.2/apache-solr-3.6.2.tgz');
 
       $this->span("Installing Solr...");
 
-      $this->exec('tar -xzvf apache-solr-3.6.0.tgz');
+      $this->exec('tar -xzvf apache-solr-3.6.2.tgz');
 
       $this->mkdir('/usr/share/solr');
 
-      $this->cp('/tmp/solr-install/apache-solr-3.6.0/*', '/usr/share/solr/');
+      $this->cp('/tmp/solr-install/apache-solr-3.6.2/*', '/usr/share/solr/');
 
       $this->span("Configuring Solr...");
 

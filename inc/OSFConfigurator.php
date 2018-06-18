@@ -15,10 +15,10 @@
 
     /* OSF Drupal Installation status */
     public $installer_osf_drupal_configured = FALSE;
-    
+
     /* Upgrade the Linux distro with the latest updates */
     protected $upgrade_distro = TRUE;
-    
+
     /* OSF Common */
     protected $application_id = 'administer';
     protected $api_key = 'some-key';
@@ -34,7 +34,7 @@
     protected $osf_web_services_domain = "localhost";
 
     /* OSF WS-PHP-API */
-    protected $osf_ws_php_api_version = "3.1.3";
+    protected $osf_ws_php_api_version = "3.1.4";
     protected $osf_ws_php_api_folder = "StructuredDynamics/osf";
 
     /* OSF Tests Suites */
@@ -166,8 +166,8 @@
             $this->auto_deploy = $this->getBoolean($input);
           }
         }
-      }       
-      
+      }
+
       /**
        * Distro Upgrade
        */
@@ -178,8 +178,8 @@
             $this->upgrade_distro = $this->getBoolean($input);
           }
         }
-      }       
-       
+      }
+
       /**
        *  OSF Common
        */
@@ -730,12 +730,12 @@
       // Get package info
       $installPath = "{$this->osf_web_services_folder}/{$this->osf_tests_suites_folder}";
       $bckPath = "/tmp/osf/tests-" . date('Y-m-d_H-i-s');
-      
+
       $this->span("Backup of the previous version is available here: {$bckPath}");
 
       // Get previous settings in Config.php
       $configFile = file_get_contents("{$installPath}/Config.php");
-      
+
       preg_match('/this-\>osfInstanceFolder = "(.*)"/', $configFile, $matches);
       $osfInstanceFolderExtracted = $matches[1];
       preg_match('/this-\>endpointUrl = "(.*)"/', $configFile, $matches);
@@ -753,8 +753,8 @@
       preg_match('/this-\>applicationID = \'(.*)\'/', $configFile, $matches);
       $applicationIDExtracted = $matches[1];
       preg_match('/this-\>apiKey = \'(.*)\'/', $configFile, $matches);
-      $apiKeyExtracted = $matches[1];  
-      
+      $apiKeyExtracted = $matches[1];
+
       // Backup
       $this->span("Making backup...", 'info');
       $this->mkdir("{$bckPath}/");
@@ -769,17 +769,17 @@
 
       // Apply existing settings to new Config.php file
       $this->sed('$this-\>osfInstanceFolder = \".*\";', '$this-\>osfInstanceFolder = \"'.$osfInstanceFolderExtracted.'\";', "{$installPath}/Config.php");
-      $this->sed('$this-\>endpointUrl = \".*\";', '$this-\>endpointUrl = \"'.$endpointUrlExtracted.'\";', "{$installPath}/Config.php");      
-      $this->sed('$this-\>endpointUri = \".*\";', '$this-\>endpointUri = \"'.$endpointUriExtracted.'\";', "{$installPath}/Config.php");      
-      $this->sed('$this-\>userID = \'.*\';', '$this-\>userID = \''.$userIDExtracted.'\';', "{$installPath}/Config.php");      
-      $this->sed('$this-\>adminGroup = \'.*\';', '$this-\>adminGroup = \''.$adminGroupExtracted.'\';', "{$installPath}/Config.php");      
-      $this->sed('$this-\>testGroup = \".*\";', '$this-\>testGroup = \"'.$testGroupExtracted.'\";', "{$installPath}/Config.php");      
-      $this->sed('$this-\>testUser = \".*\";', '$this-\>testUser = \"'.$testUserExtracted.'\";', "{$installPath}/Config.php");      
-      $this->sed('$this-\>applicationID = \'.*\';', '$this-\>applicationID = \''.$applicationIDExtracted.'\';', "{$installPath}/Config.php");      
-      $this->sed('$this-\>apiKey = \'.*\';', '$this-\>apiKey = \''.$apiKeyExtracted.'\';', "{$installPath}/Config.php");            
-      
+      $this->sed('$this-\>endpointUrl = \".*\";', '$this-\>endpointUrl = \"'.$endpointUrlExtracted.'\";', "{$installPath}/Config.php");
+      $this->sed('$this-\>endpointUri = \".*\";', '$this-\>endpointUri = \"'.$endpointUriExtracted.'\";', "{$installPath}/Config.php");
+      $this->sed('$this-\>userID = \'.*\';', '$this-\>userID = \''.$userIDExtracted.'\';', "{$installPath}/Config.php");
+      $this->sed('$this-\>adminGroup = \'.*\';', '$this-\>adminGroup = \''.$adminGroupExtracted.'\';', "{$installPath}/Config.php");
+      $this->sed('$this-\>testGroup = \".*\";', '$this-\>testGroup = \"'.$testGroupExtracted.'\";', "{$installPath}/Config.php");
+      $this->sed('$this-\>testUser = \".*\";', '$this-\>testUser = \"'.$testUserExtracted.'\";', "{$installPath}/Config.php");
+      $this->sed('$this-\>applicationID = \'.*\';', '$this-\>applicationID = \''.$applicationIDExtracted.'\';', "{$installPath}/Config.php");
+      $this->sed('$this-\>apiKey = \'.*\';', '$this-\>apiKey = \''.$apiKeyExtracted.'\';', "{$installPath}/Config.php");
+
     }
-    
+
     /**
      * Install OSF Tests suites
      */
@@ -804,9 +804,9 @@
       $this->span("Cleaning...", 'info');
       $this->rm("{$tmpPath}/", TRUE);
     }
-    
-    
-    
+
+
+
     /**
      *  Ask a series of questions to the user to configure the installer
      *  software related to OSF Web Services
@@ -830,7 +830,7 @@
         } else {
           break;
         }
-      } while (1);      
+      } while (1);
 
       /**
        * Installation Configuration
@@ -846,8 +846,8 @@
         } else {
           break;
         }
-      } while (1);          
-      
+      } while (1);
+
       /**
        *  OSF Common
        */
@@ -1003,7 +1003,7 @@
           break;
         }
       } while (1);
- 
+
       /**
        *  OSF Data Validator Tool
        */
@@ -1285,7 +1285,7 @@
         } else {
           break;
         }
-      } while (1);      
+      } while (1);
 
       /**
        *  Solr dependency
