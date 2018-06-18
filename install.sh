@@ -55,7 +55,7 @@ fi
 
 cecho "\n\nDownload the latest version of the OSF Installer tool...\n"
 
-wget https://github.com/webcivics/Open-Semantic-Framework-Installer/archive/3.4.zip
+wget https://github.com/WebCivics/Open-Semantic-Framework-Installer/archive/3.4.zip
 
 unzip 3.4.zip
 
