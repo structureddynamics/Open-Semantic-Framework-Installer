@@ -266,7 +266,7 @@
 
       $this->h1("Installing Virtuoso 7 from .deb file....");
 
-      $this->wget("https://github.com/feup-infolab/virtuoso7-debs/raw/master/debs-ubuntu-16-04/virtuoso_7.2.4-stable-1_amd64.deb");
+      $this->wget("https://raw.githubusercontent.com/feup-infolab/virtuoso7-debs/master/debs-ubuntu-16-04/virtuoso_7.2.4-stable-1_amd64.deb");
       $this->exec('dpkg -i virtuoso_7.2.4-stable-1_amd64.deb');
 
       $this->mv('/etc/init.d/virtuoso-opensource', '/etc/init.d/virtuoso');
