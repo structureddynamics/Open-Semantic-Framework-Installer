@@ -263,10 +263,16 @@
     */
     public function installVirtuoso()
     {
+      $this->h1("Installing Git-LFS....");
+
+      $this->exec('add-apt-repository -y ppa:git-core/ppa');
+      $this->exec('curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh');
+      $this->exec('apt-get install -y git-lfs');
+      $this->exec('git lfs install');
 
       $this->h1("Installing Virtuoso 7 from .deb file....");
 
-      $this->wget("https://raw.githubusercontent.com/feup-infolab/virtuoso7-debs/master/debs-ubuntu-16-04/virtuoso_7.2.4-stable-1_amd64.deb");
+      $this->wget("https://media.githubusercontent.com/media/feup-infolab/virtuoso7-debs/master/debs-ubuntu-16-04//virtuoso_7.2.4-stable-1_amd64.deb");
       $this->exec('dpkg -i virtuoso_7.2.4-stable-1_amd64.deb');
 
       $this->mv('/etc/init.d/virtuoso-opensource', '/etc/init.d/virtuoso');

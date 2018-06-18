@@ -45,7 +45,7 @@ if which apt-get >/dev/null;
 then
   apt-get -y update
   apt-get -y install php5
-  apt-get -y install unzip wget
+  apt-get -y install unzip wget software-properties-common
 elif which yum >/dev/null;
 then
   yum install -y php unzip wget
