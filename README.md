@@ -17,13 +17,13 @@ Requirements
 Installing the Open Semantic Framework
 --------------------------------------
 To install OSF on your server, you first have to install the OSF Installer command line tool. You only have to run the following commands:
-                       
+
 ```bash
 mkdir -p /usr/share/osf-installer/
 
 cd /usr/share/osf-installer/
 
-wget https://raw.github.com/structureddynamics/Open-Semantic-Framework-Installer/3.4/install.sh
+wget https://raw.github.com/WebCivics/Open-Semantic-Framework-Installer/3.4/install.sh
 
 chmod 755 install.sh
 
@@ -205,4 +205,3 @@ For More Help
 If you are experiencing issues with this installation process, please do make an outreach to the [Open Semantic Web Mailing List](http://groups.google.com/group/open-semantic-framework).
 
 Describe the specifications of the server where you are trying to install OSF. Tell us where the issue happens in the installation process. Also add any logs that could be helpful in debugging the issue.
-
